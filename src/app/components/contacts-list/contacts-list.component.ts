@@ -16,8 +16,8 @@ import {SearchPipe} from "../../pipes/search.pipe";
 export class ContactsListComponent implements OnInit, OnDestroy {
 
 
-  contacts: Contact[] = [];
-  displayedContact: Contact[] = [];
+  fetchedContacts: Contact[] = [];
+  contactsToDisplay: Contact[] = [];
   isWelcomePage = false;
 
   searchFilter: string = '';
@@ -42,8 +42,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
     //load data, displayed data and listen for changes
     this.contactsSub = this.contactsService.fetchContacts().subscribe(contactsData => {
-      this.contacts = contactsData;
-      this.displayedContact = contactsData
+      this.fetchedContacts = contactsData;
+      this.contactsToDisplay = contactsData;
     });
 
     //Listen url for pagination pipe
@@ -62,7 +62,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   onFilterChanges(event: Event) {
-    this.displayedContact = new Array(...this.searchPipe.transform(this.contacts, (<HTMLInputElement>event.target).value, ['name', 'phone', 'email', 'company', 'createdAt']))
+    this.contactsToDisplay = new Array(...this.searchPipe.transform(this.fetchedContacts, (<HTMLInputElement>event.target).value, ['name', 'phone', 'email', 'company', 'createdAt']))
   }
 
 }

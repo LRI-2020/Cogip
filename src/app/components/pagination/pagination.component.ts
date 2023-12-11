@@ -18,6 +18,12 @@ export class PaginationComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.setTotalPages();
+    // reset current page to 1 if data to displayed has changed)
+    if (!changes['totalItems'].firstChange){
+      this.currentPage = 1;
+      this.setPaginationParams();
+      this.setTotalPages();
+    }
   }
 
   ngOnInit() {
@@ -58,6 +64,5 @@ export class PaginationComponent implements OnInit, OnChanges {
 
   private setPaginationParams() {
     this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
-
   }
 }
