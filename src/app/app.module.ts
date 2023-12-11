@@ -13,10 +13,11 @@ import {AppRoutingModule} from './routing/app-routing.module';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
-import {InvoicesService} from "./services/invoices-service";
+import {InvoicesService} from "./services/invoices.service";
 import {HttpClientModule} from "@angular/common/http";
 import { SearchPipe } from './pipes/search.pipe';
 import {FormsModule} from "@angular/forms";
+import {ContactsService} from "./services/contacts.service";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,7 @@ import {FormsModule} from "@angular/forms";
     HttpClientModule,
     FormsModule
   ],
-  providers: [InvoicesService],
+  providers: [InvoicesService, ContactsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
