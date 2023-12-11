@@ -18,6 +18,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { SearchPipe } from './pipes/search.pipe';
 import {FormsModule} from "@angular/forms";
 import {ContactsService} from "./services/contacts.service";
+import {CompaniesService} from "./services/companies.service";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import {ContactsService} from "./services/contacts.service";
     HttpClientModule,
     FormsModule
   ],
-  providers: [InvoicesService, ContactsService],
+  providers: [InvoicesService, ContactsService, CompaniesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
