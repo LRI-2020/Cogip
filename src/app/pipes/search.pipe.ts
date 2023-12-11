@@ -10,7 +10,6 @@ export class SearchPipe implements PipeTransform {
       return value;
     }
     let regex = this.generateRegex(searchFilter.toLowerCase());
-    console.log('regex : ' + regex);
     let resultArray = new Set();
     for (const item of value) {
       for (const prop of props) {
@@ -40,7 +39,6 @@ export class SearchPipe implements PipeTransform {
   }
 
   private generateRegex(searchFilter: string) {
-    console.log('searchfilter : ' + searchFilter);
     let charactersToEscape = ['+', '.'];
     let split = searchFilter.split('');
     for (let character of split ) {
@@ -48,7 +46,6 @@ export class SearchPipe implements PipeTransform {
           split[split.indexOf(character)] = "\\" + character;
       }
     }
-    console.log("regex after escaping : " + split.join(''));
     return new RegExp(split.join(''));
   }
 }

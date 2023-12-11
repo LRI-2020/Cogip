@@ -20,6 +20,7 @@ import {FormsModule} from "@angular/forms";
 import {ContactsService} from "./services/contacts.service";
 import {CompaniesService} from "./services/companies.service";
 import { LastPipe } from './pipes/last.pipe';
+import { PaginationComponent } from './components/pagination/pagination.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +36,8 @@ import { LastPipe } from './pipes/last.pipe';
     RegisterComponent,
     LoginComponent,
     SearchPipe,
-    LastPipe
+    LastPipe,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,
