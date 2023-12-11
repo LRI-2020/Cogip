@@ -24,7 +24,7 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData justify-content-start" *ngFor="let contact of contacts | search:searchFilter">
+      <div class="row itemsData justify-content-start" *ngFor="let contact of contacts | search:searchFilter:['name','phone','email','company','createdAt']">
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{contact.name}}</p>
         </div>

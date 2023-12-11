@@ -24,7 +24,7 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData justify-content-start" *ngFor="let company of companies | search:searchFilter">
+      <div class="row itemsData justify-content-start" *ngFor="let company of companies | search:searchFilter:['name','tva','country','type','createdAt']">
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{company.name}}</p>
         </div>

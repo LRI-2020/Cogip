@@ -21,7 +21,7 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData align-items-center" *ngFor="let invoice of invoices | search:searchFilter">
+      <div class="row itemsData align-items-center" *ngFor="let invoice of invoices | search:searchFilter:['invoiceNumber','dueDate','company','createdAt']">
         <div class="col-2">
           <p class="data my-2">{{invoice.invoiceNumber}}</p>
         </div>
