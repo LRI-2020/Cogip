@@ -5,7 +5,7 @@
       <input class="form-control w-auto" type="text" placeholder="search invoice" [(ngModel)]="searchFilter">
     </div>
   </div>
-  <div class="row invoicesList">
+  <div class="row itemsList">
     <div class="col-10">
       <div class="row titleRow align-items-center">
         <div class="col-2" >
@@ -21,7 +21,7 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row invoicesData align-items-center" *ngFor="let invoice of invoices | search:searchFilter">
+      <div class="row itemsData align-items-center" *ngFor="let invoice of invoices | search:searchFilter">
         <div class="col-2">
           <p class="data my-2">{{invoice.invoiceNumber}}</p>
         </div>
