@@ -7,6 +7,8 @@ import {CompaniesListComponent} from "../components/companies-list/companies-lis
 import {CompanyDetailsComponent} from "../components/company-details/company-details.component";
 import {WelcomePageComponent} from "../components/welcome-page/welcome-page.component";
 import {NotFoundComponent} from "../components/not-found/not-found.component";
+import {RegisterComponent} from "../components/register/register.component";
+import {LoginComponent} from "../components/login/login.component";
 
 
 const appRoutes: Routes = [
@@ -20,6 +22,9 @@ const appRoutes: Routes = [
       {path: ":id", component: CompanyDetailsComponent},
     ]
   },
+  {path: "register", component: RegisterComponent},
+  {path: "login", component: LoginComponent},
+
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', redirectTo: '/not-found' }
 ]

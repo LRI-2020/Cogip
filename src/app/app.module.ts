@@ -11,6 +11,8 @@ import {CompanyDetailsComponent} from "./components/company-details/company-deta
 import {FooterComponent} from "./components/footer/footer.component";
 import {AppRoutingModule} from "./routing/app-routing.module";
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     CompaniesListComponent,
     CompanyDetailsComponent,
     FooterComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    RegisterComponent,
+    LoginComponent
 
   ],
   imports: [
