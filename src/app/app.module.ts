@@ -21,6 +21,7 @@ import {ContactsService} from "./services/contacts.service";
 import {CompaniesService} from "./services/companies.service";
 import { LastPipe } from './pipes/last.pipe';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { PaginationPipe } from './pipes/pagination.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +38,8 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     LoginComponent,
     SearchPipe,
     LastPipe,
-    PaginationComponent
+    PaginationComponent,
+    PaginationPipe
   ],
   imports: [
     BrowserModule,
@@ -45,7 +47,7 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     HttpClientModule,
     FormsModule
   ],
-  providers: [InvoicesService, ContactsService, CompaniesService],
+  providers: [InvoicesService, ContactsService, CompaniesService, SearchPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

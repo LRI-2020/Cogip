@@ -1,4 +1,5 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router, RouterModule} from "@angular/router";
 
 @Component({
   selector: 'app-pagination',
@@ -8,24 +9,55 @@ import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from 
 export class PaginationComponent implements OnInit, OnChanges {
 
   @Input() totalItems: number = 0;
-  @Input() currentPage: number = 0;
-  @Input() itemsPerPage: number = 0;
+  itemsPerPage: number = 5;
   pagesCount: number = 1;
+  currentPage: number = 1;
+
+  constructor(private router: Router) {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.pagesCount = this.itemsPerPage > 0?
-      (Math.ceil(this.totalItems/this.itemsPerPage)>0? Math.ceil(this.totalItems/this.itemsPerPage):1)
+    this.setTotalPages();
+  }
+
+  ngOnInit() {
+    this.setPaginationParams();
+    this.setTotalPages();
+  }
+
+  onPrevious() {
+    if (this.currentPage > 1) {
+      this.currentPage = --this.currentPage;
+      this.setPaginationParams();
+    }
+  }
+
+  onNext() {
+    if (this.currentPage < this.pagesCount) {
+      this.currentPage = ++this.currentPage;
+      this.setPaginationParams();
+    }
+  }
+
+  onGoTo(number: number) {
+    this.currentPage = number;
+    this.setPaginationParams();
+  }
+
+  onItemPerPageChanges() {
+    this.currentPage = 1;
+    this.setPaginationParams();
+    this.setTotalPages();
+  }
+
+  private setTotalPages() {
+    this.pagesCount = this.itemsPerPage > 0 ?
+      (Math.ceil(this.totalItems / this.itemsPerPage) > 0 ? Math.ceil(this.totalItems / this.itemsPerPage) : 1)
       : 1;
   }
-  ngOnInit() {
-    console.log('displayedContacts : ' + this.totalItems)
-    this.pagesCount = this.itemsPerPage > 0?
-      (Math.ceil(this.totalItems/this.itemsPerPage)>0? Math.ceil(this.totalItems/this.itemsPerPage):1)
-      : 1;  }
 
-  counter(i: number) {
-    return new Array(i);
+  private setPaginationParams() {
+    this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
+
   }
-
-
 }

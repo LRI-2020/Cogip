@@ -11,39 +11,58 @@ import {SearchPipe} from "../../pipes/search.pipe";
   selector: 'app-contacts-list',
   templateUrl: './contacts-list.component.html',
   styleUrl: './contacts-list.component.scss',
-  providers:[SearchPipe]
+  providers: []
 })
 export class ContactsListComponent implements OnInit, OnDestroy {
 
-  searchFilter:string='';
-  contacts:Contact[]=[];
-  contactsSub:Subscription = new Subscription();
-  isWelcomePage = false;
-  welcomePgCheckSub = new Subscription();
-  itemsPerPage=2;
-  displayedContact:Contact[]=[];
 
-  constructor(private contactsService:ContactsService, private route:ActivatedRoute, private searchPipe:SearchPipe) {
+  contacts: Contact[] = [];
+  displayedContact: Contact[] = [];
+  isWelcomePage = false;
+
+  searchFilter: string = '';
+
+  itemsPerPage = 2;
+  currentPage = 1;
+
+  welcomePgCheckSub = new Subscription();
+  contactsSub: Subscription = new Subscription();
+  routeSub = new Subscription();
+
+  constructor(private contactsService: ContactsService, private route: ActivatedRoute, private searchPipe: SearchPipe) {
   }
 
   ngOnInit(): void {
+
+    //Check if on welcome page - then display only 5 last items
     this.isWelcomePage = onWelcomePage(this.route.snapshot.url);
     this.welcomePgCheckSub = this.route.url.subscribe(urlSegments => {
       this.isWelcomePage = onWelcomePage(urlSegments);
     })
-   this.contactsSub = this.contactsService.fetchContacts().subscribe(contactsData =>
-   {this.contacts = contactsData;
-   this.displayedContact = contactsData})
+
+    //load data, displayed data and listen for changes
+    this.contactsSub = this.contactsService.fetchContacts().subscribe(contactsData => {
+      this.contacts = contactsData;
+      this.displayedContact = contactsData
+    });
+
+    //Listen url for pagination pipe
+    this.routeSub = this.route.queryParams.subscribe(params => {
+      this.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : this.itemsPerPage;
+      this.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.itemsPerPage;
+    })
+
   }
 
 
   ngOnDestroy(): void {
     this.contactsSub.unsubscribe();
     this.welcomePgCheckSub.unsubscribe();
+    this.routeSub.unsubscribe();
   }
 
-  onFilterChanges(event:Event){
-    this.displayedContact = new Array(...this.searchPipe.transform(this.contacts,(<HTMLInputElement> event.target).value, ['name','phone','email','company','createdAt']))
+  onFilterChanges(event: Event) {
+    this.displayedContact = new Array(...this.searchPipe.transform(this.contacts, (<HTMLInputElement>event.target).value, ['name', 'phone', 'email', 'company', 'createdAt']))
   }
 
- }
+}
