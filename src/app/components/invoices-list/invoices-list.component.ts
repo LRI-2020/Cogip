@@ -10,6 +10,7 @@ import {InvoicesService} from "../../services/invoices-service";
 @Injectable()
 export class InvoicesListComponent implements OnInit {
 
+  searchFilter:string=''
   constructor(private invoicesService:InvoicesService) {
   }
 

@@ -15,6 +15,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import {InvoicesService} from "./services/invoices-service";
 import {HttpClientModule} from "@angular/common/http";
+import { SearchPipe } from './pipes/search.pipe';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -29,13 +31,15 @@ import {HttpClientModule} from "@angular/common/http";
     FooterComponent,
     NotFoundComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    SearchPipe
 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [InvoicesService],
   bootstrap: [AppComponent]

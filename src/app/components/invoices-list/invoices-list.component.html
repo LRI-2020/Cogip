@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-10 d-flex flex-inline justify-content-around align-items-center">
       <h1 class="">All invoices</h1>
-      <input class="form-control w-auto" type="text" placeholder="search invoice">
+      <input class="form-control w-auto" type="text" placeholder="search invoice" [(ngModel)]="searchFilter">
     </div>
   </div>
   <div class="row invoicesList">
@@ -21,7 +21,7 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row invoicesData align-items-center" *ngFor="let invoice of invoices">
+      <div class="row invoicesData align-items-center" *ngFor="let invoice of invoices | search:searchFilter">
         <div class="col-2">
           <p class="data my-2">{{invoice.invoiceNumber}}</p>
         </div>
