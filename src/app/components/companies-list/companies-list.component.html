@@ -2,7 +2,7 @@
   <div  class="row">
     <div *ngIf="!onlyLastCompanies; else lastCompanies" class="col-10 d-flex flex-inline justify-content-around align-items-center">
       <h1 class="">All companies</h1>
-      <input class="form-control w-auto" type="text" placeholder="search company" [(ngModel)]="searchFilter">
+      <input class="form-control w-auto" type="text" placeholder="search company" [(ngModel)]="searchFilter" (input)="onFilterChanges($event)">
     </div>
     <ng-template #lastCompanies>
       <div class="col-10">
@@ -29,9 +29,11 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData justify-content-start" *ngFor="let company of companies
-            | search:searchFilter:['name','tva','country','type','createdAt']
-            |last: (onlyLastCompanies?5:0):'createdAt'">
+
+        <div class="row itemsData justify-content-start"
+             *ngFor="let company of (onlyLastCompanies? (companiesToDisplay | last:2:'createdAt')
+        :(companiesToDisplay | pagination:currentPage:itemsPerPage))">
+
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{company.name}}</p>
         </div>
@@ -48,6 +50,11 @@
           <p class="data my-2">{{company.createdAt}}</p>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row my-2">
+    <div class="col-12 d-flex justify-content-center" *ngIf="!onlyLastCompanies">
+      <app-pagination [totalItems]="companiesToDisplay.length"></app-pagination>
     </div>
   </div>
 </div>

@@ -18,7 +18,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   fetchedContacts: Contact[] = [];
   contactsToDisplay: Contact[] = [];
-  isWelcomePage = false;
+  onlyLastItems = false;
 
   searchFilter: string = '';
 
@@ -35,9 +35,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     //Check if on welcome page - then display only 5 last items
-    this.isWelcomePage = onWelcomePage(this.route.snapshot.url);
+    this.onlyLastItems = onWelcomePage(this.route.snapshot.url);
     this.welcomePgCheckSub = this.route.url.subscribe(urlSegments => {
-      this.isWelcomePage = onWelcomePage(urlSegments);
+      this.onlyLastItems = onWelcomePage(urlSegments);
     })
 
     //load data, displayed data and listen for changes
