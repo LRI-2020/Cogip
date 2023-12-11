@@ -8,11 +8,13 @@ import {ContactsListComponent} from "./components/contacts-list/contacts-list.co
 import {ContactDetailsComponent} from "./components/contact-details/contact-details.component";
 import {CompaniesListComponent} from "./components/companies-list/companies-list.component";
 import {CompanyDetailsComponent} from "./components/company-details/company-details.component";
-import {FooterComponent} from "./components/footer/footer.component";
-import {AppRoutingModule} from "./routing/app-routing.module";
+import {FooterComponent} from './components/footer/footer.component';
+import {AppRoutingModule} from './routing/app-routing.module';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import {InvoicesService} from "./services/invoices-service";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -32,9 +34,10 @@ import { LoginComponent } from './components/login/login.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [InvoicesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

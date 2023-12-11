@@ -1,1 +1,41 @@
-<p>invoices-list works!</p>
+<div class="container mx-auto">
+  <div class="row">
+    <div class="col-10 d-flex flex-inline justify-content-around align-items-center">
+      <h1 class="">All invoices</h1>
+      <input class="form-control w-auto" type="text" placeholder="search invoice">
+    </div>
+  </div>
+  <div class="row invoicesList">
+    <div class="col-10">
+      <div class="row titleRow align-items-center">
+        <div class="col-2" >
+          <p class="title my-2">Invoice Number</p>
+        </div>
+        <div class="col-2">
+          <p class="title my-2">Due Date</p>
+        </div>
+        <div class="col-2">
+          <p class="title my-2">Company</p>
+        </div>
+        <div class="col-2">
+          <p class="title my-2">Created At</p>
+        </div>
+      </div>
+      <div class="row invoicesData align-items-center" *ngFor="let invoice of invoices">
+        <div class="col-2">
+          <p class="data my-2">{{invoice.invoiceNumber}}</p>
+        </div>
+        <div class="col-2">
+          <p class="data my-2">{{invoice.dueDate}}</p>
+        </div>
+        <div class="col-2">
+          <p class="data my-2">{{invoice.company}}</p>
+        </div>
+        <div class="col-2">
+          <p class="data my-2">{{invoice.createdAt}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
