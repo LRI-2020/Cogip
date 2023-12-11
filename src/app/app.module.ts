@@ -10,6 +10,7 @@ import {CompaniesListComponent} from "./components/companies-list/companies-list
 import {CompanyDetailsComponent} from "./components/company-details/company-details.component";
 import {FooterComponent} from "./components/footer/footer.component";
 import {AppRoutingModule} from "./routing/app-routing.module";
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {AppRoutingModule} from "./routing/app-routing.module";
     ContactDetailsComponent,
     CompaniesListComponent,
     CompanyDetailsComponent,
-    FooterComponent
+    FooterComponent,
+    NotFoundComponent
 
   ],
   imports: [

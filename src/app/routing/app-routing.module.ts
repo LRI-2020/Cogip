@@ -6,6 +6,7 @@ import {ContactDetailsComponent} from "../components/contact-details/contact-det
 import {CompaniesListComponent} from "../components/companies-list/companies-list.component";
 import {CompanyDetailsComponent} from "../components/company-details/company-details.component";
 import {WelcomePageComponent} from "../components/welcome-page/welcome-page.component";
+import {NotFoundComponent} from "../components/not-found/not-found.component";
 
 
 const appRoutes: Routes = [
@@ -18,7 +19,9 @@ const appRoutes: Routes = [
   {path: "companies", component: CompaniesListComponent, children: [
       {path: ":id", component: CompanyDetailsComponent},
     ]
-  }
+  },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: '**', redirectTo: '/not-found' }
 ]
 
 @NgModule({
