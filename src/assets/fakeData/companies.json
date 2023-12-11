@@ -1,0 +1,26 @@
+﻿[
+  {
+    "id": 1,
+    "name": "Opinum",
+    "tva": "BE0888888888",
+    "country": "Belgium",
+    "type": "Client",
+    "createdAt": "2015-01-25"
+  },
+  {
+    "id": 2,
+    "name": "BeCode",
+    "tva": "BE0999999999",
+    "country": "Belgium",
+    "type": "Supplier",
+    "createdAt": "2017-11-01"
+  },
+  {
+    "id": 3,
+    "name": "SecurD",
+    "tva": "BE0777777777",
+    "country": "Belgium",
+    "type": "Client",
+    "createdAt": "2021-05-15"
+  }
+]

@@ -1,0 +1,43 @@
+﻿[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john.doe@becode.com",
+    "phone": "+32471717171",
+    "company": "BeCode",
+    "createdAt": "2015-02-02"
+  },
+  {
+    "id": 2,
+    "name": "Sarah Dupond",
+    "email": "sarah.dupond@opinum.com",
+    "phone": "+32473737373",
+    "company": "Opinum",
+    "createdAt": "2018-06-12"
+  },
+  {
+    "id": 3,
+    "name": "Georges Noel",
+    "email": "georges.noeldoe@opinum.com",
+    "phone": "+32474747474",
+    "company": "Opinum",
+    "createdAt": "2019-12-31"
+  },
+  {
+    "id": 4,
+    "name": "Jonas Best",
+    "email": "jonas.best@securd.com",
+    "phone": "+32475757575",
+    "company": "SecurD",
+    "createdAt": "2015-02-02"
+  },
+  {
+    "id": 5,
+    "name": "Julie Margot",
+    "email": "julie.margot@opinum.com",
+    "phone": "+32476767676",
+    "company": "Opinum",
+    "createdAt": "2023-04-02"
+  }
+
+]
