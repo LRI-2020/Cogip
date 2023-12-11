@@ -1,9 +1,14 @@
 <div class="container mx-auto">
-  <div class="row">
-    <div class="col-10 d-flex flex-inline justify-content-around align-items-center">
+  <div  class="row">
+    <div *ngIf="!onlyLastCompanies; else lastCompanies" class="col-10 d-flex flex-inline justify-content-around align-items-center">
       <h1 class="">All companies</h1>
       <input class="form-control w-auto" type="text" placeholder="search company" [(ngModel)]="searchFilter">
     </div>
+    <ng-template #lastCompanies>
+      <div class="col-10">
+        <h1 class="">Last companies</h1>
+      </div>
+    </ng-template>
   </div>
   <div class="row itemsList">
     <div class="col-12">
@@ -24,7 +29,9 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData justify-content-start" *ngFor="let company of companies | search:searchFilter:['name','tva','country','type','createdAt']">
+      <div class="row itemsData justify-content-start" *ngFor="let company of companies
+            | search:searchFilter:['name','tva','country','type','createdAt']
+            |last: (onlyLastCompanies?5:0):'createdAt'">
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{company.name}}</p>
         </div>

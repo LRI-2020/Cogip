@@ -1,9 +1,16 @@
 <div class="container mx-auto">
   <div class="row">
-    <div class="col-10 d-flex flex-inline justify-content-around align-items-center">
+    <div *ngIf="!isWelcomePage; else lastContacts" class="col-10 d-flex flex-inline justify-content-around align-items-center">
       <h1 class="">All contacts</h1>
       <input class="form-control w-auto" type="text" placeholder="search contact" [(ngModel)]="searchFilter">
     </div>
+
+    <ng-template #lastContacts>
+      <div class="col-10 d-flex flex-inline">
+        <h1 class="">Last contacts</h1>
+      </div>
+    </ng-template>
+
   </div>
   <div class="row itemsList">
     <div class="col-12">
@@ -24,7 +31,9 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData justify-content-start" *ngFor="let contact of contacts | search:searchFilter:['name','phone','email','company','createdAt']">
+      <div class="row itemsData justify-content-start" *ngFor="let contact of contacts
+      | search:searchFilter:['name','phone','email','company','createdAt']
+      | last:(isWelcomePage?2:0):'createdAt'">
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{contact.name}}</p>
         </div>

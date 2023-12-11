@@ -1,14 +1,19 @@
 <div class="container mx-auto">
-  <div class="row">
+  <div *ngIf="!isLastInvoices; else lastInvoices" class="row">
     <div class="col-10 d-flex flex-inline justify-content-around align-items-center">
       <h1 class="">All invoices</h1>
       <input class="form-control w-auto" type="text" placeholder="search invoice" [(ngModel)]="searchFilter">
     </div>
   </div>
+  <ng-template #lastInvoices>
+    <div class="col-10 d-flex flex-inline">
+      <h1 class="">Last invoices</h1>
+    </div>
+  </ng-template>
   <div class="row itemsList">
     <div class="col-10">
       <div class="row titleRow align-items-center">
-        <div class="col-2" >
+        <div class="col-2">
           <p class="title my-2">Invoice Number</p>
         </div>
         <div class="col-2">
@@ -21,7 +26,9 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData align-items-center" *ngFor="let invoice of invoices | search:searchFilter:['invoiceNumber','dueDate','company','createdAt']">
+      <div class="row itemsData align-items-center" *ngFor="let invoice of invoices
+              | search:(searchFilter?searchFilter:''):['invoiceNumber','dueDate','company','createdAt']
+              |last: (isLastInvoices?5:0):'createdAt'">
         <div class="col-2">
           <p class="data my-2">{{invoice.invoiceNumber}}</p>
         </div>

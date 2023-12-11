@@ -19,7 +19,7 @@ import { SearchPipe } from './pipes/search.pipe';
 import {FormsModule} from "@angular/forms";
 import {ContactsService} from "./services/contacts.service";
 import {CompaniesService} from "./services/companies.service";
-
+import { LastPipe } from './pipes/last.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,8 +34,8 @@ import {CompaniesService} from "./services/companies.service";
     NotFoundComponent,
     RegisterComponent,
     LoginComponent,
-    SearchPipe
-
+    SearchPipe,
+    LastPipe
   ],
   imports: [
     BrowserModule,
