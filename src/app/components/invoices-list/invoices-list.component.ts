@@ -1,4 +1,4 @@
-import {Component, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Invoice} from "../../models/invoice.model";
 import {InvoicesService} from "../../services/invoices.service";
 import {Subscription} from "rxjs";
@@ -15,7 +15,7 @@ import {PaginationPipe} from "../../pipes/pagination.pipe";
 @Injectable()
 export class InvoicesListComponent implements OnInit, OnDestroy {
 
-  onlyLastItems = false;
+  @Input() onlyLastItems = false;
   fetchedData: Invoice[] = []
   dataToDisplay: Invoice[] = []
 
@@ -29,8 +29,6 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-
-    this.onlyLastItems = onWelcomePage(this.route.snapshot.url);
 
     this.invoicesSub = this.invoicesService.fetchInvoices().subscribe(invoicesData => {
       this.fetchedData = invoicesData;

@@ -1,4 +1,4 @@
-import {Component, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Company} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Subscription} from "rxjs";
@@ -23,7 +23,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   fetchedData: Company[] = [];
   dataToDisplay: Company[] = [];
-  onlyLastItems = false;
+  @Input()onlyLastItems = false;
 
   itemsPerPage = 2;
   currentPage = 1;
@@ -32,9 +32,6 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   routeSub = new Subscription();
 
   ngOnInit(): void {
-
-    //Check if on welcome page - then display only 5 last items
-    this.onlyLastItems = onWelcomePage(this.route.snapshot.url);
 
     //load data, displayed data and listen for changes
     this.companiesSub = this.companiesService.fetchInvoices().subscribe(companiesData => {
@@ -54,7 +51,6 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 
   ngOnDestroy(): void {
     this.companiesSub.unsubscribe();

@@ -1,4 +1,4 @@
-import {Component, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../models/contact.model";
 import {ContactsService} from "../../services/contacts.service";
 import {Subscription} from "rxjs";
@@ -16,7 +16,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   fetchedContacts: Contact[] = [];
   contactsToDisplay: Contact[] = [];
-  onlyLastItems = false;
+  @Input()onlyLastItems = false;
 
   itemsPerPage = 2;
   currentPage = 1;
@@ -29,8 +29,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    //Check if on welcome page - then display only 5 last items
-    this.onlyLastItems = onWelcomePage(this.route.snapshot.url);
 
     //load data, displayed data and listen for changes
     this.contactsSub = this.contactsService.fetchContacts().subscribe(contactsData => {
