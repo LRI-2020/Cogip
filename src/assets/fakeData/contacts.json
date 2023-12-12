@@ -5,7 +5,8 @@
     "email": "john.doe@becode.com",
     "phone": "+32471717171",
     "company": "BeCode",
-    "createdAt": "2015-02-02"
+    "createdAt": "2015-02-02",
+    "photo": "/assets/img/john-doe.jpg"
   },
   {
     "id": 2,
@@ -13,7 +14,8 @@
     "email": "sarah.dupond@opinum.com",
     "phone": "+32473737373",
     "company": "Opinum",
-    "createdAt": "2018-06-12"
+    "createdAt": "2018-06-12",
+    "photo": "/assets/img/sarah-dupond.jpg"
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "email": "georges.noeldoe@opinum.com",
     "phone": "+32474747474",
     "company": "Opinum",
-    "createdAt": "2019-12-31"
+    "createdAt": "2019-12-31",
+    "photo": "/assets/img/georges-noel.jpg"
   },
   {
     "id": 4,
@@ -37,7 +40,8 @@
     "email": "julie.margot@opinum.com",
     "phone": "+32476767676",
     "company": "Opinum",
-    "createdAt": "2023-04-02"
+    "createdAt": "2023-04-02",
+    "photo": "/assets/img/julie-margot.jpg"
   },
   {
     "id": 6,
@@ -45,7 +49,8 @@
     "phone": "+4235875105829",
     "email": "pdwelly0@yandex.ru",
     "company": "Becode",
-    "createdAt": "2023-01-17"
+    "createdAt": "2023-01-17",
+    "photo": "/assets/img/pammie-delly.jpg"
   },
   {
     "id": 7,

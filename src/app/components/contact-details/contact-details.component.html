@@ -1,1 +1,12 @@
-<p>contact-details works!</p>
+    <div class="row justify-content-around my-4">
+      <div class="col-5">
+        <h1>{{contact?.name}}</h1>
+        <p><strong>Contact : </strong>{{contact?.name}}</p>
+        <p><strong>Phone : </strong>{{contact?.phone}}</p>
+        <p><strong>Mail : </strong>{{contact?.email}}</p>
+        <p><strong>Company : </strong>{{contact?.company}}</p>
+      </div>
+      <div class="col-4">
+        <img class="contact_photo w-50 rounded-circle" alt="{{contact?.name}}_photo" src="{{contact?.photo}}">
+      </div>
+    </div>

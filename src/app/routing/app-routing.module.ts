@@ -14,19 +14,14 @@ import {LoginComponent} from "../components/login/login.component";
 const appRoutes: Routes = [
   {path: "", component: WelcomePageComponent, pathMatch: "full"},
   {path: "invoices", component: InvoicesListComponent},
-  {path: "contacts", component: ContactsListComponent, children: [
-      {path: ":id", component: ContactDetailsComponent},
-    ]
-  },
-  {path: "companies", component: CompaniesListComponent, children: [
-      {path: ":id", component: CompanyDetailsComponent},
-    ]
-  },
+  {path: "contacts", component: ContactsListComponent},
+  {path: "contacts/:id", component: ContactDetailsComponent},
+  {path: "companies", component: CompaniesListComponent},
+  {path: "companies/:id", component: CompanyDetailsComponent},
   {path: "register", component: RegisterComponent},
   {path: "login", component: LoginComponent},
-
-  { path: 'not-found', component: NotFoundComponent },
-  { path: '**', redirectTo: '/not-found' }
+  {path: 'not-found', component: NotFoundComponent},
+  {path: '**', redirectTo: '/not-found'}
 ]
 
 @NgModule({
