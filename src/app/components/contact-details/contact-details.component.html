@@ -1,12 +1,15 @@
-    <div class="row justify-content-around my-4">
-      <div class="col-5">
-        <h1>{{contact?.name}}</h1>
-        <p><strong>Contact : </strong>{{contact?.name}}</p>
-        <p><strong>Phone : </strong>{{contact?.phone}}</p>
-        <p><strong>Mail : </strong>{{contact?.email}}</p>
-        <p><strong>Company : </strong>{{contact?.company}}</p>
-      </div>
-      <div class="col-4">
-        <img class="contact_photo w-50 rounded-circle" alt="{{contact?.name}}_photo" src="{{contact?.photo}}">
-      </div>
-    </div>
+<div class="row justify-content-around my-4">
+  <div class="col-5">
+    <h1>{{contact?.name}}</h1>
+    <p><strong>Contact : </strong>{{contact?.name}}</p>
+    <p><strong>Phone : </strong>{{contact?.phone}}</p>
+    <p><strong>Mail : </strong>{{contact?.email}}</p>
+    <p><strong>Company : </strong>{{contact?.company}}</p>
+  </div>
+  <div class="col-4 d-flex flex-column justify-content-center align-items-center">
+      <img class="shadow contact_photo w-50 rounded-circle" alt="{{contact?.name}}_photo"
+           [src]="contact?.photo!== undefined?contact?.photo : '/assets/img/default-avatar.jpg'">
+      <a class="attribution align-self-startr" *ngIf="contact?.photo=== undefined" href="https://www.vecteezy.com/free-vector/default-profile-picture">Default Profile Picture Vectors by Vecteezy</a>
+  </div>
+</div>
+
