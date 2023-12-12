@@ -3,8 +3,9 @@ import {Company} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Subscription} from "rxjs";
 import {onWelcomePage} from "../../shared/helpers";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SearchPipe} from "../../pipes/search.pipe";
+import {PaginationPipe} from "../../pipes/pagination.pipe";
 
 @Injectable()
 @Component({
@@ -14,7 +15,10 @@ import {SearchPipe} from "../../pipes/search.pipe";
 })
 export class CompaniesListComponent implements OnInit, OnDestroy {
 
-  constructor(private companiesService: CompaniesService, private route: ActivatedRoute, private searchPipe: SearchPipe) {
+  constructor(private companiesService: CompaniesService,
+              private route: ActivatedRoute,
+              private searchPipe: SearchPipe,
+              private router: Router) {
   }
 
   fetchedCompanies: Company[] = [];
@@ -46,10 +50,17 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
     //Listen url for pagination pipe
     this.routeSub = this.route.queryParams.subscribe(params => {
+
       this.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : this.itemsPerPage;
-      this.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.itemsPerPage;
-    })
+      this.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.currentPage;
+
+      //keep query params is page is reload without init
+      if (!this.onlyLastCompanies && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
+        this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
+      }
+    });
   }
+
 
   ngOnDestroy(): void {
     this.companiesSub.unsubscribe();
@@ -58,7 +69,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   }
 
   onFilterChanges(event: Event) {
-    this.companiesToDisplay = new Array(...this.searchPipe.transform(this.fetchedCompanies, (<HTMLInputElement>event.target).value, ['name','tva','country','type','createdAt']))
+    this.companiesToDisplay = new Array(...this.searchPipe.transform(this.fetchedCompanies, (<HTMLInputElement>event.target).value, ['name', 'tva', 'country', 'type', 'createdAt']))
   }
 
 }

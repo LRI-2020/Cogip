@@ -1,15 +1,25 @@
-<nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item"><a class="page-link" (click)="onPrevious()">Previous</a></li>
-    <li class="page-item" *ngFor="let _ of [].constructor(pagesCount); let i = index"><a class="page-link" (click)="onGoTo(1+i)">{{1+i}}</a></li>
-    <li class="page-item"><a class="page-link" (click)="onNext()">Next</a></li>
-  </ul>
-  <label for="itemsPerPage">Items per page:</label>
+<div class="row">
+  <div class="col-12 d-flex flex-inline align-items-start justify-content-center">
+    <nav aria-label="Page navigation example mx-2">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" (click)="onPrevious()">Previous</a></li>
+        <li class="page-item" *ngFor="let _ of [].constructor(pagesCount); let i = index"><a class="page-link" (click)="onGoTo(1+i)">{{1+i}}</a></li>
+        <li class="page-item"><a class="page-link" (click)="onNext()">Next</a></li>
+      </ul>
+    </nav>
+    <div class="d-flex flex-inline">
+      <label class="form-label col-form-label mx-2" for="itemsPerPage">Items:</label>
+      <select class="form-select" id="itemsPerPage" [(ngModel)]="itemsPerPage" (change)="onItemPerPageChanges()">
+        <option [ngValue]="2">2</option>
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="20">20</option>
+      </select>
+    </div>
 
-  <select id="itemsPerPage" [(ngModel)]="itemsPerPage" (change)="onItemPerPageChanges()">
-    <option [ngValue]="2">2</option>
-    <option [ngValue]="5">5</option>
-    <option [ngValue]="10">10</option>
-    <option [ngValue]="20">20</option>
-  </select>
-</nav>
+  </div>
+</div>
+
+
+
+

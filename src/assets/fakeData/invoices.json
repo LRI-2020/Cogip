@@ -21,5 +21,51 @@
     "dueDate": "2023-12-31",
     "company": "Becode",
     "createdAt": "2023-09-01"
+},
+  {
+
+    "id": 4,
+    "invoiceNumber": "F18520123-008",
+    "dueDate": "2024-01-20",
+    "company": "SecurD",
+    "createdAt": "2023-11-26"
+},
+  {
+
+    "id": 5,
+    "invoiceNumber": "F10110814-002",
+    "dueDate": "2024-01-15",
+    "company": "Opinum",
+    "createdAt": "2023-12-05"
+},  {
+
+    "id": 6,
+    "invoiceNumber": "F22221115-003",
+    "dueDate": "2023-02-16",
+    "company": "Becode",
+    "createdAt": "2022-08-01"
+},
+  {
+
+    "id": 7,
+    "invoiceNumber": "F33330915-001",
+    "dueDate": "2023-07-26",
+    "company": "Opinum",
+    "createdAt": "2023-01-26"
+  },
+  {
+
+    "id": 8,
+    "invoiceNumber": "F55550814-002",
+    "dueDate": "2024-02-15",
+    "company": "Opinum",
+    "createdAt": "2023-12-01"
+  },  {
+
+  "id": 9,
+  "invoiceNumber": "F432100005-003",
+  "dueDate": "2024-04-29",
+  "company": "Becode",
+  "createdAt": "2023-05-01"
 }
 ]
