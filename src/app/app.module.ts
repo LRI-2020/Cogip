@@ -22,6 +22,7 @@ import {CompaniesService} from "./services/companies.service";
 import { LastPipe } from './pipes/last.pipe';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PaginationPipe } from './pipes/pagination.pipe';
+import { ListHeaderComponent } from './components/list-header/list-header.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,8 @@ import { PaginationPipe } from './pipes/pagination.pipe';
     SearchPipe,
     LastPipe,
     PaginationComponent,
-    PaginationPipe
+    PaginationPipe,
+    ListHeaderComponent
   ],
   imports: [
     BrowserModule,

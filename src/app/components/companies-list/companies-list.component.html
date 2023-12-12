@@ -1,19 +1,16 @@
 <div class="container mx-auto">
-  <div  class="row">
-    <div *ngIf="!onlyLastCompanies; else lastCompanies" class="col-10 d-flex flex-inline justify-content-around align-items-center">
-      <h1 class="">All companies</h1>
-      <input class="form-control w-auto" type="text" placeholder="search company" [(ngModel)]="searchFilter" (input)="onFilterChanges($event)">
+
+  <app-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="filterData($event)" [title]="'All Companies'"></app-list-header>
+
+  <ng-template #lastData>
+    <div class="col-12 d-flex flex-inline my-2">
+      <h1 class="">Last companies</h1>
     </div>
-    <ng-template #lastCompanies>
-      <div class="col-10">
-        <h1 class="">Last companies</h1>
-      </div>
-    </ng-template>
-  </div>
+  </ng-template>
   <div class="row itemsList">
     <div class="col-12">
       <div class="row titleRow justify-content-start">
-        <div class="col-2" >
+        <div class="col-2">
           <p class="title my-2">Name</p>
         </div>
         <div class="col-2">
@@ -30,9 +27,9 @@
         </div>
       </div>
 
-        <div class="row itemsData justify-content-start"
-             *ngFor="let company of (onlyLastCompanies? (companiesToDisplay | last:2:'createdAt')
-        :(companiesToDisplay | pagination:currentPage:itemsPerPage))">
+      <div class="row itemsData justify-content-start"
+           *ngFor="let company of (onlyLastItems? (dataToDisplay | last:2:'createdAt')
+        :(dataToDisplay | pagination:currentPage:itemsPerPage))">
 
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{company.name}}</p>
@@ -52,9 +49,9 @@
       </div>
     </div>
   </div>
-  <div class="row my-2">
-    <div class="col-12 d-flex justify-content-center" *ngIf="!onlyLastCompanies">
-      <app-pagination [totalItems]="companiesToDisplay.length"></app-pagination>
+  <div class="row my-2" *ngIf="!onlyLastItems">
+    <div class="col-12 d-flex justify-content-center">
+      <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
     </div>
   </div>
 </div>

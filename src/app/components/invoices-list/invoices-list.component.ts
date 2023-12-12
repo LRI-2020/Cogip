@@ -15,12 +15,10 @@ import {PaginationPipe} from "../../pipes/pagination.pipe";
 @Injectable()
 export class InvoicesListComponent implements OnInit, OnDestroy {
 
-  searchFilter: string = '';
   onlyLastItems = false;
-  fetchedInvoices: Invoice[] = []
-  invoicesToDisplay: Invoice[] = []
+  fetchedData: Invoice[] = []
+  dataToDisplay: Invoice[] = []
 
-  lastInvoiceCheckSub = new Subscription();
   invoicesSub: Subscription = new Subscription();
   routeSub: Subscription = new Subscription();
 
@@ -33,13 +31,10 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.onlyLastItems = onWelcomePage(this.route.snapshot.url);
-    this.lastInvoiceCheckSub = this.route.url.subscribe( urlSegments => {
-      this.onlyLastItems = onWelcomePage(urlSegments);
-    })
 
     this.invoicesSub = this.invoicesService.fetchInvoices().subscribe(invoicesData => {
-      this.fetchedInvoices = invoicesData;
-      this.invoicesToDisplay = invoicesData;
+      this.fetchedData = invoicesData;
+      this.dataToDisplay = invoicesData;
     })
 
     //Listen url for pagination pipe
@@ -53,14 +48,11 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
       }
     })
   }
-  onFilterChanges(event: Event) {
-    this.invoicesToDisplay = new Array(...this.searchPipe.transform(this.fetchedInvoices,
-      (<HTMLInputElement>event.target).value, ['invoiceNumber','dueDate','company','createdAt']))
+  filterData(event: Event) {
+    this.dataToDisplay = new Array(...this.searchPipe.transform(this.fetchedData, (<HTMLInputElement>event.target).value, ['invoiceNumber','dueDate','company','createdAt']))
   }
-
   ngOnDestroy(): void {
     this.invoicesSub.unsubscribe();
-    this.lastInvoiceCheckSub.unsubscribe();
     this.routeSub.unsubscribe();
   }
 

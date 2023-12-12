@@ -21,31 +21,25 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
               private router: Router) {
   }
 
-  fetchedCompanies: Company[] = [];
-  companiesToDisplay: Company[] = [];
-  onlyLastCompanies = false;
-
-  searchFilter: string = '';
+  fetchedData: Company[] = [];
+  dataToDisplay: Company[] = [];
+  onlyLastItems = false;
 
   itemsPerPage = 2;
   currentPage = 1;
 
   companiesSub: Subscription = new Subscription();
-  lastCompaniesCheckSub = new Subscription();
   routeSub = new Subscription();
 
   ngOnInit(): void {
 
     //Check if on welcome page - then display only 5 last items
-    this.onlyLastCompanies = onWelcomePage(this.route.snapshot.url);
-    this.lastCompaniesCheckSub = this.route.url.subscribe(urlSegments => {
-      this.onlyLastCompanies = onWelcomePage(urlSegments);
-    });
+    this.onlyLastItems = onWelcomePage(this.route.snapshot.url);
 
     //load data, displayed data and listen for changes
     this.companiesSub = this.companiesService.fetchInvoices().subscribe(companiesData => {
-      this.fetchedCompanies = companiesData;
-      this.companiesToDisplay = companiesData;
+      this.fetchedData = companiesData;
+      this.dataToDisplay = companiesData;
     });
 
     //Listen url for pagination pipe
@@ -55,7 +49,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       this.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.currentPage;
 
       //keep query params is page is reload without init
-      if (!this.onlyLastCompanies && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
+      if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
         this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
       }
     });
@@ -64,12 +58,10 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.companiesSub.unsubscribe();
-    this.lastCompaniesCheckSub.unsubscribe();
     this.routeSub.unsubscribe();
   }
 
-  onFilterChanges(event: Event) {
-    this.companiesToDisplay = new Array(...this.searchPipe.transform(this.fetchedCompanies, (<HTMLInputElement>event.target).value, ['name', 'tva', 'country', 'type', 'createdAt']))
+  filterData(event: Event) {
+    this.dataToDisplay = new Array(...this.searchPipe.transform(this.fetchedData, (<HTMLInputElement>event.target).value, ['name', 'tva', 'country', 'type', 'createdAt']))
   }
-
 }
