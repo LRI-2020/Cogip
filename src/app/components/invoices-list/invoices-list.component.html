@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="row my-2">
-      <div class="col-12" *ngIf="!onlyLastItems">
+      <div class="col-12" *ngIf="pagination">
         <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
       </div>
     </div>

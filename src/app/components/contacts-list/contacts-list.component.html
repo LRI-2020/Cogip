@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="row my-2">
-      <div class="col-12 d-flex justify-content-center" *ngIf="!onlyLastItems">
+      <div class="col-12 d-flex justify-content-center" *ngIf="pagination">
         <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
       </div>
     </div>
