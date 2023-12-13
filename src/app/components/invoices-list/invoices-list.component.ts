@@ -59,6 +59,8 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   }
 
   searchData(event: Event) {
+    console.log('search triggered!');
+
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value),
       (<HTMLInputElement>event.target).value,
       ['invoiceNumber', 'dueDate', 'company', 'createdAt']);

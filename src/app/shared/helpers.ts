@@ -34,7 +34,7 @@ export class Helpers {
 
 
   searchData(data:any[],value:string,props:string[]) {
-    return new Array(...this.searchPipe.transform(data,value,props))
+    return this.searchPipe.transform(data,value,props);
   }
 
   sortByAsc(prop: string) {

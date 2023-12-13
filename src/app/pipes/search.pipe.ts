@@ -23,12 +23,10 @@ export class SearchPipe implements PipeTransform {
             if (this.searchOnString(item, item[prop].toString(), regex) !== undefined) {
               resultArray.add(this.searchOnString(item, item[prop].toString(), regex))
             }
-
         }
-
       }
     }
-    return resultArray;
+    return Array.from(resultArray);
   }
 
   private searchOnString(item: any, value: string, regex: RegExp) {
