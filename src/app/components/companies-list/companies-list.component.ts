@@ -15,8 +15,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
-              private helpers: Helpers,
-              private router: Router) {
+              private helpers: Helpers) {
   }
 
   @Input() lastItemsParams = {count: -1, prop: ''};
@@ -39,17 +38,15 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     this.loadData();
 
     //Listen url for pagination pipe
-    this.subscriptionsList.push(
-      this.route.queryParams.subscribe(params => {
+    if (this.pagination) {
+      this.subscriptionsList.push(
+        this.route.queryParams.subscribe(params => {
+          {
+            this.helpers.listenPagination(params, this.paginationInfos);
+          }
+        }));
+    }
 
-        this.paginationInfos.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : this.paginationInfos.itemsPerPage;
-        this.paginationInfos.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.paginationInfos.currentPage;
-
-        //keep query params is page is reload without init
-        if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
-          this.router.navigate([], {queryParams: {'currentPage': this.paginationInfos.currentPage.toString(), 'itemsPerPage': this.paginationInfos.itemsPerPage}})
-        }
-      }));
   }
 
   ngOnDestroy(): void {

@@ -30,7 +30,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   constructor(private contactsService: ContactsService,
               private route: ActivatedRoute,
-              private router: Router,
               private helpers: Helpers) {
   }
 
@@ -40,18 +39,16 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     //load data, displayed data and listen for changes
     this.loadData();
 
-    //Listen url for pagination pipe
-    this.subscriptionsList.push(this.route.queryParams.subscribe(params => {
-        this.isLoading = true;
-        this.paginationInfos = this.helpers.SetPagination(params, this.paginationInfos.itemsPerPage, this.paginationInfos.currentPage);
+//Listen url for pagination pipe
+    if (this.pagination) {
+      this.subscriptionsList.push(
+        this.route.queryParams.subscribe(params => {
+          {
+            this.helpers.listenPagination(params, this.paginationInfos);
+          }
+        }));
+    }
 
-        //keep query params is page is reload without init
-        if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
-          this.router.navigate([], {queryParams: {'currentPage': this.paginationInfos.currentPage.toString(), 'itemsPerPage': this.paginationInfos.itemsPerPage}})
-        }
-        this.isLoading = false;
-      }
-    ))
   }
 
   searchData(event: Event) {
@@ -65,7 +62,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
-  loadData(){
+  loadData() {
     this.subscriptionsList.push(this.contactsService.fetchContacts().subscribe(contactsData => {
       this.isLoading = true;
 

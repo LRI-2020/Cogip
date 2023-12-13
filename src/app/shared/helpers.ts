@@ -1,8 +1,9 @@
-﻿import {Params, UrlSegment} from "@angular/router";
+﻿import {ActivatedRoute, Params, Router, UrlSegment} from "@angular/router";
 import {FilterPipe} from "../pipes/filter.pipe";
 import {LastPipe} from "../pipes/last.pipe";
 import {Injectable} from "@angular/core";
 import {SearchPipe} from "../pipes/search.pipe";
+import {Subscription} from "rxjs";
 
 export function onWelcomePage(url: UrlSegment[]) {
   return url.length === 0;
@@ -43,12 +44,25 @@ export function   sortByAsc(prop: string) {
   };
 }
 
+
+
 @Injectable()
 export class Helpers {
 
-  constructor(private filterPipe: FilterPipe, private lastPipe: LastPipe, private searchPipe:SearchPipe) {
+  constructor(private filterPipe: FilterPipe, private lastPipe: LastPipe, private searchPipe:SearchPipe, private router:Router) {
   }
 
+  listenPagination(params:Params, paginationInfos: { itemsPerPage: number, currentPage: number }){
+
+    paginationInfos.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : paginationInfos.itemsPerPage;
+    paginationInfos.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : paginationInfos.currentPage;
+
+    if ((!params['itemsPerPage'] || !params['itemsPerPage'])) {
+      this.router.navigate([], {queryParams: {'currentPage': paginationInfos.currentPage.toString(), 'itemsPerPage': paginationInfos.itemsPerPage}})
+    }
+    return paginationInfos;
+
+  }
 
   searchData(data:any[],value:string,props:string[]) {
     return this.searchPipe.transform(data,value,props);

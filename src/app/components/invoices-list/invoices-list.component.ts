@@ -28,7 +28,6 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
 
   constructor(private invoicesService: InvoicesService,
               private route: ActivatedRoute,
-              private router: Router,
               private helpers: Helpers) {
   }
 
@@ -37,17 +36,16 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
     //load Data
     this.loadData();
 
-    //Listen for pagination
-    this.subscriptionsList.push(this.route.queryParams.subscribe(params => {
+    //Listen url for pagination pipe
+    if (this.pagination) {
+      this.subscriptionsList.push(
+        this.route.queryParams.subscribe(params => {
+          {
+            this.helpers.listenPagination(params, this.paginationInfos);
+          }
+        }));
+    }
 
-        this.paginationInfos = this.helpers.SetPagination(params, this.paginationInfos.itemsPerPage, this.paginationInfos.currentPage);
-
-        //keep query params is page is reload without init
-        if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
-          this.router.navigate([], {queryParams: {'currentPage': this.paginationInfos.currentPage.toString(), 'itemsPerPage': this.paginationInfos.itemsPerPage}})
-        }
-      }
-    ));
   }
 
   searchData(event: Event) {
