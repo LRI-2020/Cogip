@@ -21,14 +21,11 @@ export class PaginationComponent implements OnInit, OnChanges {
 
     // reset current page to 1 if data to displayed has changed)
     if (changes['totalItems']){
-      console.log('data to paginate changed!');
       this.currentPage = 1;
       this.setPaginationParams();
       this.setTotalPages();
     }
-    else{
-      console.log('changes BUT NOT DATA');
-    }
+
   }
 
   ngOnInit() {

@@ -26,6 +26,23 @@ export function   sortByDesc(prop: string) {
 
 }
 
+export function   sortByAsc(prop: string) {
+  return function (a: any, b: any) {
+
+    if (typeof a[prop] == 'string' && typeof a[prop] !== 'number' && !(Object.prototype.toString.call(a[prop]) === "[object String]")) {
+      return 0;
+    }
+
+    if (a[prop] > b[prop])
+      return 1;
+
+    if (a[prop] < b[prop])
+      return -1;
+
+    return 0;
+  };
+}
+
 @Injectable()
 export class Helpers {
 
@@ -37,23 +54,6 @@ export class Helpers {
     return this.searchPipe.transform(data,value,props);
   }
 
-  sortByAsc(prop: string) {
-    return function (a: any, b: any) {
-
-      if (typeof a[prop] == 'string' && typeof a[prop] !== 'number' && !(Object.prototype.toString.call(a[prop]) === "[object String]")) {
-        return 0;
-      }
-
-      if (a[prop] > b[prop])
-        return 1;
-
-      if (a[prop] < b[prop])
-        return -1;
-
-      return 0;
-    };
-  }
-
   SetPagination(params: Params, itemsPerPage: number, currentPage: number) {
     itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : itemsPerPage;
     currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : currentPage;
@@ -63,13 +63,9 @@ export class Helpers {
   filterData(data: any[], filterProp: string, filterValue: any, lastItems: { count: number, prop: string }) {
     let result: any[] = [];
     result.push(...(this.filterPipe.transform(data, filterProp, filterValue)));
-  console.log('filter without last items : ' + JSON.stringify(result));
     if (lastItems.count>0 && lastItems.prop!=='') {
       result = this.lastPipe.transform(result, lastItems.count, lastItems.prop);
-      console.log('filter with last items : ' + JSON.stringify(result));
     }
-    console.log('final result : ' + JSON.stringify(result));
-
     return result;
   }
 }

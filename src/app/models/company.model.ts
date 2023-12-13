@@ -6,15 +6,15 @@
   set createdAt(value: Date) {
     this._createdAt = value;
   }
-  get id(): Number {
+  get id(): number {
     return this._id;
   }
 
-  set id(value: Number) {
+  set id(value: number) {
     this._id = value;
   }
   private _createdAt: Date;
-  private _id: Number;
+  private _id: number;
   get type(): string {
     return this._type;
   }
@@ -48,7 +48,7 @@
   }
   private _name: string;
 
-  constructor(id:Number,name:string, tva:string, country : string, type:string, createdAt:Date) {
+  constructor(id:number,name:string, tva:string, country : string, type:string, createdAt:Date) {
     this._id=id;
     this._name=name;
     this._tva=tva;
