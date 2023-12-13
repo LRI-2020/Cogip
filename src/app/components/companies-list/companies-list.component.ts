@@ -32,13 +32,11 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   subscriptionsList: Subscription[] = [];
-  companiesSub: Subscription = new Subscription();
-  routeSub = new Subscription();
 
   ngOnInit(): void {
 
     //load data, displayed data and listen for changes
-      this.loadData();
+    this.loadData();
 
     //Listen url for pagination pipe
     this.subscriptionsList.push(
@@ -55,8 +53,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.companiesSub.unsubscribe();
-    this.routeSub.unsubscribe();
+    this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
   searchData(event: Event) {
@@ -68,14 +65,14 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   loadData() {
     this.subscriptionsList.push(
-      this.companiesSub = this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
-       this.isLoading=true;
+      this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
+        this.isLoading = true;
 
         this.fetchedData = companiesData;
         this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
 
-        this.isLoading=false;
+        this.isLoading = false;
 
       }));
   }

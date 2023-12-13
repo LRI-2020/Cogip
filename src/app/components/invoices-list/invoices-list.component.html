@@ -7,41 +7,51 @@
     </div>
   </ng-template>
 
-  <div class="row itemsList">
-    <div class="col-12">
-      <div class="row titleRow align-items-center">
-        <div class="col-2">
-          <p class="title my-2">Invoice Number</p>
+  <div class="row my-4"  *ngIf="isLoading">
+    <div class="col-12  justify-content-center text-center">
+      <span class="loader"></span>
+    </div>
+  </div>
+
+  <div class="component-data" *ngIf="!isLoading">
+    <div class="row itemsList">
+      <div class="col-12">
+        <div class="row titleRow align-items-center">
+          <div class="col-2">
+            <p class="title my-2">Invoice Number</p>
+          </div>
+          <div class="col-2">
+            <p class="title my-2">Due Date</p>
+          </div>
+          <div class="col-2">
+            <p class="title my-2">Company</p>
+          </div>
+          <div class="col-2">
+            <p class="title my-2">Created At</p>
+          </div>
         </div>
-        <div class="col-2">
-          <p class="title my-2">Due Date</p>
-        </div>
-        <div class="col-2">
-          <p class="title my-2">Company</p>
-        </div>
-        <div class="col-2">
-          <p class="title my-2">Created At</p>
-        </div>
-      </div>
-      <div class="row itemsData align-items-center" *ngFor="let invoice of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay) ">
-        <div class="col-2">
-          <p class="data my-2">{{invoice.invoiceNumber}}</p>
-        </div>
-        <div class="col-2">
-          <p class="data my-2">{{invoice.dueDate}}</p>
-        </div>
-        <div class="col-2">
-          <p class="data my-2">{{invoice.company}}</p>
-        </div>
-        <div class="col-2">
-          <p class="data my-2">{{invoice.createdAt}}</p>
+        <div class="row itemsData align-items-center" *ngFor="let invoice of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay) ">
+          <div class="col-2">
+            <p class="data my-2">{{invoice.invoiceNumber}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{invoice.dueDate}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{invoice.company}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{invoice.createdAt}}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row my-2">
-    <div class="col-12" *ngIf="!onlyLastItems">
-      <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
+    <div class="row my-2">
+      <div class="col-12" *ngIf="!onlyLastItems">
+        <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
+      </div>
     </div>
   </div>
+
+
 

@@ -21,8 +21,8 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   fetchedData: Invoice[] = []
   dataToDisplay: Invoice[] = []
 
-  invoicesSub: Subscription = new Subscription();
-  routeSub: Subscription = new Subscription();
+  subscriptionsList:Subscription[]=[];
+  isLoading=false;
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
@@ -35,15 +35,10 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     //load Data
-    this.invoicesSub = this.invoicesService.fetchInvoices().subscribe(invoicesData => {
-      this.fetchedData = invoicesData;
-      this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
-      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
-
-    })
+    this.loadData();
 
     //Listen for pagination
-    this.routeSub = this.route.queryParams.subscribe(params => {
+    this.subscriptionsList.push(this.route.queryParams.subscribe(params => {
 
         this.paginationInfos = this.helpers.SetPagination(params, this.paginationInfos.itemsPerPage, this.paginationInfos.currentPage);
 
@@ -52,7 +47,7 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
           this.router.navigate([], {queryParams: {'currentPage': this.paginationInfos.currentPage.toString(), 'itemsPerPage': this.paginationInfos.itemsPerPage}})
         }
       }
-    )
+    ));
   }
 
   searchData(event: Event) {
@@ -63,8 +58,18 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.invoicesSub.unsubscribe();
-    this.routeSub.unsubscribe();
+    this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
+  private loadData() {
+    this.subscriptionsList.push(
+      this.invoicesService.fetchInvoices().subscribe(invoicesData => {
+        this.isLoading=true;
+        this.fetchedData = invoicesData;
+        this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
+        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
+        this.isLoading=false;
+
+      }));
+  }
 }
