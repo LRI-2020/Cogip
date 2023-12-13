@@ -3,7 +3,6 @@ import {Invoice} from "../../models/invoice.model";
 import {InvoicesService} from "../../services/invoices.service";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
-import {SearchPipe} from "../../pipes/search.pipe";
 import {Helpers} from "../../shared/helpers";
 
 @Component({
@@ -24,8 +23,7 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   invoicesSub: Subscription = new Subscription();
   routeSub: Subscription = new Subscription();
 
-  itemsPerPage = 2;
-  currentPage = 1;
+  paginationInfos:{itemsPerPage:number,currentPage:number}={itemsPerPage : 2, currentPage : 1};
 
   constructor(private invoicesService: InvoicesService,
               private route: ActivatedRoute,
@@ -41,18 +39,14 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
       this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value) as Invoice[];
     })
 
-    //Listen url for pagination
+    //Listen for pagination
     this.routeSub = this.route.queryParams.subscribe(params => {
 
-        let paginationResult = this.helpers.SetPagination(params, this.itemsPerPage, this.currentPage);
-        this.currentPage = paginationResult.currentPage
-        this.itemsPerPage = paginationResult.itemsPerPage
-
-        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value);
+        this.paginationInfos = this.helpers.SetPagination(params, this.paginationInfos.itemsPerPage, this.paginationInfos.currentPage);
 
         //keep query params is page is reload without init
         if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
-          this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
+          this.router.navigate([], {queryParams: {'currentPage': this.paginationInfos.currentPage.toString(), 'itemsPerPage': this.paginationInfos.itemsPerPage}})
         }
       }
     )
@@ -60,7 +54,6 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
 
   searchData(event: Event) {
     console.log('search triggered!');
-
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value),
       (<HTMLInputElement>event.target).value,
       ['invoiceNumber', 'dueDate', 'company', 'createdAt']);

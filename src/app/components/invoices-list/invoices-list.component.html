@@ -23,7 +23,7 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row itemsData align-items-center" *ngFor="let invoice of (pagination? (dataToDisplay | pagination:currentPage:itemsPerPage) : dataToDisplay) ">
+      <div class="row itemsData align-items-center" *ngFor="let invoice of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay) ">
         <div class="col-2">
           <p class="data my-2">{{invoice.invoiceNumber}}</p>
         </div>

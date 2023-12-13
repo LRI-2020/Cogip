@@ -6,7 +6,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class PaginationPipe implements PipeTransform {
 
   //TODO unit test on this!!!
-  transform(value: any, currentPage: number, itemsPerPage: number): any {
+  transform(value: any, itemsPerPage: number,currentPage: number): any {
     if (value.length === 0 || currentPage < 1 || itemsPerPage < 1) {
       return value;
     }
