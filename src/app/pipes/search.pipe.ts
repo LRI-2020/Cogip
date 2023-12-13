@@ -5,7 +5,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class SearchPipe implements PipeTransform {
 
-  transform(value: any, searchFilter: string, props: string[]): any {
+  transform(value: any[], searchFilter: string, props: string[]): any {
     if (value.length === 0 || searchFilter === '' || props.length < 1) {
       return value;
     }
@@ -41,9 +41,9 @@ export class SearchPipe implements PipeTransform {
   private generateRegex(searchFilter: string) {
     let charactersToEscape = ['+', '.'];
     let split = searchFilter.split('');
-    for (let character of split ) {
+    for (let character of split) {
       if (charactersToEscape.indexOf(character) !== -1) {
-          split[split.indexOf(character)] = "\\" + character;
+        split[split.indexOf(character)] = "\\" + character;
       }
     }
     return new RegExp(split.join(''));

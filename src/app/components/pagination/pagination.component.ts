@@ -19,7 +19,8 @@ export class PaginationComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.setTotalPages();
     // reset current page to 1 if data to displayed has changed)
-    if (!changes['totalItems'].firstChange){
+    if (changes['totalItems']){
+      console.log('reset to 1');
       this.currentPage = 1;
       this.setPaginationParams();
       this.setTotalPages();

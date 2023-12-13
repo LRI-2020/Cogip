@@ -1,1 +1,25 @@
-<p>company-details works!</p>
+<div class="container">
+<div class="row my-4 justify-content-center">
+  <div class="col-10">
+    <h1>{{company?.name}}</h1>
+    <p><strong>Name : </strong>{{company?.name}}</p>
+    <p><strong>TVA : </strong>{{company?.tva}}</p>
+    <p><strong>Country : </strong>{{company?.country}}</p>
+    <p><strong>Type : </strong>{{company?.type}}</p>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-10">
+    <h1>Contact People</h1>
+
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-10">
+    <app-invoices-list [onlyLastItems]="true"></app-invoices-list>
+
+  </div>
+</div>
+</div>

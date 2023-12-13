@@ -34,7 +34,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     //load data, displayed data and listen for changes
-    this.companiesSub = this.companiesService.fetchInvoices().subscribe(companiesData => {
+    this.companiesSub = this.companiesService.fetchCompanies().subscribe(companiesData => {
       this.fetchedData = companiesData;
       this.dataToDisplay = companiesData;
     });

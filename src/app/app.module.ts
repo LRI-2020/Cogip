@@ -23,6 +23,8 @@ import { LastPipe } from './pipes/last.pipe';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PaginationPipe } from './pipes/pagination.pipe';
 import { ListHeaderComponent } from './components/list-header/list-header.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import {Helpers} from "./shared/helpers";
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +43,8 @@ import { ListHeaderComponent } from './components/list-header/list-header.compon
     LastPipe,
     PaginationComponent,
     PaginationPipe,
-    ListHeaderComponent
+    ListHeaderComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,7 @@ import { ListHeaderComponent } from './components/list-header/list-header.compon
     HttpClientModule,
     FormsModule
   ],
-  providers: [InvoicesService, ContactsService, CompaniesService, SearchPipe],
+  providers: [InvoicesService, ContactsService, CompaniesService, SearchPipe, LastPipe, FilterPipe, PaginationPipe, Helpers],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
