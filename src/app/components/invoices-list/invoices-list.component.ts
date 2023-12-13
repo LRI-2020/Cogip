@@ -13,7 +13,8 @@ import {Helpers} from "../../shared/helpers";
 @Injectable()
 export class InvoicesListComponent implements OnInit, OnDestroy {
 
-  @Input() onlyLastItems = false;
+  onlyLastItems = false;
+  @Input() lastItemsParams = {count: -1, prop: ''};
   @Input() pagination = true;
   @Input() dataFilter: { prop: string, value: any } = {prop: '', value: ''};
 
@@ -23,7 +24,7 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   invoicesSub: Subscription = new Subscription();
   routeSub: Subscription = new Subscription();
 
-  paginationInfos:{itemsPerPage:number,currentPage:number}={itemsPerPage : 2, currentPage : 1};
+  paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   constructor(private invoicesService: InvoicesService,
               private route: ActivatedRoute,
@@ -36,7 +37,9 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
     //load Data
     this.invoicesSub = this.invoicesService.fetchInvoices().subscribe(invoicesData => {
       this.fetchedData = invoicesData;
-      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value) as Invoice[];
+      this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
+      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
+
     })
 
     //Listen for pagination
@@ -54,7 +57,7 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
 
   searchData(event: Event) {
     console.log('search triggered!');
-    this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value),
+    this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
       (<HTMLInputElement>event.target).value,
       ['invoiceNumber', 'dueDate', 'company', 'createdAt']);
   }
@@ -64,25 +67,4 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
-
-  // private filterData() {
-  //   this.dataToDisplay = this.filterPipe.transform(this.fetchedData, this.dataFilter.prop, this.dataFilter.value);
-  //
-  //   if (this.onlyLastItems) {
-  //     this.dataToDisplay = this.lastPipe.transform(this.dataToDisplay, 5, 'createdAt');
-  //   }
-  // }
-  //
-  // private SetPagination(params:Params) {
-  //   this.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : this.itemsPerPage;
-  //   this.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.currentPage;
-  //
-  // }
-
-  // searchData(event: Event) {
-  //   this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value);
-  //   this.dataToDisplay = new Array(...this.searchPipe.transform(this.dataToDisplay, (<HTMLInputElement>event.target).value, ['invoiceNumber', 'dueDate', 'company', 'createdAt']))
-  //
-  // }
-  //
 }

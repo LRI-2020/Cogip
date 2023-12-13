@@ -18,7 +18,7 @@
 
 <div class="row justify-content-center">
   <div class="col-10">
-    <app-invoices-list [onlyLastItems]="true"></app-invoices-list>
+    <app-invoices-list [lastItemsParams]="{count:3,prop:'createdAt'}" [dataFilter]="{prop:'company',value:company?.name}"></app-invoices-list>
 
   </div>
 </div>

@@ -1,4 +1,4 @@
-  <app-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="filterData($event)" [title]="'All Companies'"></app-list-header>
+  <app-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="searchData($event)" [title]="'All Companies'"></app-list-header>
 
   <ng-template #lastData>
     <div class="col-12 d-flex flex-inline my-2">
@@ -26,8 +26,7 @@
       </div>
 
       <div class="row itemsData justify-content-start"
-           *ngFor="let company of (onlyLastItems? (dataToDisplay | last:2:'createdAt')
-        :(dataToDisplay | pagination:currentPage:itemsPerPage))" routerLink="/companies/{{company.id}}">
+           *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/companies/{{company.id}}">
 
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{company.name}}</p>

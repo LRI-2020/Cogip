@@ -3,8 +3,8 @@ import {Contact} from "../../models/contact.model";
 import {ContactsService} from "../../services/contacts.service";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
-import {onWelcomePage} from "../../shared/helpers";
-import {SearchPipe} from "../../pipes/search.pipe";
+import {Helpers} from "../../shared/helpers";
+
 
 @Injectable()
 @Component({
@@ -13,18 +13,24 @@ import {SearchPipe} from "../../pipes/search.pipe";
   styleUrl: './contacts-list.component.scss'})
 export class ContactsListComponent implements OnInit, OnDestroy {
 
+  @Input() dataFilter: { prop: string, value: any } = {prop: '', value: ''};
 
-  fetchedContacts: Contact[] = [];
-  contactsToDisplay: Contact[] = [];
-  @Input()onlyLastItems = false;
+  onlyLastItems = false;
+  @Input()lastItemsParams = {count:-1,prop:''};
 
-  itemsPerPage = 2;
-  currentPage = 1;
+  @Input()pagination=true;
+  paginationInfos:{itemsPerPage:number,currentPage:number}={itemsPerPage : 2, currentPage : 1};
+
+  fetchedData: Contact[] = [];
+  dataToDisplay: Contact[] = [];
 
   contactsSub: Subscription = new Subscription();
   routeSub = new Subscription();
 
-  constructor(private contactsService: ContactsService, private route: ActivatedRoute, private searchPipe: SearchPipe, private router: Router) {
+  constructor(private contactsService: ContactsService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private helpers:Helpers) {
   }
 
   ngOnInit(): void {
@@ -32,29 +38,34 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
     //load data, displayed data and listen for changes
     this.contactsSub = this.contactsService.fetchContacts().subscribe(contactsData => {
-      this.fetchedContacts = contactsData;
-      this.contactsToDisplay = contactsData;
+      this.fetchedData = contactsData;
+      this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
+      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
     });
 
     //Listen url for pagination pipe
     this.routeSub = this.route.queryParams.subscribe(params => {
-      this.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : this.itemsPerPage;
-      this.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.currentPage;
 
-      //keep query params is page is reload without init
-      if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
-        this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
+        this.paginationInfos = this.helpers.SetPagination(params, this.paginationInfos.itemsPerPage, this.paginationInfos.currentPage);
+
+        //keep query params is page is reload without init
+        if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
+          this.router.navigate([], {queryParams: {'currentPage': this.paginationInfos.currentPage.toString(), 'itemsPerPage': this.paginationInfos.itemsPerPage}})
+        }
       }
-    })
+    )
 
+  }
+
+  searchData(event: Event) {
+    console.log('search triggered!');
+    this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
+      (<HTMLInputElement>event.target).value,
+      ['name', 'phone', 'email', 'company', 'createdAt']);
   }
   ngOnDestroy(): void {
     this.contactsSub.unsubscribe();
     this.routeSub.unsubscribe();
-  }
-
-  filterData(event: Event) {
-    this.contactsToDisplay = new Array(...this.searchPipe.transform(this.fetchedContacts, (<HTMLInputElement>event.target).value, ['name', 'phone', 'email', 'company', 'createdAt']))
   }
 
 }

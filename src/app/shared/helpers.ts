@@ -60,13 +60,15 @@ export class Helpers {
     return {itemsPerPage, currentPage}
   }
 
-  filterData(data: any[], filterProp: string, filterValue: any, lastItems?: { count: number, prop: string }) {
+  filterData(data: any[], filterProp: string, filterValue: any, lastItems: { count: number, prop: string }) {
     let result: any[] = [];
     result.push(...(this.filterPipe.transform(data, filterProp, filterValue)));
-
-    if (lastItems) {
-      result.push(...this.lastPipe.transform(result, 5, 'createdAt'));
+  console.log('filter without last items : ' + JSON.stringify(result));
+    if (lastItems.count>0 && lastItems.prop!=='') {
+      result = this.lastPipe.transform(result, lastItems.count, lastItems.prop);
+      console.log('filter with last items : ' + JSON.stringify(result));
     }
+    console.log('final result : ' + JSON.stringify(result));
 
     return result;
   }

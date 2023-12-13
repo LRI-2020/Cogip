@@ -2,10 +2,8 @@ import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Company} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Subscription} from "rxjs";
-import {onWelcomePage} from "../../shared/helpers";
 import {ActivatedRoute, Router} from "@angular/router";
-import {SearchPipe} from "../../pipes/search.pipe";
-import {PaginationPipe} from "../../pipes/pagination.pipe";
+import {Helpers} from "../../shared/helpers";
 
 @Injectable()
 @Component({
@@ -17,16 +15,19 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
-              private searchPipe: SearchPipe,
+              private helpers:Helpers,
               private router: Router) {
   }
 
+  @Input() lastItemsParams = {count: -1, prop: ''};
+  @Input() dataFilter = {prop:'',value:''};
+  @Input()pagination=true;
+
   fetchedData: Company[] = [];
   dataToDisplay: Company[] = [];
-  @Input()onlyLastItems = false;
+  onlyLastItems = false;
 
-  itemsPerPage = 2;
-  currentPage = 1;
+  paginationInfos:{itemsPerPage:number,currentPage:number}={itemsPerPage : 2, currentPage : 1};
 
   companiesSub: Subscription = new Subscription();
   routeSub = new Subscription();
@@ -34,20 +35,22 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     //load data, displayed data and listen for changes
-    this.companiesSub = this.companiesService.fetchCompanies().subscribe(companiesData => {
+    this.companiesSub = this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
       this.fetchedData = companiesData;
-      this.dataToDisplay = companiesData;
+      this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
+      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
+
     });
 
     //Listen url for pagination pipe
     this.routeSub = this.route.queryParams.subscribe(params => {
 
-      this.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : this.itemsPerPage;
-      this.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.currentPage;
+      this.paginationInfos.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : this.paginationInfos.itemsPerPage;
+      this.paginationInfos.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : this.paginationInfos.currentPage;
 
       //keep query params is page is reload without init
       if (!this.onlyLastItems && (!this.route.snapshot.params['itemsPerPage'] || !this.route.snapshot.params['itemsPerPage'])) {
-        this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
+        this.router.navigate([], {queryParams: {'currentPage': this.paginationInfos.currentPage.toString(), 'itemsPerPage': this.paginationInfos.itemsPerPage}})
       }
     });
   }
@@ -57,7 +60,11 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
-  filterData(event: Event) {
-    this.dataToDisplay = new Array(...this.searchPipe.transform(this.fetchedData, (<HTMLInputElement>event.target).value, ['name', 'tva', 'country', 'type', 'createdAt']))
+  searchData(event: Event) {
+    console.log('search triggered!');
+    this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
+      (<HTMLInputElement>event.target).value,
+      ['name', 'tva', 'country', 'type', 'createdAt']);
   }
+
 }

@@ -1,4 +1,4 @@
-  <app-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="filterData($event)" [title]="'All Contacts'"></app-list-header>
+  <app-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="searchData($event)" [title]="'All Contacts'"></app-list-header>
 
   <ng-template #lastData>
     <div class="col-12 d-flex flex-inline my-2">
@@ -26,8 +26,7 @@
       </div>
 
         <div class="row itemsData justify-content-start"
-        *ngFor="let contact of (onlyLastItems? (contactsToDisplay | last:2:'createdAt')
-        :(contactsToDisplay | pagination:currentPage:itemsPerPage))" routerLink="/contacts/{{contact.id}}">
+             *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/contacts/{{contact.id}}">
         <div class="col-2 overflow-hidden">
           <p class="data my-2">{{contact.name}}</p>
         </div>
@@ -48,7 +47,7 @@
   </div>
   <div class="row my-2">
     <div class="col-12 d-flex justify-content-center" *ngIf="!onlyLastItems">
-      <app-pagination [totalItems]="contactsToDisplay.length"></app-pagination>
+      <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
     </div>
   </div>
 
