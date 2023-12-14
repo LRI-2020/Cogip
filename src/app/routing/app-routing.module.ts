@@ -14,8 +14,10 @@ import {AdminDashboardComponent} from "../components/admin/admin-dashboard/admin
 import {AdminCompanyDetailsComponent} from "../components/admin/admin-company-details/admin-company-details.component";
 import {AdminContactsComponent} from "../components/admin/admin-contacts/admin-contacts.component";
 import {AdminContactDetailsComponent} from "../components/admin/admin-contact-details/admin-contact-details.component";
-import {AdminInvoicesComponent} from "../components/admin/admin-invoices/admin-invoices.component";
+import {AdminInvoicesListComponent} from "../components/admin/admin-invoices-list/admin-invoices-list.component";
 import {AdminInvoiceDetailsComponent} from "../components/admin/admin-invoice-details/admin-invoice-details.component";
+import {EditInvoiceComponent} from "../components/admin/edit-invoice/edit-invoice.component";
+import {AdminInvoicesComponent} from "../components/admin/admin-invoices/admin-invoices.component";
 
 
 const appRoutes: Routes = [
@@ -28,14 +30,19 @@ const appRoutes: Routes = [
   {path: "register", component: RegisterComponent},
   {path: "login", component: LoginComponent},
   {path: "admin", component: AdminDashboardComponent},
-  {path: "admin/invoices", component: AdminInvoicesComponent},
-  {path: "admin/invoices/:id", component: AdminInvoiceDetailsComponent},
+  {path: "admin/invoices", component:AdminInvoicesComponent, children:[
+      {path: "", component: AdminInvoicesListComponent},
+      {path: "new", component: EditInvoiceComponent},
+      {path: ":id", component: AdminInvoiceDetailsComponent},
+      {path: ":id/edit", component: EditInvoiceComponent},
+    ]},
+
   {path: "admin/contacts", component: AdminContactsComponent},
   {path: "admin/contacts/:id", component: AdminContactDetailsComponent},
   {path: "admin/companies", component: AdminCompaniesComponent},
   {path: "admin/companies/:id", component: AdminCompanyDetailsComponent},
   {path: 'not-found', component: NotFoundComponent},
-  {path: '**', redirectTo: '/not-found'}
+   {path: '**', redirectTo: '/not-found'}
 ]
 
 @NgModule({

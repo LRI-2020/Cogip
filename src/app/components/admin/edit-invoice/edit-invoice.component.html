@@ -1,0 +1,42 @@
+<form (ngSubmit)="onSave()" [formGroup]="invoiceForm">
+  <div class="row">
+    <div class="col-sm-4 d-flex justify-content-sm-around mx-auto my-2">
+      <button class="btn btn-light" type="submit">Save</button>
+      <button class="btn btn-light" type="button" (click)="onCancel()">Cancel</button>
+      <button class="btn btn-light" type="button" (click)="onBack()">Back</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 mx-2">
+      <div>
+        <label for="invoice_id" class="form-label"> Invoice Id : </label>
+        <input class="readonly form-control" readonly type="number" id="invoice_id" formControlName="id">
+      </div>
+      <div>
+        <label for="invoice_number" class="form-label"> Invoice Number : </label>
+        <span class="on-error" *ngIf="!invoiceForm.get('invoiceNumber')?.valid  && invoiceForm.get('invoiceNumber')?.touched"> * Invoice Number is required</span>
+        <input type="text" id="invoice_number" class="form-control" formControlName="invoiceNumber">
+      </div>
+      <div>
+        <label for="invoice_company" class="form-label"> invoice Company : </label>
+        <span class="on-error" *ngIf="!invoiceForm.get('invoiceCompany')?.valid  && invoiceForm.get('invoiceCompany')?.touched"> * Company is required</span>
+        <input id="invoice_company" type="text" class="form-control" formControlName="invoiceCompany">
+      </div>
+      <div>
+        <label for="invoiceDueDate" class="form-label"> invoice due date : </label>
+        <span class="on-error" *ngIf="!invoiceForm.get('invoiceDueDate')?.valid  && invoiceForm.get('invoiceDueDate')?.touched"> * Due Date is required</span>
+        <input type="date" id="invoiceDueDate" class="form-control" formControlName="invoiceDueDate">
+      </div>
+
+      <div>
+        <label for="invoiceCreatedAt" class="form-label"> invoice created date : </label>
+        <input type="date" id="invoiceCreatedAt" class="form-control" readonly formControlName="invoiceCreatedDate">
+      </div>
+
+
+    </div>
+
+  </div>
+
+</form>

@@ -16,7 +16,7 @@ import { LoginComponent } from './components/login/login.component';
 import {InvoicesService} from "./services/invoices.service";
 import {HttpClientModule} from "@angular/common/http";
 import { SearchPipe } from './pipes/search.pipe';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ContactsService} from "./services/contacts.service";
 import {CompaniesService} from "./services/companies.service";
 import { LastPipe } from './pipes/last.pipe';
@@ -30,10 +30,12 @@ import { AdminCompaniesComponent } from './components/admin/admin-companies/admi
 import { AdminHeaderComponent } from './components/admin/admin-header/admin-header.component';
 import { AdminListHeaderComponent } from './components/admin/admin-list-header/admin-list-header.component';
 import { AdminContactsComponent } from './components/admin/admin-contacts/admin-contacts.component';
-import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
+import { AdminInvoicesListComponent } from './components/admin/admin-invoices-list/admin-invoices-list.component';
 import { AdminContactDetailsComponent } from './components/admin/admin-contact-details/admin-contact-details.component';
 import { AdminCompanyDetailsComponent } from './components/admin/admin-company-details/admin-company-details.component';
 import { AdminInvoiceDetailsComponent } from './components/admin/admin-invoice-details/admin-invoice-details.component';
+import { EditInvoiceComponent } from './components/admin/edit-invoice/edit-invoice.component';
+import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,16 +61,19 @@ import { AdminInvoiceDetailsComponent } from './components/admin/admin-invoice-d
     AdminHeaderComponent,
     AdminListHeaderComponent,
     AdminContactsComponent,
-    AdminInvoicesComponent,
+    AdminInvoicesListComponent,
     AdminContactDetailsComponent,
     AdminCompanyDetailsComponent,
-    AdminInvoiceDetailsComponent
+    AdminInvoiceDetailsComponent,
+    EditInvoiceComponent,
+    AdminInvoicesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [InvoicesService, ContactsService, CompaniesService, SearchPipe, LastPipe, FilterPipe, PaginationPipe, Helpers],
   bootstrap: [AppComponent]
