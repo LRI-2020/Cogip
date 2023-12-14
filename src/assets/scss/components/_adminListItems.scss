@@ -1,9 +1,19 @@
 ﻿
 .row.adminTitleRow{
   font-weight: bold;
-  border-top: lightgray solid 1px;
 }
 
 .admin-list-header{
   background-color: #9698D6;
+}
+
+.component-data{
+  background-color: white;
+  padding: 1px;
+  margin-top: 2%;
+  border-radius: 10px;
+}
+
+.lastItemsTitle{
+  border-bottom: lightgray solid 1px;
 }

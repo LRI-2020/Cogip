@@ -2,7 +2,7 @@
 <app-admin-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="searchData($event)" [title]="'All Invoices'"></app-admin-list-header>
 
 <ng-template #lastData>
-  <div class="col-12 d-flex flex-inline my-2">
+  <div class="col-12 d-flex flex-inline my-2 lastItemsTitle">
     <h1 class="">Last invoices</h1>
   </div>
 </ng-template>
@@ -14,7 +14,7 @@
 </div>
 
 <div class="component-data" *ngIf="!isLoading">
-  <div class="row itemsList">
+  <div class="row adminItemsList ps-2">
     <div class="col-12">
       <div class="row adminTitleRow align-items-center">
         <div class="col-2">
@@ -30,7 +30,9 @@
           <p class="title my-2">Created At</p>
         </div>
       </div>
-      <div class="row adminItemsData align-items-center" *ngFor="let invoice of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay) ">
+      <div class="row adminItemsData align-items-center" *ngFor="let invoice of (pagination?
+      (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay)"
+      routerLink="/admin/invoices/{{invoice.id}}">
         <div class="col-2">
           <p class="data my-2">{{invoice.invoiceNumber}}</p>
         </div>

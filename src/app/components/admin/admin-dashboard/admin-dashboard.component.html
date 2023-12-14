@@ -4,11 +4,11 @@
   </div>
 </div>
 
-<div class="containerWelcome">
+<div class="containerWelcome ms-2">
   <div class="row p-0 m-0 w-100 position-relative">
     <div class="col row dashboard_welcome rounded p-4 mt-4 w-100">
           <div class="row align-items-center">
-            <div class="col-6">
+            <div class="col-5">
               <h4>Welcome Back User!</h4>
               <p>You can here add an invoice, a company and some contacts</p>
             </div>
@@ -22,17 +22,18 @@
 
 
 <div class="row my-2">
-  <div class="col-10">
+  <div class="col">
     <app-admin-invoices [lastItemsParams]="{count:5,prop:'createdAt'}" [pagination]="false"></app-admin-invoices>
   </div>
-</div>
-<div class="row my-2">
-  <div class="col-10">
+
+  <div class="row my-2">
+  <div class="col">
     <app-admin-companies [lastItemsParams]="{count:5,prop:'createdAt'}" [pagination]="false"></app-admin-companies>
   </div>
-</div>
-<div class="row my-2">
-  <div class="col-10">
-    <app-admin-contacts [lastItemsParams]="{count:5,prop:'createdAt'}" [pagination]="false"></app-admin-contacts>
-  </div>
+
+  <div class="row my-2">
+    <div class="col">
+      <app-admin-contacts [lastItemsParams]="{count:5,prop:'createdAt'}" [pagination]="false"></app-admin-contacts>
+    </div>
+
 </div>

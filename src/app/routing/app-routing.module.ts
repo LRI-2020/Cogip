@@ -15,6 +15,7 @@ import {AdminCompanyDetailsComponent} from "../components/admin/admin-company-de
 import {AdminContactsComponent} from "../components/admin/admin-contacts/admin-contacts.component";
 import {AdminContactDetailsComponent} from "../components/admin/admin-contact-details/admin-contact-details.component";
 import {AdminInvoicesComponent} from "../components/admin/admin-invoices/admin-invoices.component";
+import {AdminInvoiceDetailsComponent} from "../components/admin/admin-invoice-details/admin-invoice-details.component";
 
 
 const appRoutes: Routes = [
@@ -28,6 +29,7 @@ const appRoutes: Routes = [
   {path: "login", component: LoginComponent},
   {path: "admin", component: AdminDashboardComponent},
   {path: "admin/invoices", component: AdminInvoicesComponent},
+  {path: "admin/invoices/:id", component: AdminInvoiceDetailsComponent},
   {path: "admin/contacts", component: AdminContactsComponent},
   {path: "admin/contacts/:id", component: AdminContactDetailsComponent},
   {path: "admin/companies", component: AdminCompaniesComponent},

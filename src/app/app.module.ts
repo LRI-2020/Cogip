@@ -33,6 +33,7 @@ import { AdminContactsComponent } from './components/admin/admin-contacts/admin-
 import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
 import { AdminContactDetailsComponent } from './components/admin/admin-contact-details/admin-contact-details.component';
 import { AdminCompanyDetailsComponent } from './components/admin/admin-company-details/admin-company-details.component';
+import { AdminInvoiceDetailsComponent } from './components/admin/admin-invoice-details/admin-invoice-details.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +61,8 @@ import { AdminCompanyDetailsComponent } from './components/admin/admin-company-d
     AdminContactsComponent,
     AdminInvoicesComponent,
     AdminContactDetailsComponent,
-    AdminCompanyDetailsComponent
+    AdminCompanyDetailsComponent,
+    AdminInvoiceDetailsComponent
   ],
   imports: [
     BrowserModule,
