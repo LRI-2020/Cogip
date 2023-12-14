@@ -4,6 +4,7 @@ import {Invoice} from "../../../models/invoice.model";
 import {InvoicesService} from "../../../services/invoices.service";
 import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {NavigationService} from "../../../services/navigation.service";
 
 @Component({
   selector: 'app-edit-invoice',
@@ -25,7 +26,7 @@ export class EditInvoiceComponent implements OnInit {
     "invoiceCreatedDate": new FormControl('')
   })
 
-  constructor(private activeRoute: ActivatedRoute, private invoicesService: InvoicesService) {
+  constructor(private activeRoute: ActivatedRoute, private invoicesService: InvoicesService, private navigationService:NavigationService) {
   }
 
   ngOnInit(): void {
@@ -59,7 +60,7 @@ export class EditInvoiceComponent implements OnInit {
   }
 
   onBack() {
-
+    this.navigationService.back("/admin");
   }
 
   private setFormValue(invoice: Invoice) {
