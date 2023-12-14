@@ -1,0 +1,38 @@
+<div class="row my-4 py-4">
+  <div class="col-11">
+    <h2>Dashboard</h2>
+  </div>
+</div>
+
+<div class="containerWelcome">
+  <div class="row p-0 m-0 w-100 position-relative">
+    <div class="col row dashboard_welcome rounded p-4 mt-4 w-100">
+          <div class="row align-items-center">
+            <div class="col-6">
+              <h4>Welcome Back User!</h4>
+              <p>You can here add an invoice, a company and some contacts</p>
+            </div>
+          </div>
+    </div>
+    <div class="col-5 position-absolute bottom-0 end-0 mb-4 me-4">
+      <img alt="welcome_picture" class="w-100" src="assets/img/example-scene-2%201.svg">
+    </div>
+  </div>
+</div>
+
+
+<div class="row my-2">
+  <div class="col-10">
+    <app-admin-invoices [lastItemsParams]="{count:5,prop:'createdAt'}" [pagination]="false"></app-admin-invoices>
+  </div>
+</div>
+<div class="row my-2">
+  <div class="col-10">
+    <app-admin-companies [lastItemsParams]="{count:5,prop:'createdAt'}" [pagination]="false"></app-admin-companies>
+  </div>
+</div>
+<div class="row my-2">
+  <div class="col-10">
+    <app-admin-contacts [lastItemsParams]="{count:5,prop:'createdAt'}" [pagination]="false"></app-admin-contacts>
+  </div>
+</div>

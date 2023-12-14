@@ -65,7 +65,6 @@ export class PaginationComponent implements OnInit, OnChanges {
   }
 
   private setPaginationParams() {
-    console.log('set pagination params - pagination components!')
     this.router.navigate([], {queryParams: {'currentPage': this.currentPage.toString(), 'itemsPerPage': this.itemsPerPage}})
   }
 }

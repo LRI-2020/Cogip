@@ -25,6 +25,14 @@ import { PaginationPipe } from './pipes/pagination.pipe';
 import { ListHeaderComponent } from './components/list-header/list-header.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import {Helpers} from "./shared/helpers";
+import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
+import { AdminCompaniesComponent } from './components/admin/admin-companies/admin-companies.component';
+import { AdminHeaderComponent } from './components/admin/admin-header/admin-header.component';
+import { AdminListHeaderComponent } from './components/admin/admin-list-header/admin-list-header.component';
+import { AdminContactsComponent } from './components/admin/admin-contacts/admin-contacts.component';
+import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
+import { AdminContactDetailsComponent } from './components/admin/admin-contact-details/admin-contact-details.component';
+import { AdminCompanyDetailsComponent } from './components/admin/admin-company-details/admin-company-details.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +52,15 @@ import {Helpers} from "./shared/helpers";
     PaginationComponent,
     PaginationPipe,
     ListHeaderComponent,
-    FilterPipe
+    FilterPipe,
+    AdminDashboardComponent,
+    AdminCompaniesComponent,
+    AdminHeaderComponent,
+    AdminListHeaderComponent,
+    AdminContactsComponent,
+    AdminInvoicesComponent,
+    AdminContactDetailsComponent,
+    AdminCompanyDetailsComponent
   ],
   imports: [
     BrowserModule,
