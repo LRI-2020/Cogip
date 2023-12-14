@@ -72,4 +72,7 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
     }));
   }
 
+  onNewContact() {
+
+  }
 }

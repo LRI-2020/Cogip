@@ -69,4 +69,8 @@ export class AdminInvoicesComponent implements OnInit, OnDestroy {
 
       }));
   }
+
+  onNewInvoice() {
+
+  }
 }

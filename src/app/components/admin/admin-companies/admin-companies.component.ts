@@ -73,4 +73,7 @@ export class AdminCompaniesComponent {
       }));
   }
 
+  onNewCompany() {
+
+  }
 }

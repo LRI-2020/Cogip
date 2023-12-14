@@ -1,8 +1,9 @@
 <app-admin-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="searchData($event)" [title]="'All Contacts'"></app-admin-list-header>
 
 <ng-template #lastData>
-  <div class="col-12 d-flex flex-inline my-2 lastItemsTitle">
+  <div class="col-12 d-flex flex-inline my-2 px-2 lastItemsTitle justify-content-between align-items-center">
     <h1 class="">Last contacts</h1>
+    <button class="btn newBtn fw-bold" type="button" (click)="onNewContact()">New Contact</button>
   </div>
 </ng-template>
 <div class="row my-4"  *ngIf="isLoading">
