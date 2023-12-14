@@ -26,7 +26,7 @@ export class EditInvoiceComponent implements OnInit {
     "invoiceCreatedDate": new FormControl('')
   })
 
-  constructor(private activeRoute: ActivatedRoute, private invoicesService: InvoicesService, private navigationService:NavigationService) {
+  constructor(private activeRoute: ActivatedRoute, private invoicesService: InvoicesService, private navigationService: NavigationService) {
   }
 
   ngOnInit(): void {
@@ -56,20 +56,25 @@ export class EditInvoiceComponent implements OnInit {
   }
 
   onCancel() {
-
+    if (this.originalInvoice) {
+      this.setFormValue(this.originalInvoice);
+    }
+    else{
+      this.setFormValue();
+    }
   }
 
   onBack() {
     this.navigationService.back("/admin");
   }
 
-  private setFormValue(invoice: Invoice) {
+  private setFormValue(invoice?: Invoice) {
     this.invoiceForm.setValue({
-      id: invoice.id,
-      invoiceNumber: invoice.invoiceNumber,
-      invoiceCompany: invoice.company,
-      invoiceDueDate: invoice.dueDate,
-      invoiceCreatedDate: invoice.createdAt
+      id: invoice? invoice.id:'',
+      invoiceNumber: invoice?invoice.invoiceNumber:'',
+      invoiceCompany: invoice?invoice.company:'',
+      invoiceDueDate: invoice?invoice.dueDate:'',
+      invoiceCreatedDate: invoice?invoice.createdAt:''
     })
   }
 }
