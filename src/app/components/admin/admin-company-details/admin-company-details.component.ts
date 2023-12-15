@@ -13,9 +13,8 @@ import {CompaniesService} from "../../../services/companies.service";
 export class AdminCompanyDetailsComponent implements OnInit,OnDestroy{
   company: Company | undefined;
   companyContacts:Contact[]=[]
-  isLoading=true;
-  isLoadingCompanyDetails=false;
-  isLoadingContacts=false;
+  isLoadingCompanyDetails=true;
+  isLoadingContacts=true;
   subscriptionsList:Subscription[]=[]
   constructor(private route:ActivatedRoute, private companiesService:CompaniesService) {
   }
@@ -31,19 +30,15 @@ export class AdminCompanyDetailsComponent implements OnInit,OnDestroy{
 
   loadData(id:number){
     this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe(companyData => {
-      this.isLoading=true;
-      // this.isLoadingCompanyDetails=true;
+      this.isLoadingCompanyDetails=true;
       this.company = companyData;
-      // this.isLoadingCompanyDetails=false;
-      this.isLoading=false;
+      this.isLoadingCompanyDetails=false;
     }));
 
     this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe(contacts =>{
-      this.isLoading=true;
-      // this.isLoadingContacts=true;
+       this.isLoadingContacts=true;
       this.companyContacts = contacts;
-      // this.isLoadingContacts=false;
-      this.isLoading=false;
+       this.isLoadingContacts=false;
     }));
   }
 
