@@ -29,9 +29,12 @@
           <div class="col d-flex flex-inline" *ngFor="let contact of companyContacts">
             <div class="col-5 d-flex flex-column justify-content-center align-items-center">
               <img class="shadow contact_photo w-50 rounded-circle" alt="{{contact?.name}}_photo"
-                   [src]="contact?.photo!== undefined?contact?.photo : '/assets/img/default-avatar.jpg'">
-              <a class="attribution align-self-startr" *ngIf="contact?.photo=== undefined" href="https://www.vecteezy.com/free-vector/default-profile-picture">Default Profile Picture Vectors by
+                   src="/assets/img/default-avatar.jpg">
+              <!--                   [src]="contact?.photo!== undefined?contact?.photo : '/assets/img/default-avatar.jpg'">-->
+              <a class="attribution align-self-startr" href="https://www.vecteezy.com/free-vector/default-profile-picture">Default Profile Picture Vectors by
                 Vecteezy</a>
+<!--              <a class="attribution align-self-startr" *ngIf="contact?.photo=== undefined" href="https://www.vecteezy.com/free-vector/default-profile-picture">Default Profile Picture Vectors by-->
+<!--                Vecteezy</a>-->
             </div>
             <div class="col-5">
               <h3>{{contact.name}}</h3>

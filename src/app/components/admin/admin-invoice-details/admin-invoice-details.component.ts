@@ -44,6 +44,7 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
     },
       error =>{
       console.log(error);
+      this.isLoading=false;
       }));
   }
 

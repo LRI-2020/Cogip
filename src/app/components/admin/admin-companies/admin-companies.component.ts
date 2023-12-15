@@ -70,7 +70,13 @@ export class AdminCompaniesComponent {
 
         this.isLoading = false;
 
-      }));
+      },
+
+        error => {
+          console.log(error);
+          this.isLoading = false;
+
+        }));
   }
 
   onNewCompany() {

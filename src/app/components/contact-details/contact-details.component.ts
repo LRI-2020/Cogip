@@ -25,9 +25,7 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
 
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
       let id = +params['id'];
-      this.isLoading = true;
       this.loadData(id);
-      this.isLoading = false;
     }))
 
   }
@@ -41,7 +39,11 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       this.contact = contactData;
       this.isLoading = false;
-    }));
+    },
+      error => {
+      console.log(error);
+        this.isLoading = false;
+      }));
   }
 
 

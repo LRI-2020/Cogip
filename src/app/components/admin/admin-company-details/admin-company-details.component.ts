@@ -33,13 +33,25 @@ export class AdminCompanyDetailsComponent implements OnInit,OnDestroy{
       this.isLoadingCompanyDetails=true;
       this.company = companyData;
       this.isLoadingCompanyDetails=false;
-    }));
+    },
+
+      error => {
+        console.log(error);
+        this.isLoadingCompanyDetails = false;
+
+      }));
 
     this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe(contacts =>{
        this.isLoadingContacts=true;
       this.companyContacts = contacts;
        this.isLoadingContacts=false;
-    }));
+    },
+
+      error => {
+        console.log(error);
+        this.isLoadingContacts = false;
+
+      }));
   }
 
   ngOnDestroy(): void {

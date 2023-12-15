@@ -68,7 +68,13 @@ export class AdminInvoicesComponent implements OnInit, OnDestroy {
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
         this.isLoading=false;
 
-      }));
+      },
+
+        error => {
+          console.log(error);
+          this.isLoading = false;
+
+        }));
   }
 
   onNewInvoice() {

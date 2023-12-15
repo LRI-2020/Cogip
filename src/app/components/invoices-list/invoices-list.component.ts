@@ -22,7 +22,7 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   dataToDisplay: Invoice[] = []
 
   subscriptionsList:Subscription[]=[];
-  isLoading=false;
+  isLoading=true;
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
@@ -68,6 +68,12 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
         this.isLoading=false;
 
-      }));
+      },
+
+        error => {
+          console.log(error);
+          this.isLoading = false;
+
+        }));
   }
 }

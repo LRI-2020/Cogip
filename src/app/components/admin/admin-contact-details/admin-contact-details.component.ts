@@ -44,6 +44,7 @@ export class AdminContactDetailsComponent implements OnInit, OnDestroy {
     },
       error => {
         console.log(error);
+        this.isLoading=false;
       }));
   }
 

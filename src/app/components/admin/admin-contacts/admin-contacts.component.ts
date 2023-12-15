@@ -67,7 +67,13 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
       this.fetchedData = contactsData;
       this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
       this.isLoading = false;
-    }));
+    },
+
+      error => {
+        console.log(error);
+        this.isLoading = false;
+
+      }));
   }
 
   onNewContact() {
