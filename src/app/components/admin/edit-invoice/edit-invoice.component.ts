@@ -40,6 +40,9 @@ export class EditInvoiceComponent implements OnInit {
         let id = +params['id'];
         this.fullFillForm(id);
       }
+      else{
+        this.isLoading=false;
+      }
     }));
   }
 
