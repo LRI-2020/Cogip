@@ -2,22 +2,27 @@
 <app-admin-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="searchData($event)" [title]="'All Invoices'"></app-admin-list-header>
 
 <ng-template #lastData>
-  <div class="col-12 d-flex flex-inline my-2 px-2 lastItemsTitle justify-content-between align-items-center">
-    <h1 class="">Last invoices</h1>
-<!--    <button class="btn newBtn fw-bold" type="button" (click)="onNewInvoice()">New Invoice</button>-->
+  <div class="row">
+    <div class="col-12 d-flex flex-inline my-2 px-2 lastItemsTitle justify-content-between align-items-center">
+      <h1 class="">Last invoices</h1>
+      <!--    <button class="btn newBtn fw-bold" type="button" (click)="onNewInvoice()">New Invoice</button>-->
+    </div>
   </div>
 </ng-template>
 
-<div class="row my-4"  *ngIf="isLoading">
-  <div class="col-12  justify-content-center text-center">
-    <span class="loader"></span>
+<ng-template #loading>
+  <div class="row my-4" >
+    <div class="col-12  justify-content-center text-center">
+      <span class="adminLoader"></span>
+    </div>
   </div>
-</div>
+</ng-template>
 
-<div class="component-data" *ngIf="!isLoading">
+
+<div class="component-data" *ngIf="!isLoading;else loading">
   <div class="row">
     <div class="col admin-new d-flex justify-content-end">
-      <button class="btn newBtn fw-bold mt-3 me-3" type="button" routerLink="/admin/invoices/new">New Invoice</button>
+      <button class="btn newBtn fw-bold mt-3 me-3" type="button" (click)="onNewInvoice()">New Invoice</button>
     </div>
   </div>
   <div class="row adminItemsList ps-2">
@@ -42,18 +47,18 @@
       </div>
       <div class="row adminItemsData align-items-center" *ngFor="let invoice of (pagination?
       (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay)"
-      routerLink="/admin/invoices/{{invoice.id}}">
+           routerLink="/admin/invoices/{{invoice.id}}">
         <div class="col-2">
           <p class="data my-2">{{invoice.invoiceNumber}}</p>
         </div>
         <div class="col-2">
-          <p class="data my-2">{{invoice.dueDate}}</p>
+          <p class="data my-2">{{invoice.dueDate|date:'longDate'}}</p>
         </div>
         <div class="col-2">
           <p class="data my-2">{{invoice.company}}</p>
         </div>
         <div class="col-2">
-          <p class="data my-2">{{invoice.createdAt}}</p>
+          <p class="data my-2">{{invoice.createdAt |date:'longDate'}}</p>
         </div>
         <div class="col-2">
           <button type="button" class="editBtn btn btn-light my-2" routerLink="{{invoice.id}}/edit"> Edit</button>

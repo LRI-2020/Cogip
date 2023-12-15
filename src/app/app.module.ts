@@ -36,6 +36,7 @@ import { AdminCompanyDetailsComponent } from './components/admin/admin-company-d
 import { AdminInvoiceDetailsComponent } from './components/admin/admin-invoice-details/admin-invoice-details.component';
 import { EditInvoiceComponent } from './components/admin/edit-invoice/edit-invoice.component';
 import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
+import {DatePipe} from "@angular/common";
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,7 +76,7 @@ import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [InvoicesService, ContactsService, CompaniesService, SearchPipe, LastPipe, FilterPipe, PaginationPipe, Helpers],
+  providers: [InvoicesService, ContactsService, CompaniesService, SearchPipe, LastPipe, FilterPipe, PaginationPipe, Helpers, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

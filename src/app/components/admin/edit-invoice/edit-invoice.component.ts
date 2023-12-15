@@ -5,6 +5,7 @@ import {InvoicesService} from "../../../services/invoices.service";
 import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-edit-invoice',
@@ -14,7 +15,7 @@ import {NavigationService} from "../../../services/navigation.service";
 export class EditInvoiceComponent implements OnInit {
 
   editMode = true;
-  isLoading = false;
+  isLoading = true;
   originalInvoice: Invoice | undefined;
   subscriptionsList: Subscription[] = [];
 
@@ -26,7 +27,10 @@ export class EditInvoiceComponent implements OnInit {
     "invoiceCreatedDate": new FormControl('')
   })
 
-  constructor(private activeRoute: ActivatedRoute, private invoicesService: InvoicesService, private navigationService: NavigationService) {
+  constructor(private activeRoute: ActivatedRoute,
+              private invoicesService: InvoicesService,
+              private navigationService: NavigationService,
+              private datepipe: DatePipe) {
   }
 
   ngOnInit(): void {
@@ -47,7 +51,7 @@ export class EditInvoiceComponent implements OnInit {
       if (this.originalInvoice) {
         this.setFormValue(this.originalInvoice);
       }
-      this.isLoading = true;
+      this.isLoading = false;
     }));
   }
 
@@ -73,8 +77,8 @@ export class EditInvoiceComponent implements OnInit {
       id: invoice? invoice.id:'',
       invoiceNumber: invoice?invoice.invoiceNumber:'',
       invoiceCompany: invoice?invoice.company:'',
-      invoiceDueDate: invoice?invoice.dueDate:'',
-      invoiceCreatedDate: invoice?invoice.createdAt:''
+      invoiceDueDate: invoice?this.datepipe.transform(invoice.dueDate, 'yyyy-MM-dd'):'',
+      invoiceCreatedDate: invoice?this.datepipe.transform(invoice.createdAt, 'yyyy-MM-dd'):''
     })
   }
 }

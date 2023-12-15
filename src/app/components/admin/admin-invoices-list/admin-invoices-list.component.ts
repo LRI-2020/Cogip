@@ -21,7 +21,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   dataToDisplay: Invoice[] = []
 
   subscriptionsList:Subscription[]=[];
-  isLoading=false;
+  isLoading=true;
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
@@ -31,6 +31,8 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load Data
     this.loadData();
@@ -61,13 +63,18 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   private loadData() {
     this.subscriptionsList.push(
       this.invoicesService.fetchInvoices().subscribe(invoicesData => {
-        this.isLoading=true;
-        this.fetchedData = invoicesData;
-        this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
-        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
-        this.isLoading=false;
+          this.isLoading=true;
+          this.fetchedData = invoicesData;
+          this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
+          this.isLoading=false;
 
-      }));
+        },
+
+        error => {
+          console.log(error);
+          this.isLoading = false;
+
+        }));
   }
 
   onNewInvoice() {
