@@ -27,7 +27,7 @@ export class AdminCompaniesComponent {
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
-  isLoading = false;
+  isLoading = true;
 
   subscriptionsList: Subscription[] = [];
 
@@ -62,9 +62,7 @@ export class AdminCompaniesComponent {
   loadData() {
     this.subscriptionsList.push(
       this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
-        console.log(companiesData);
         this.isLoading = true;
-        console.log('companies ' + companiesData);
         this.fetchedData = companiesData;
         this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];

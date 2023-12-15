@@ -28,7 +28,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
-  isLoading = false;
+  isLoading = true;
 
   subscriptionsList: Subscription[] = [];
 

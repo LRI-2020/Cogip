@@ -28,8 +28,10 @@ export class CompaniesService {
 
   getCompanytById(id: number) {
 
-    return this.http.get<Company>(this.apiUrl+'companies/'+id.toString()).pipe(map(companyData => companyData));
-    // return this.fetchCompanies().pipe(map(companiesData => companiesData.find(c => c.id === id)));
+    return this.http.get<{ message:string,'content-type':string,status:string,code:number,data:CompanyRawModel}>(this.apiUrl+'companies/'+id.toString()).pipe(map(companyResponse => {
+      let converter:CompanyConverter = new CompanyConverter();
+      return converter.rawToCompany(companyResponse.data);
+    }));
   }
 
   getContacts(companyId: number) {
