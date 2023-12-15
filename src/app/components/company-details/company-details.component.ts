@@ -12,11 +12,13 @@ import {Subscriber, Subscription} from "rxjs";
 })
 export class CompanyDetailsComponent implements OnInit, OnDestroy {
   company: Company | undefined;
-  companyContacts:Contact[]=[]
+  companyContacts: Contact[] = []
 
-  isLoading=false;
-  subscriptionsList:Subscription[]=[]
-  constructor(private route:ActivatedRoute, private companiesService:CompaniesService) {
+  isLoadingCompany = true;
+  isLoadingContacts = true;
+  subscriptionsList: Subscription[] = []
+
+  constructor(private route: ActivatedRoute, private companiesService: CompaniesService) {
 
   }
 
@@ -25,27 +27,36 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
     this.loadData(id);
 
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
-      this.isLoading=true;
       let id = +params['id'];
       this.loadData(id);
-      this.isLoading=false;
     }))
   }
 
-loadData(id:number){
-  this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe(companyData => {
-    this.isLoading=true;
-    this.company = companyData;
-    this.isLoading=false;
+  loadData(id: number) {
+    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe(companyData => {
+        this.isLoadingCompany = true;
+        this.company = companyData;
+        this.isLoadingCompany = false;
 
-  }));
+      },
+      error => {
+        console.log(error);
+        this.isLoadingCompany = false;
 
-  this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe(contacts =>{
-    this.isLoading=true;
-    this.companyContacts = contacts;
-    this.isLoading=false;
-  }));
-}
+      }));
+
+    this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe(contacts => {
+        this.isLoadingContacts = true;
+        this.companyContacts = contacts;
+        this.isLoadingContacts = false;
+      },
+
+      error => {
+        console.log(error);
+        this.isLoadingContacts = false;
+
+      }));
+  }
 
   ngOnDestroy(): void {
     this.subscriptionsList.forEach(s => s.unsubscribe());

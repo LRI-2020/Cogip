@@ -20,7 +20,7 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
   @Input() pagination = true;
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
-  isLoading = false;
+  isLoading = true;
   fetchedData: Contact[] = [];
   dataToDisplay: Contact[] = [];
 
@@ -33,6 +33,7 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
 
   ngOnInit(): void {
 
+    this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load data, displayed data and listen for changes
     this.loadData();
@@ -63,13 +64,16 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
   loadData() {
     this.subscriptionsList.push(this.contactsService.fetchContacts().subscribe(contactsData => {
       this.isLoading = true;
-
       this.fetchedData = contactsData;
-      this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
       this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
-
       this.isLoading = false;
-    }));
+    },
+
+      error => {
+        console.log(error);
+        this.isLoading = false;
+
+      }));
   }
 
   onNewContact() {

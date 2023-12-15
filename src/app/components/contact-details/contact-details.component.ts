@@ -12,7 +12,7 @@ import {Subscription} from "rxjs";
 export class ContactDetailsComponent implements OnInit, OnDestroy {
 
   contact: Contact | undefined;
-  isLoading = false;
+  isLoading = true;
   subscriptionsList: Subscription[] = [];
 
   constructor(private route: ActivatedRoute, private contactsService: ContactsService) {
@@ -25,9 +25,7 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
 
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
       let id = +params['id'];
-      this.isLoading = true;
       this.loadData(id);
-      this.isLoading = false;
     }))
 
   }
@@ -41,8 +39,11 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       this.contact = contactData;
       this.isLoading = false;
-      this.isLoading = false;
-    }));
+    },
+      error => {
+      console.log(error);
+        this.isLoading = false;
+      }));
   }
 
 

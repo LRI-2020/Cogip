@@ -28,7 +28,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
-  isLoading = false;
+  isLoading = true;
 
   subscriptionsList: Subscription[] = [];
 
@@ -64,14 +64,19 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     this.subscriptionsList.push(
       this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
         this.isLoading = true;
-
         this.fetchedData = companiesData;
         this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
-
         this.isLoading = false;
 
-      }));
+      },
+
+        error => {
+          console.log(error);
+          this.isLoading = false;
+
+        }
+        ));
   }
 
 }

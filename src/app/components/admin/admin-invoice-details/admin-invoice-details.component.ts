@@ -14,7 +14,7 @@ import {Invoice} from "../../../models/invoice.model";
 export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
 
   invoice:Invoice | undefined;
-  isLoading = false;
+  isLoading = true;
   subscriptionsList: Subscription[] = [];
 
   constructor(private route: ActivatedRoute, private invoicesService: InvoicesService) {
@@ -27,9 +27,7 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
 
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
       let id = +params['id'];
-      this.isLoading = true;
       this.loadData(id);
-      this.isLoading = false;
     }))
 
   }
@@ -43,8 +41,11 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       this.invoice = invoicesData;
       this.isLoading = false;
-      this.isLoading = false;
-    }));
+    },
+      error =>{
+      console.log(error);
+      this.isLoading=false;
+      }));
   }
 
 
