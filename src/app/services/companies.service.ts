@@ -1,23 +1,35 @@
 ﻿import {HttpClient} from "@angular/common/http";
-import {Invoice} from "../models/invoice.model";
 import {Injectable} from "@angular/core";
-import {Company} from "../models/company.model";
+import {Company, CompanyConverter,CompanyRawModel} from "../models/company.model";
 import {map} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
 
+
 @Injectable()
 export class CompaniesService {
 
+  apiUrl='https://api-cogip-329f9c72c66d.herokuapp.com/api/';
   constructor(private http: HttpClient, private contactsService: ContactsService) {
   }
 
   fetchCompanies() {
-    return this.http.get<Company[]>("../assets/fakeData/companies.json")
+
+    return this.http.get<{ message:string,'content-type':string,status:string,code:number,data:any[]}>( this.apiUrl+'companies').pipe(map(companiesResponse => {
+      let companies:Company[]=[];
+      let converter:CompanyConverter = new CompanyConverter();
+      companiesResponse.data.forEach(d => {
+        companies.push(converter.rawToCompany(d as CompanyRawModel));
+      })
+      console.log(JSON.stringify(companies));
+      return companies;
+    }));
   }
 
   getCompanytById(id: number) {
-    return this.fetchCompanies().pipe(map(companiesData => companiesData.find(c => c.id === id)));
+
+    return this.http.get<Company>(this.apiUrl+'companies/'+id.toString()).pipe(map(companyData => companyData));
+    // return this.fetchCompanies().pipe(map(companiesData => companiesData.find(c => c.id === id)));
   }
 
   getContacts(companyId: number) {

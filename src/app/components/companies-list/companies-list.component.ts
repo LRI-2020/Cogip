@@ -64,7 +64,6 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     this.subscriptionsList.push(
       this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
         this.isLoading = true;
-
         this.fetchedData = companiesData;
         this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
