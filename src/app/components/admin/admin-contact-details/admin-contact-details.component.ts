@@ -12,7 +12,7 @@ import {ContactsService} from "../../../services/contacts.service";
 export class AdminContactDetailsComponent implements OnInit, OnDestroy {
 
   contact: Contact | undefined;
-  isLoading = false;
+  isLoading = true;
   subscriptionsList: Subscription[] = [];
 
   constructor(private route: ActivatedRoute, private contactsService: ContactsService) {
@@ -25,9 +25,7 @@ export class AdminContactDetailsComponent implements OnInit, OnDestroy {
 
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
       let id = +params['id'];
-      this.isLoading = true;
       this.loadData(id);
-      this.isLoading = false;
     }))
 
   }
@@ -37,12 +35,16 @@ export class AdminContactDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadData(id: number) {
-    this.subscriptionsList.push(this.contactsService.getContactById(id).subscribe(contactData => {
+    this.subscriptionsList.push(this.contactsService.getContactById(id).subscribe(
+      contactData => {
       this.isLoading = true;
+      console.log('contact : ' + JSON.stringify(contactData));
       this.contact = contactData;
       this.isLoading = false;
-      this.isLoading = false;
-    }));
+    },
+      error => {
+        console.log(error);
+      }));
   }
 
 

@@ -74,7 +74,7 @@ export class CompanyConverter {
   constructor() {
   }
 
-  rawToCompany(rawCompany: CompanyRawModel) {
+  static rawToCompany(rawCompany: CompanyRawModel) {
     return new Company(rawCompany.id,
       rawCompany.company_name,
       rawCompany.tva,

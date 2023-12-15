@@ -33,6 +33,8 @@ export class AdminCompaniesComponent {
 
   ngOnInit(): void {
 
+    this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
+
     //load data, displayed data and listen for changes
     this.loadData();
 
@@ -64,7 +66,6 @@ export class AdminCompaniesComponent {
       this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
         this.isLoading = true;
         this.fetchedData = companiesData;
-        this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
 
         this.isLoading = false;

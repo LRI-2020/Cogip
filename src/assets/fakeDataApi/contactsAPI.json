@@ -1,0 +1,176 @@
+﻿{
+  "message": "List of all contacts",
+  "content-type": "application/json",
+  "code": 200,
+  "status": "success",
+  "data": [
+    {
+      "id": 22,
+      "name": "Ahmed Khan",
+      "email": "ahmed.khan@email.com",
+      "phone": "+91 80 1234 5678",
+      "contact_creation": "2023-02-13 00:00:00",
+      "company_name": "Digital Creations"
+    },
+    {
+      "id": 26,
+      "name": "Alexei Petrov",
+      "email": "alexei.petrov@email.com",
+      "phone": "+7 495 123 4567",
+      "contact_creation": "2023-02-17 00:00:00",
+      "company_name": "Brasil Innovate"
+    },
+    {
+      "id": 13,
+      "name": "Alice Williams",
+      "email": "alice.williams@email.com",
+      "phone": "+49 30 9876 5432",
+      "contact_creation": "2023-02-04 00:00:00",
+      "company_name": "Global Innovators"
+    },
+    {
+      "id": 18,
+      "name": "Anna Karlsson",
+      "email": "anna.karlsson@email.com",
+      "phone": "+46 8 7654 3210",
+      "contact_creation": "2023-02-09 00:00:00",
+      "company_name": "Eco Solutions"
+    },
+    {
+      "id": 12,
+      "name": "Bob Johnson",
+      "email": "bob.johnson@email.com",
+      "phone": "+1 (987) 654-3210",
+      "contact_creation": "2023-02-03 00:00:00",
+      "company_name": "Tech Solutions"
+    },
+    {
+      "id": 16,
+      "name": "Carlos Silva",
+      "email": "carlos.silva@email.com",
+      "phone": "+55 11 98765 4321",
+      "contact_creation": "2023-02-07 00:00:00",
+      "company_name": "Innovate Co."
+    },
+    {
+      "id": 14,
+      "name": "Charlie Brown",
+      "email": "charlie.brown@email.com",
+      "phone": "+33 1 2345 6789",
+      "contact_creation": "2023-02-05 00:00:00",
+      "company_name": "EuroTech"
+    },
+    {
+      "id": 28,
+      "name": "Daniel Oliveira",
+      "email": "daniel.oliveira@email.com",
+      "phone": "+55 31 98765 4321",
+      "contact_creation": "2023-02-19 00:00:00",
+      "company_name": "ScandiTech Solutions"
+    },
+    {
+      "id": 15,
+      "name": "Eva Lee",
+      "email": "eva.lee@email.com",
+      "phone": "+61 2 3456 7890",
+      "contact_creation": "2023-02-06 00:00:00",
+      "company_name": "ABC International"
+    },
+    {
+      "id": 11,
+      "name": "Jane Smith",
+      "email": "jane.smith@email.com",
+      "phone": "+44 20 1234 5678",
+      "contact_creation": "2023-02-02 00:00:00",
+      "company_name": "XYZ Ltd"
+    },
+    {
+      "id": 24,
+      "name": "Javier Rodriguez",
+      "email": "javier.rodriguez@email.com",
+      "phone": "+34 91 234 5678",
+      "contact_creation": "2023-02-15 00:00:00",
+      "company_name": "InnoTech France"
+    },
+    {
+      "id": 10,
+      "name": "John Doe",
+      "email": "john.doe@email.com",
+      "phone": "+1 (123) 456-7890",
+      "contact_creation": "2023-02-01 00:00:00",
+      "company_name": "ABC Corporation"
+    },
+    {
+      "id": 30,
+      "name": "Lili Potter",
+      "email": "john.doe@email.com",
+      "phone": "+1 (123) 456-7890",
+      "contact_creation": "2023-02-01 00:00:00",
+      "company_name": "ABC Corporation"
+    },
+    {
+      "id": 25,
+      "name": "Lily Chen",
+      "email": "lily.chen@email.com",
+      "phone": "+86 10 8765 4321",
+      "contact_creation": "2023-02-16 00:00:00",
+      "company_name": "Aussie Innovations"
+    },
+    {
+      "id": 23,
+      "name": "Maria Santos",
+      "email": "maria.santos@email.com",
+      "phone": "+55 21 98765 4321",
+      "contact_creation": "2023-02-14 00:00:00",
+      "company_name": "EuroTech Solutions"
+    },
+    {
+      "id": 20,
+      "name": "Michael Chang",
+      "email": "michael.chang@email.com",
+      "phone": "+1 (408) 555-1234",
+      "contact_creation": "2023-02-11 00:00:00",
+      "company_name": "TechHub Solutions"
+    },
+    {
+      "id": 17,
+      "name": "Raj Patel",
+      "email": "raj.patel@email.com",
+      "phone": "+91 22 1234 5678",
+      "contact_creation": "2023-02-08 00:00:00",
+      "company_name": "Tech Ventures"
+    },
+    {
+      "id": 19,
+      "name": "Samantha Tan",
+      "email": "samantha.tan@email.com",
+      "phone": "+65 9123 4567",
+      "contact_creation": "2023-02-10 00:00:00",
+      "company_name": "Global Reach"
+    },
+    {
+      "id": 27,
+      "name": "Sophia Kim",
+      "email": "sophia.kim@email.com",
+      "phone": "+82 2 3456 7890",
+      "contact_creation": "2023-02-18 00:00:00",
+      "company_name": "TechSphere Ventures"
+    },
+    {
+      "id": 21,
+      "name": "Sophie Dupont",
+      "email": "sophie.dupont@email.com",
+      "phone": "+33 1 9876 5432",
+      "contact_creation": "2023-02-12 00:00:00",
+      "company_name": "Global Innovate Co."
+    },
+    {
+      "id": 31,
+      "name": "Test",
+      "email": "test@email.com",
+      "phone": "+1 (123) 456-7890",
+      "contact_creation": "2023-12-14 14:53:56",
+      "company_name": "ABC Corporation"
+    }
+  ]
+}

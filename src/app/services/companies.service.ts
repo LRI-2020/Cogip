@@ -4,6 +4,7 @@ import {Company, CompanyConverter,CompanyRawModel} from "../models/company.model
 import {map} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
+import {Invoice, InvoiceConverter, RawInvoice} from "../models/invoice.model";
 
 
 @Injectable()
@@ -15,22 +16,28 @@ export class CompaniesService {
 
   fetchCompanies() {
 
-    return this.http.get<{ message:string,'content-type':string,status:string,code:number,data:any[]}>( this.apiUrl+'companies').pipe(map(companiesResponse => {
-      let companies:Company[]=[];
-      let converter:CompanyConverter = new CompanyConverter();
-      companiesResponse.data.forEach(d => {
-        companies.push(converter.rawToCompany(d as CompanyRawModel));
-      })
-      console.log(JSON.stringify(companies));
+    return this.http.get<any>( this.apiUrl+'companies').pipe(map(responseData => {
+      let companies:Company[] = [];
+      if (responseData.data) {
+        responseData.data.forEach((d: any) => {
+          let company = CompanyConverter.rawToCompany(d as CompanyRawModel);
+          if (company) {
+            companies.push(company);
+          }
+        })
+      }
       return companies;
     }));
   }
 
   getCompanytById(id: number) {
 
-    return this.http.get<{ message:string,'content-type':string,status:string,code:number,data:CompanyRawModel}>(this.apiUrl+'companies/'+id.toString()).pipe(map(companyResponse => {
-      let converter:CompanyConverter = new CompanyConverter();
-      return converter.rawToCompany(companyResponse.data);
+    return this.http.get<any>(this.apiUrl + 'companies/' + id.toString()).pipe(map(responseData => {
+      if (responseData.data) {
+        return CompanyConverter.rawToCompany(responseData.data as CompanyRawModel);
+      }
+      throw new Error('no company found with id ' + id);
+
     }));
   }
 

@@ -12,7 +12,7 @@ import {Subscription} from "rxjs";
 export class ContactDetailsComponent implements OnInit, OnDestroy {
 
   contact: Contact | undefined;
-  isLoading = false;
+  isLoading = true;
   subscriptionsList: Subscription[] = [];
 
   constructor(private route: ActivatedRoute, private contactsService: ContactsService) {
@@ -40,7 +40,6 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
     this.subscriptionsList.push(this.contactsService.getContactById(id).subscribe(contactData => {
       this.isLoading = true;
       this.contact = contactData;
-      this.isLoading = false;
       this.isLoading = false;
     }));
   }
