@@ -34,23 +34,25 @@
           </div>
         </div>
 
-        <div class="row itemsData justify-content-start"
-             *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/companies/{{company.id}}">
+        <div *ngIf="!inError">
+          <div class="row itemsData justify-content-start"
+               *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/companies/{{company.id}}">
 
-          <div class="col-2 overflow-hidden">
-            <p class="data my-2">{{company.name}}</p>
-          </div>
-          <div class="col-2">
-            <p class="data my-2">{{company.tva}}</p>
-          </div>
-          <div class="col-3 overflow-hidden">
-            <p class="data my-2">{{company.country}}</p>
-          </div>
-          <div class="col-2 overflow-hidden">
-            <p class="data my-2">{{company.type}}</p>
-          </div>
-          <div class="col-2">
-            <p class="data my-2">{{company.createdAt | date:'longDate'}}</p>
+            <div class="col-2 overflow-hidden">
+              <p class="data my-2">{{company.name}}</p>
+            </div>
+            <div class="col-2">
+              <p class="data my-2">{{company.tva}}</p>
+            </div>
+            <div class="col-3 overflow-hidden">
+              <p class="data my-2">{{company.country}}</p>
+            </div>
+            <div class="col-2 overflow-hidden">
+              <p class="data my-2">{{company.type}}</p>
+            </div>
+            <div class="col-2">
+              <p class="data my-2">{{company.createdAt | date:'longDate'}}</p>
+            </div>
           </div>
         </div>
       </div>

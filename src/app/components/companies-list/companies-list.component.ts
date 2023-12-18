@@ -27,6 +27,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   fetchedData: Company[] = [];
   dataToDisplay: Company[] = [];
   onlyLastItems = false;
+  inError=false;
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
@@ -64,20 +65,23 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
+    this.isLoading = true;
+
     this.subscriptionsList.push(
       this.companiesService.fetchCompanies().subscribe({
         next:(companiesData)=>{
-          this.isLoading = true;
+          this.inError=false;
           this.fetchedData = companiesData;
           this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
           this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
           this.isLoading = false;
         },
         error:(error)=>{
+          this.inError=true;
           this.notificationService.notify({
             title: 'Oh Oh 😕',
             type: NotificationType.error,
-            message: error.message,
+            message: "The companies could not be loaded.",
           });
           this.isLoading=false;
         }
