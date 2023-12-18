@@ -35,22 +35,24 @@
           </div>
         </div>
 
-        <div class="row itemsData justify-content-start"
-             *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/contacts/{{contact.id}}">
-          <div class="col-2 overflow-hidden">
-            <p class="data my-2">{{contact.name}}</p>
-          </div>
-          <div class="col-2">
-            <p class="data my-2">{{contact.phone}}</p>
-          </div>
-          <div class="col-3 overflow-hidden">
-            <p class="data my-2">{{contact.email}}</p>
-          </div>
-          <div class="col-2 overflow-hidden">
-            <p class="data my-2">{{contact.company}}</p>
-          </div>
-          <div class="col-2">
-            <p class="data my-2">{{contact.createdAt |date:'longDate'}}</p>
+        <div *ngIf="!inError">
+          <div class="row itemsData justify-content-start"
+               *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/contacts/{{contact.id}}">
+            <div class="col-2 overflow-hidden">
+              <p class="data my-2">{{contact.name}}</p>
+            </div>
+            <div class="col-2">
+              <p class="data my-2">{{contact.phone}}</p>
+            </div>
+            <div class="col-3 overflow-hidden">
+              <p class="data my-2">{{contact.email}}</p>
+            </div>
+            <div class="col-2 overflow-hidden">
+              <p class="data my-2">{{contact.company}}</p>
+            </div>
+            <div class="col-2">
+              <p class="data my-2">{{contact.createdAt |date:'longDate'}}</p>
+            </div>
           </div>
         </div>
       </div>

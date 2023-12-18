@@ -4,6 +4,8 @@ import {ContactsService} from "../../services/contacts.service";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../shared/helpers";
+import {NotificationsService} from "../../services/notifications.service";
+import {NotificationType} from "../../models/notification.model";
 
 
 @Injectable()
@@ -23,7 +25,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   isLoading = true;
-  inError=false;
+  inError = false;
   fetchedData: Contact[] = [];
   dataToDisplay: Contact[] = [];
 
@@ -31,16 +33,18 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   constructor(private contactsService: ContactsService,
               private route: ActivatedRoute,
-              private helpers: Helpers) {
+              private helpers: Helpers,
+              private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
 
+    this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load data, displayed data and listen for changes
     this.loadData();
 
-//Listen url for pagination pipe
+    //Listen url for pagination pipe
     if (this.pagination) {
       this.subscriptionsList.push(
         this.route.queryParams.subscribe(params => {
@@ -64,21 +68,27 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.subscriptionsList.push(this.contactsService.fetchContacts().subscribe(contactsData => {
-      this.isLoading = true;
+    this.isLoading = true;
 
-      this.fetchedData = contactsData;
-      this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
-      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
+    this.subscriptionsList.push(this.contactsService.fetchContacts().subscribe({
+      next : contactsData => {
 
-      this.isLoading = false;
-    },
+        this.fetchedData = contactsData;
+        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
+        this.inError = false;
+        this.isLoading = false;
+      },
 
-      error => {
-        console.log(error);
+      error : error => {
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The contacts could not be loaded.",
+        });
+        this.inError = true;
         this.isLoading = false;
 
-      }));
+      }}));
   }
 
 }
