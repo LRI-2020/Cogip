@@ -21,7 +21,7 @@ export class EditInvoiceComponent implements OnInit {
   subscriptionsList: Subscription[] = [];
 
   invoiceForm: FormGroup = new FormGroup({
-    "id": new FormControl('', Validators.required),
+    "id": new FormControl(''),
     "invoiceNumber": new FormControl('', Validators.required),
     "invoiceCompany": new FormControl('', Validators.required),
     "invoiceDueDate": new FormControl('', Validators.required),
@@ -58,10 +58,15 @@ export class EditInvoiceComponent implements OnInit {
   }
 
   onSave() {
-    if (this.editMode) {
-      this.updateInvoice()
-    } else {
-      this.createInvoice()
+    if(this.invoiceForm.valid){
+      if (this.editMode) {
+        this.updateInvoice()
+      } else {
+        this.createInvoice()
+      }
+    }
+    else{
+      this.invoiceForm.markAllAsTouched();
     }
   }
 
