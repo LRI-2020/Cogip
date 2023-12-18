@@ -14,10 +14,10 @@ export class InvoicesService {
 
   fetchInvoices() {
 
-    return this.http.get<any>(this.apiUrl + 'invoices').pipe(map(responseData => {
+    return this.http.get<any>(this.apiUrl + 'invoices',{observe:"response"}).pipe(map(responseData => {
       let invoices: Invoice[] = [];
-      if (responseData.data) {
-        responseData.data.forEach((d: any) => {
+      if (responseData.body.data) {
+        responseData.body.data.forEach((d: any) => {
           let invoice = InvoiceConverter.toInvoice(d as RawInvoice);
           if (invoice) {
             invoices.push(invoice);
@@ -29,12 +29,12 @@ export class InvoicesService {
   }
 
   getInvoiceBy(id: number) {
-    return this.http.get<any>(this.apiUrl + 'invoices/' + id.toString()).pipe(map(responseData => {
-      if (responseData.data && responseData.data[0]) {
-        return InvoiceConverter.toInvoice(responseData.data[0] as RawInvoice);
+    return this.http.get<any>(this.apiUrl + 'invoices/' + id.toString(),{observe:"response"})
+      .pipe(map(responseData => {
+      if (responseData.body.data && responseData.body.data[0]) {
+        return InvoiceConverter.toInvoice(responseData.body.data[0] as RawInvoice);
       }
       throw new Error('no invoice found with id ' + id);
-
     }));
   }
 

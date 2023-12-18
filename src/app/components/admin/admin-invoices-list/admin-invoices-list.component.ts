@@ -97,7 +97,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
               type: NotificationType.success,
               message: "The invoice has been deleted",
             });
-            this.router.navigate(['/invoices']);
+            this.router.navigate(['/admin/invoices']);
           }
         },
         error: error => {

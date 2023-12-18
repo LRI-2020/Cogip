@@ -7,6 +7,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
 import {DatePipe} from "@angular/common";
 import {datesEquals} from "../../../shared/helpers";
+import {NotificationType} from "../../../models/notification.model";
+import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
   selector: 'app-edit-invoice',
@@ -32,7 +34,8 @@ export class EditInvoiceComponent implements OnInit {
               private invoicesService: InvoicesService,
               private navigationService: NavigationService,
               private datepipe: DatePipe,
-              private router: Router) {
+              private router: Router,
+              private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -49,12 +52,20 @@ export class EditInvoiceComponent implements OnInit {
 
   private fullFillForm(id: number) {
     this.isLoading = true;
-    this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe(invoiceData => {
-      this.originalInvoice = invoiceData;
-      if (this.originalInvoice) {
+    this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe({
+      next: invoiceData => {
+        this.originalInvoice = invoiceData;
         this.setFormValue(this.originalInvoice);
+        this.isLoading = false;
+      },
+      error: error => {
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice could not be loaded",
+        });
+        this.router.navigate(['/admin/invoices']);
       }
-      this.isLoading = false;
     }));
   }
 
@@ -106,13 +117,26 @@ export class EditInvoiceComponent implements OnInit {
           next: (response) => {
             if (response.ok && this.originalInvoice) {
               this.fullFillForm(this.originalInvoice.id);
+              this.notificationsService.notify({
+                title: 'Success',
+                type: NotificationType.success,
+                message: "The invoice has been updated",
+              });
             }
           },
           error: (error) => {
-            error.message;
+            this.notificationsService.notify({
+              title: 'Oh Oh 😕',
+              type: NotificationType.error,
+              message: "The invoice could not be updated",
+            });
+            if (this.originalInvoice) {
+              this.fullFillForm(this.originalInvoice.id);
+            } else {
+              this.router.navigate(['/admin/invoices']);
+            }
           }
         })
-
       } catch (e) {
         if (e instanceof Error) {
           console.log(e.message);
@@ -136,7 +160,7 @@ export class EditInvoiceComponent implements OnInit {
           }
         },
         error: (error) => {
-          //TODO what to do when error? displaying errors component?
+          //TODO notifications here
           console.log(error);
         }
       })
