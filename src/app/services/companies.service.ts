@@ -4,7 +4,6 @@ import {Company, CompanyConverter,CompanyRawModel} from "../models/company.model
 import {map} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
-import {Invoice, InvoiceConverter, RawInvoice} from "../models/invoice.model";
 
 
 @Injectable()

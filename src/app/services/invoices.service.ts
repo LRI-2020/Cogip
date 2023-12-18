@@ -1,8 +1,7 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Invoice, InvoiceConverter, RawInvoice} from "../models/invoice.model";
 import {Injectable} from "@angular/core";
-import {map, Subject} from "rxjs";
-import {Contact, ContactConverter, RawContact} from "../models/contact.model";
+import {map} from "rxjs";
 import {CompaniesService} from "./companies.service";
 import {dateToCorrectFormat} from "../shared/helpers";
 
