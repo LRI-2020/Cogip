@@ -23,6 +23,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   isLoading = true;
+  inError=false;
   fetchedData: Contact[] = [];
   dataToDisplay: Contact[] = [];
 
