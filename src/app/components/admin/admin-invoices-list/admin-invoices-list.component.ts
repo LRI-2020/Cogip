@@ -4,6 +4,8 @@ import {Subscription} from "rxjs";
 import {InvoicesService} from "../../../services/invoices.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
+import {NotificationsService} from "../../../services/notifications.service";
+import {NotificationType} from "../../../models/notification.model";
 
 @Component({
   selector: 'app-admin-list-invoices',
@@ -22,13 +24,15 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
 
   subscriptionsList: Subscription[] = [];
   isLoading = true;
+  inError = false;
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   constructor(private invoicesService: InvoicesService,
               private route: ActivatedRoute,
               private helpers: Helpers,
-              private router:Router) {
+              private router: Router,
+              private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -64,19 +68,62 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   private loadData() {
     this.isLoading = true;
     this.subscriptionsList.push(
-      this.invoicesService.fetchInvoices().subscribe(invoicesData => {
+      this.invoicesService.fetchInvoices().subscribe({
+        next:invoicesData => {
           this.fetchedData = invoicesData;
           this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
           this.isLoading = false;
+          this.inError=false;
         },
-        error => {
-          console.log(error);
+        error:error => {
+          this.inError=true;
+          this.notificationsService.notify({
+            title: 'Oh Oh 😕',
+            type: NotificationType.error,
+            message: "The invoices could not be loaded",
+          });
           this.isLoading = false;
 
-        }));
+        }}));
   }
 
   onDelete(id: number) {
+    try {
+      this.invoicesService.deleteInvoice(id).subscribe({
+        next: response => {
+          if (response.ok) {
+            this.notificationsService.notify({
+              title: 'Success',
+              type: NotificationType.success,
+              message: "The invoice has been deleted",
+            });
+            this.router.navigate(['/invoices']);
+          }
+        },
+        error: error => {
+          this.notificationsService.notify({
+            title: 'Oh Oh 😕',
+            type: NotificationType.error,
+            message: "The invoice has not been deleted",
+          });
+        }
+      });
+    } catch (e) {
+      if (e instanceof Error){
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice has not been deleted : " + e.message,
+        });
+      }
 
+      else {
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice has not been deleted",
+        });
+      }
+    }
   }
 }
