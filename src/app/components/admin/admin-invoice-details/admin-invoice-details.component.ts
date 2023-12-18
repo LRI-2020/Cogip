@@ -5,6 +5,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ContactsService} from "../../../services/contacts.service";
 import {InvoicesService} from "../../../services/invoices.service";
 import {Invoice} from "../../../models/invoice.model";
+import {NotificationsService} from "../../../services/notifications.service";
+import {NotificationType} from "../../../models/notification.model";
 
 @Component({
   selector: 'app-admin-invoice-details',
@@ -13,11 +15,12 @@ import {Invoice} from "../../../models/invoice.model";
 })
 export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
 
-  invoice:Invoice | undefined;
+  invoice: Invoice | undefined;
   isLoading = true;
   subscriptionsList: Subscription[] = [];
+  inError = false;
 
-  constructor(private route: ActivatedRoute, private invoicesService: InvoicesService, private router:Router) {
+  constructor(private route: ActivatedRoute, private invoicesService: InvoicesService, private router: Router, private notificationsService: NotificationsService) {
 
   }
 
@@ -37,35 +40,62 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadData(id: number) {
-    this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe(invoicesData => {
-      this.isLoading = true;
-      this.invoice = invoicesData;
-      this.isLoading = false;
-    },
-      error =>{
-      console.log(error);
-      this.isLoading=false;
-      }));
+    this.isLoading = true;
+    this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe({
+      next: invoicesData => {
+        this.invoice = invoicesData;
+        this.inError = false;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.inError = true;
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice details could not be loaded",
+        });
+        this.isLoading = false;
+      }
+    }));
   }
 
 
   onDelete(id: number) {
     try {
-      this.invoicesService.deleteInvoice(id).subscribe(
-        response => {
-          if(response.ok){
+      this.invoicesService.deleteInvoice(id).subscribe({
+        next: response => {
+          if (response.ok) {
+            this.notificationsService.notify({
+              title: 'Success',
+              type: NotificationType.success,
+              message: "The invoice has been deleted",
+            });
             this.router.navigate(['/invoices']);
           }
-          console.log(JSON.stringify(response))
         },
-        error => {
-          console.log(error.message)
-        });
+        error: error => {
+          this.notificationsService.notify({
+            title: 'Oh Oh 😕',
+            type: NotificationType.error,
+            message: "The invoice has not been deleted",
+          });
+        }
+      });
     } catch (e) {
-      if (e instanceof Error)
-        console.log('invoice has not been delete : ' + e.message)
+      if (e instanceof Error){
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice has not been deleted : " + e.message,
+        });
+      }
+
       else {
-        console.log('error - invoice has not been deleted')
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice has not been deleted",
+        });
       }
     }
   }
