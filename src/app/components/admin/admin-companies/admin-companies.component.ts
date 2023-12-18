@@ -4,6 +4,8 @@ import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
 import {Company} from "../../../models/company.model";
 import {Subscription} from "rxjs";
+import {NotificationsService} from "../../../services/notifications.service";
+import {NotificationType} from "../../../models/notification.model";
 
 @Component({
   selector: 'app-admin-companies',
@@ -14,7 +16,8 @@ export class AdminCompaniesComponent {
 
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
-              private helpers: Helpers) {
+              private helpers: Helpers,
+              private notificationsService:NotificationsService) {
   }
 
   @Input() lastItemsParams = {count: -1, prop: ''};
@@ -28,6 +31,7 @@ export class AdminCompaniesComponent {
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   isLoading = true;
+  inError = false;
 
   subscriptionsList: Subscription[] = [];
 
@@ -47,7 +51,6 @@ export class AdminCompaniesComponent {
           }
         }));
     }
-
   }
 
   ngOnDestroy(): void {
@@ -62,24 +65,25 @@ export class AdminCompaniesComponent {
   }
 
   loadData() {
+    this.isLoading = true;
     this.subscriptionsList.push(
-      this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
-        this.isLoading = true;
-        this.fetchedData = companiesData;
-        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
-
-        this.isLoading = false;
-
-      },
-
-        error => {
-          console.log(error);
+      this.companiesService.fetchCompanies().subscribe({
+        next:(companiesData)=>{
+          this.inError = false;
+          this.fetchedData = companiesData;
+          this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
           this.isLoading = false;
-
-        }));
+        },
+        error:(error)=>{
+          this.inError = true;
+          this.isLoading = false;
+          this.notificationsService.notify({
+            title: 'Oh Oh 😕',
+            type: NotificationType.error,
+            message: "The companies could not be loaded",
+          });
+        }
+      }));
   }
 
-  onNewCompany() {
-
-  }
 }

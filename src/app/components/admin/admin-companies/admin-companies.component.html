@@ -16,59 +16,61 @@
   </div>
 </ng-template>
 
-
-<div class="component-data" *ngIf="!isLoading; else loading">
-  <div class="row">
-    <div class="col admin-new d-flex justify-content-end">
-      <button class="btn newBtn fw-bold mt-3 me-3" type="button" (click)="onNewCompany()">New Company</button>
-    </div>
-  </div>
-  <div class="row adminItemsList ps-2">
-    <div class="col-12">
-      <div class="row adminTitleRow justify-content-start">
-        <div class="col-2">
-          <p class="title my-2">Name</p>
-        </div>
-        <div class="col-2">
-          <p class="title my-2">TVA</p>
-        </div>
-        <div class="col-3">
-          <p class="title my-2">Country</p>
-        </div>
-        <div class="col-2">
-          <p class="title my-2">Type</p>
-        </div>
-        <div class="col-2">
-          <p class="title my-2">Created At</p>
-        </div>
+<div *ngIf="!inError">
+  <div class="component-data" *ngIf="!isLoading; else loading">
+    <div class="row">
+      <div class="col admin-new d-flex justify-content-end">
+        <button class="btn newBtn fw-bold mt-3 me-3" type="button">New Company</button>
       </div>
+    </div>
+    <div class="row adminItemsList ps-2">
+      <div class="col-12">
+        <div class="row adminTitleRow justify-content-start">
+          <div class="col-2">
+            <p class="title my-2">Name</p>
+          </div>
+          <div class="col-2">
+            <p class="title my-2">TVA</p>
+          </div>
+          <div class="col-3">
+            <p class="title my-2">Country</p>
+          </div>
+          <div class="col-2">
+            <p class="title my-2">Type</p>
+          </div>
+          <div class="col-2">
+            <p class="title my-2">Created At</p>
+          </div>
+        </div>
 
-      <div class="row adminItemsData justify-content-start"
-           *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
+        <div class="row adminItemsData justify-content-start"
+             *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
            :dataToDisplay)" routerLink="/admin/companies/{{company.id}}">
 
-        <div class="col-2 overflow-hidden">
-          <p class="data my-2">{{company.name}}</p>
-        </div>
-        <div class="col-2">
-          <p class="data my-2">{{company.tva}}</p>
-        </div>
-        <div class="col-3 overflow-hidden">
-          <p class="data my-2">{{company.country}}</p>
-        </div>
-        <div class="col-2 overflow-hidden">
-          <p class="data my-2">{{company.type}}</p>
-        </div>
-        <div class="col-2">
-          <p class="data my-2">{{company.createdAt | date:'longDate'}}</p>
+          <div class="col-2 overflow-hidden">
+            <p class="data my-2">{{company.name}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{company.tva}}</p>
+          </div>
+          <div class="col-3 overflow-hidden">
+            <p class="data my-2">{{company.country}}</p>
+          </div>
+          <div class="col-2 overflow-hidden">
+            <p class="data my-2">{{company.type}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{company.createdAt | date:'longDate'}}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row my-2" *ngIf="pagination">
-    <div class="col-12 d-flex justify-content-center">
-      <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
+    <div class="row my-2" *ngIf="pagination">
+      <div class="col-12 d-flex justify-content-center">
+        <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
+      </div>
     </div>
   </div>
 </div>
+
 
