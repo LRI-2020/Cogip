@@ -1,0 +1,10 @@
+<div
+  *ngIf="showNotification"
+  class="notification"
+  [class]="incomingNotification.type"
+>
+  <h3 class="notification-title">
+    {{ incomingNotification.title }}
+  </h3>
+  <p class="notification-paragraph">{{ incomingNotification.message }}</p>
+</div>

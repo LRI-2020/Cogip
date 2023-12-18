@@ -4,6 +4,8 @@ import {Company} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Contact} from "../../models/contact.model";
 import {Subscriber, Subscription} from "rxjs";
+import {NotificationType} from "../../models/notification.model";
+import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
   selector: 'app-company-details',
@@ -16,9 +18,10 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
 
   isLoadingCompany = true;
   isLoadingContacts = true;
+  inError=false;
   subscriptionsList: Subscription[] = []
 
-  constructor(private route: ActivatedRoute, private companiesService: CompaniesService) {
+  constructor(private route: ActivatedRoute, private companiesService: CompaniesService, private notificationsService:NotificationsService) {
 
   }
 
@@ -33,17 +36,23 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadData(id: number) {
-    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe(companyData => {
+    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe({
+      next:(companyData)=>{
+        this.inError=false;
         this.isLoadingCompany = true;
         this.company = companyData;
         this.isLoadingCompany = false;
-
       },
-      error => {
-        console.log(error);
+      error:(error)=>{
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The company details could not be loaded",
+        });
+        this.inError=true;
         this.isLoadingCompany = false;
-
-      }));
+      }
+    }));
 
     this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe(contacts => {
         this.isLoadingContacts = true;

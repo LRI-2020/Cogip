@@ -1,0 +1,23 @@
+﻿.success{
+  border: 1px solid green;
+  background-color: lightgreen;
+  color:green;
+}
+
+.error{
+  border: 1px solid darkred;
+  background-color: lightcoral;
+  color:darkred;
+}
+
+.warning{
+  border: 1px solid orangered;
+  background-color: lightyellow;
+  color:orangered;
+}
+
+.notification{
+  position: absolute;
+  top:15%;
+  width:80%;
+}

@@ -4,6 +4,8 @@ import {CompaniesService} from "../../services/companies.service";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../shared/helpers";
+import {NotificationType} from "../../models/notification.model";
+import {NotificationsService} from "../../services/notifications.service";
 
 @Injectable()
 @Component({
@@ -15,7 +17,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
-              private helpers: Helpers) {
+              private helpers: Helpers, private notificationService:NotificationsService) {
   }
 
   @Input() lastItemsParams = {count: -1, prop: ''};
@@ -31,6 +33,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   isLoading = true;
 
   subscriptionsList: Subscription[] = [];
+
 
   ngOnInit(): void {
 
@@ -62,21 +65,24 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   loadData() {
     this.subscriptionsList.push(
-      this.companiesService.fetchCompanies().subscribe((companiesData: Company[]) => {
-        this.isLoading = true;
-        this.fetchedData = companiesData;
-        this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
-        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
-        this.isLoading = false;
-
-      },
-
-        error => {
-          console.log(error);
+      this.companiesService.fetchCompanies().subscribe({
+        next:(companiesData)=>{
+          this.isLoading = true;
+          this.fetchedData = companiesData;
+          this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
+          this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
           this.isLoading = false;
-
+        },
+        error:(error)=>{
+          this.notificationService.notify({
+            title: 'Oh Oh 😕',
+            type: NotificationType.error,
+            message: error.message,
+          });
+          this.isLoading=false;
         }
-        ));
+      }));
+
   }
 
 }

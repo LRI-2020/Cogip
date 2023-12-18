@@ -37,6 +37,7 @@ import { AdminInvoiceDetailsComponent } from './components/admin/admin-invoice-d
 import { EditInvoiceComponent } from './components/admin/edit-invoice/edit-invoice.component';
 import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
 import {DatePipe} from "@angular/common";
+import { NotificationsComponent } from './components/notifications/notifications.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,7 +68,8 @@ import {DatePipe} from "@angular/common";
     AdminCompanyDetailsComponent,
     AdminInvoiceDetailsComponent,
     EditInvoiceComponent,
-    AdminInvoicesComponent
+    AdminInvoicesComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,
