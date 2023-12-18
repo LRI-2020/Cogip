@@ -5,7 +5,6 @@ import {InvoicesService} from "../../../services/invoices.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
 import {NotificationsService} from "../../../services/notifications.service";
-import {NotificationType} from "../../../models/notification.model";
 
 @Component({
   selector: 'app-admin-list-invoices',
@@ -75,13 +74,9 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.inError=false;
         },
-        error:error => {
+        error:() => {
           this.inError=true;
-          this.notificationsService.notify({
-            title: 'Oh Oh 😕',
-            type: NotificationType.error,
-            message: "The invoices could not be loaded",
-          });
+          this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
           this.isLoading = false;
 
         }}));
@@ -92,37 +87,21 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
       this.invoicesService.deleteInvoice(id).subscribe({
         next: response => {
           if (response.ok) {
-            this.notificationsService.notify({
-              title: 'Success',
-              type: NotificationType.success,
-              message: "The invoice has been deleted",
-            });
+            this.notificationsService.success('Success', "The invoice has been deleted");
             this.router.navigate(['/admin/invoices']);
           }
         },
-        error: error => {
-          this.notificationsService.notify({
-            title: 'Oh Oh 😕',
-            type: NotificationType.error,
-            message: "The invoice has not been deleted",
-          });
+        error: () => {
+          this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted");
         }
       });
     } catch (e) {
       if (e instanceof Error){
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The invoice has not been deleted : " + e.message,
-        });
+        this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted : "+e.message);
       }
 
       else {
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The invoice has not been deleted",
-        });
+        this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted");
       }
     }
   }

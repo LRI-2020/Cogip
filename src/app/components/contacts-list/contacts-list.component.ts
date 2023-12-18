@@ -2,10 +2,9 @@ import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../models/contact.model";
 import {ContactsService} from "../../services/contacts.service";
 import {Subscription} from "rxjs";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../shared/helpers";
 import {NotificationsService} from "../../services/notifications.service";
-import {NotificationType} from "../../models/notification.model";
 
 
 @Injectable()
@@ -79,12 +78,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
 
-      error : error => {
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The contacts could not be loaded.",
-        });
+      error : () => {
+        this.notificationsService.error('Oh Oh 😕', "The contacts could not be loaded");
+
         this.inError = true;
         this.isLoading = false;
 

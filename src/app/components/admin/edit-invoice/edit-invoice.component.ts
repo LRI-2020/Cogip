@@ -7,7 +7,6 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
 import {DatePipe} from "@angular/common";
 import {datesEquals} from "../../../shared/helpers";
-import {NotificationType} from "../../../models/notification.model";
 import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
@@ -58,12 +57,8 @@ export class EditInvoiceComponent implements OnInit {
         this.setFormValue(this.originalInvoice);
         this.isLoading = false;
       },
-      error: error => {
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The invoice could not be loaded",
-        });
+      error: () => {
+        this.notificationsService.error('Oh Oh 😕', "The invoice could not be loaded");
         this.router.navigate(['/admin/invoices']);
       }
     }));
@@ -117,19 +112,11 @@ export class EditInvoiceComponent implements OnInit {
           next: (response) => {
             if (response.ok && this.originalInvoice) {
               this.fullFillForm(this.originalInvoice.id);
-              this.notificationsService.notify({
-                title: 'Success',
-                type: NotificationType.success,
-                message: "The invoice has been updated",
-              });
+              this.notificationsService.success('Success', "The invoice has been updated");
             }
           },
-          error: (error) => {
-            this.notificationsService.notify({
-              title: 'Oh Oh 😕',
-              type: NotificationType.error,
-              message: "The invoice could not be updated",
-            });
+          error: () => {
+            this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated");
             if (this.originalInvoice) {
               this.fullFillForm(this.originalInvoice.id);
             } else {
@@ -139,11 +126,11 @@ export class EditInvoiceComponent implements OnInit {
         })
       } catch (e) {
         if (e instanceof Error) {
-          console.log(e.message);
+          this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated : "+e.message);
         }
       }
     } else {
-      console.log('Error - Invoice has not been updated');
+      this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated");
     }
 
   }
@@ -156,35 +143,21 @@ export class EditInvoiceComponent implements OnInit {
         new Date(this.invoiceForm.get('invoiceDueDate')?.value)).subscribe({
         next: (response) => {
           if (response.ok) {
-            this.notificationsService.notify({
-              title: 'Success',
-              type: NotificationType.success,
-              message: "The invoice has been created",
-            });
+            this.notificationsService.success('Success', "The invoice has been created");
             this.router.navigate(['/invoices']);
           }
         },
-        error: (error) => {
-          this.notificationsService.notify({
-            title: 'Oh Oh 😕',
-            type: NotificationType.error,
-            message: "The invoice has not been created",
-          });
+        error: () => {
+          this.notificationsService.error('Oh Oh 😕', "The invoice has not been created");
         }
       })
     } catch (e) {
       if (e instanceof Error)
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The invoice has not been created : " + e.message,
-        });
+        this.notificationsService.error('Oh Oh 😕', "The invoice has not been created : "+e.message);
+
       else
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The invoice has not been created",
-        });    }
+        this.notificationsService.error('Oh Oh 😕', "The invoice has not been created");
+    }
   }
 
   private invoiceHasChanged() {

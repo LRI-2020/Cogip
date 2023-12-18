@@ -2,9 +2,8 @@ import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Company} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Subscription} from "rxjs";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../shared/helpers";
-import {NotificationType} from "../../models/notification.model";
 import {NotificationsService} from "../../services/notifications.service";
 
 @Injectable()
@@ -17,7 +16,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
-              private helpers: Helpers, private notificationService:NotificationsService) {
+              private helpers: Helpers, private notificationsService:NotificationsService) {
   }
 
   @Input() lastItemsParams = {count: -1, prop: ''};
@@ -76,13 +75,9 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
           this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
           this.isLoading = false;
         },
-        error:(error)=>{
+        error:()=>{
           this.inError=true;
-          this.notificationService.notify({
-            title: 'Oh Oh 😕',
-            type: NotificationType.error,
-            message: "The companies could not be loaded.",
-          });
+          this.notificationsService.error('Oh Oh 😕', "The companies could not be loaded");
           this.isLoading=false;
         }
       }));

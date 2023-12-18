@@ -4,7 +4,6 @@ import {Subscription} from "rxjs";
 import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
-import {NotificationType} from "../../../models/notification.model";
 import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
@@ -74,12 +73,9 @@ export class AdminContactsComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.inError = false;
       },
-      error: error => {
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The contacts could not be loaded",
-        });
+      error: () => {
+        this.notificationsService.error('Oh Oh 😕', "The contacts could not be loaded");
+
         this.isLoading = false;
         this.inError = true;
 

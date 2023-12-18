@@ -1,10 +1,9 @@
-<div
-  *ngIf="showNotification"
-  class="notification"
-  [class]="incomingNotification.type"
->
-  <h3 class="notification-title">
-    {{ incomingNotification.title }}
-  </h3>
-  <p class="notification-paragraph">{{ incomingNotification.message }}</p>
+<div class="row position-absolute end-0 w-25">
+  <div class=" col-8 my-1 notification"  *ngFor="let notif of notifications" [ngClass]="className(notif)">
+    <h3 class="notification-title">
+      {{ notif.title }}
+    </h3>
+    <p class="notification-paragraph">{{ notif.message }}</p>
+  </div>
+
 </div>

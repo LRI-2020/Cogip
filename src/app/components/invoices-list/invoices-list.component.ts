@@ -2,10 +2,9 @@ import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Invoice} from "../../models/invoice.model";
 import {InvoicesService} from "../../services/invoices.service";
 import {Subscription} from "rxjs";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../shared/helpers";
 import {NotificationsService} from "../../services/notifications.service";
-import {NotificationType} from "../../models/notification.model";
 
 @Component({
   selector: 'app-invoices-list',
@@ -76,12 +75,8 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
         this.inError=false;
       },
 
-        error:error => {
-          this.notificationsService.notify({
-            title: 'Oh Oh 😕',
-            type: NotificationType.error,
-            message: "The invoices could not be loaded.",
-          });
+        error:() => {
+          this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
           this.inError=true;
           this.isLoading = false;
 

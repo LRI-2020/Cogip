@@ -17,7 +17,7 @@ export class AdminCompaniesComponent {
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
               private helpers: Helpers,
-              private notificationsService:NotificationsService) {
+              private notificationsService: NotificationsService) {
   }
 
   @Input() lastItemsParams = {count: -1, prop: ''};
@@ -68,20 +68,17 @@ export class AdminCompaniesComponent {
     this.isLoading = true;
     this.subscriptionsList.push(
       this.companiesService.fetchCompanies().subscribe({
-        next:(companiesData)=>{
+        next: (companiesData) => {
           this.inError = false;
           this.fetchedData = companiesData;
           this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
           this.isLoading = false;
         },
-        error:(error)=>{
+        error: (error) => {
           this.inError = true;
           this.isLoading = false;
-          this.notificationsService.notify({
-            title: 'Oh Oh 😕',
-            type: NotificationType.error,
-            message: "The companies could not be loaded",
-          });
+          this.notificationsService.error('Oh Oh 😕', "The companies could not be loaded");
+
         }
       }));
   }

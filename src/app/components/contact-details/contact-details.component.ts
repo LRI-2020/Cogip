@@ -3,7 +3,6 @@ import {Contact} from "../../models/contact.model";
 import {ActivatedRoute} from "@angular/router";
 import {ContactsService} from "../../services/contacts.service";
 import {Subscription} from "rxjs";
-import {NotificationType} from "../../models/notification.model";
 import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
@@ -18,7 +17,7 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
   inError = false;
   subscriptionsList: Subscription[] = [];
 
-  constructor(private route: ActivatedRoute, private contactsService: ContactsService, private notificationsService:NotificationsService) {
+  constructor(private route: ActivatedRoute, private contactsService: ContactsService, private notificationsService: NotificationsService) {
 
   }
 
@@ -40,20 +39,18 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
   loadData(id: number) {
     this.isLoading = true;
 
-    this.subscriptionsList.push(this.contactsService.getContactById(id).subscribe(contactData => {
+    this.subscriptionsList.push(this.contactsService.getContactById(id).subscribe({
+      next: contactData => {
         this.contact = contactData;
         this.isLoading = false;
         this.inError = false;
       },
-      error => {
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The contact details could not be loaded.",
-        });
+      error: () => {
+        this.notificationsService.error('Oh Oh 😕', "The contact details could not be loaded");
         this.inError = true;
         this.isLoading = false;
-      }));
+      }
+    }));
   }
 
 

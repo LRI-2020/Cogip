@@ -4,7 +4,6 @@ import {Contact} from "../../../models/contact.model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
-import {NotificationType} from "../../../models/notification.model";
 import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
@@ -45,11 +44,7 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.companyError = true;
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The company details could not be loaded",
-        });
+        this.notificationsService.error('Oh Oh 😕', "The company details could not be loaded");
         this.isLoadingCompanyDetails = false;
       }
     }));
@@ -62,11 +57,7 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.contactsError = true;
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The contacts details could not be loaded",
-        });
+        this.notificationsService.error('Oh Oh 😕',"The contacts details could not be loaded");
         this.isLoadingContacts = false;
       }
     }));

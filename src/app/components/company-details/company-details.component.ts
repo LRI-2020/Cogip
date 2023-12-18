@@ -3,8 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Company} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Contact} from "../../models/contact.model";
-import {Subscriber, Subscription} from "rxjs";
-import {NotificationType} from "../../models/notification.model";
+import {Subscription} from "rxjs";
 import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
@@ -45,12 +44,8 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
         this.company = companyData;
         this.isLoadingCompany = false;
       },
-      error:(error)=>{
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The company details could not be loaded",
-        });
+      error:()=>{
+        this.notificationsService.error('Oh Oh 😕', "The company details could not be loaded");
         this.errorCompany=true;
         this.isLoadingCompany = false;
       }
@@ -63,12 +58,8 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
         this.errorContacts=false;
       },
 
-      error : error => {
-        this.notificationsService.notify({
-          title: 'Oh Oh 😕',
-          type: NotificationType.error,
-          message: "The contacts details could not be loaded",
-        });
+      error : () => {
+        this.notificationsService.error('Oh Oh 😕', "The contact details could not be loaded");
         this.errorContacts=true;
         this.isLoadingContacts = false;
 
