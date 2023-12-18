@@ -7,12 +7,15 @@
     </div>
   </div>
 </ng-template>
-<div class="row my-4"  *ngIf="isLoading">
-  <div class="col-12  justify-content-center text-center">
-    <span class="adminLoader"></span>
+<ng-template #loading>
+  <div class="row my-4">
+    <div class="col-12  justify-content-center text-center">
+      <span class="adminLoader"></span>
+    </div>
   </div>
-</div>
-<div class="component-data" *ngIf="!isLoading">
+</ng-template>
+
+<div class="component-data" *ngIf="!isLoading;else loading">
   <div class="row">
     <div class="col admin-new d-flex justify-content-end">
       <button class="btn newBtn fw-bold mt-3 me-3" type="button" (click)="onNewContact()">New Contact</button>
@@ -38,23 +41,25 @@
         </div>
       </div>
 
-      <div class="row adminItemsData justify-content-start"
-           *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
+      <div *ngIf="!inError">
+        <div class="row adminItemsData justify-content-start"
+             *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
            :dataToDisplay)" routerLink="/admin/contacts/{{contact.id}}">
-        <div class="col-2 overflow-hidden">
-          <p class="data my-2">{{contact.name}}</p>
-        </div>
-        <div class="col-2">
-          <p class="data my-2">{{contact.phone}}</p>
-        </div>
-        <div class="col-3 overflow-hidden">
-          <p class="data my-2">{{contact.email}}</p>
-        </div>
-        <div class="col-2 overflow-hidden">
-          <p class="data my-2">{{contact.company}}</p>
-        </div>
-        <div class="col-2">
-          <p class="data my-2">{{contact.createdAt |date:'longDate'}}</p>
+          <div class="col-2 overflow-hidden">
+            <p class="data my-2">{{contact.name}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{contact.phone}}</p>
+          </div>
+          <div class="col-3 overflow-hidden">
+            <p class="data my-2">{{contact.email}}</p>
+          </div>
+          <div class="col-2 overflow-hidden">
+            <p class="data my-2">{{contact.company}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{contact.createdAt |date:'longDate'}}</p>
+          </div>
         </div>
       </div>
 

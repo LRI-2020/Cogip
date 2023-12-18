@@ -4,13 +4,15 @@ import {Subscription} from "rxjs";
 import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
+import {NotificationType} from "../../../models/notification.model";
+import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
   selector: 'app-admin-contacts',
   templateUrl: './admin-contacts.component.html',
   styleUrl: './admin-contacts.component.scss'
 })
-export class AdminContactsComponent implements OnInit,OnDestroy{
+export class AdminContactsComponent implements OnInit, OnDestroy {
 
   @Input() dataFilter: { prop: string, value: any } = {prop: '', value: ''};
 
@@ -21,6 +23,7 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   isLoading = true;
+  inError = false;
   fetchedData: Contact[] = [];
   dataToDisplay: Contact[] = [];
 
@@ -28,7 +31,8 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
 
   constructor(private contactsService: ContactsService,
               private route: ActivatedRoute,
-              private helpers: Helpers) {
+              private helpers: Helpers,
+              private notificationsService:NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -62,18 +66,25 @@ export class AdminContactsComponent implements OnInit,OnDestroy{
   }
 
   loadData() {
-    this.subscriptionsList.push(this.contactsService.fetchContacts().subscribe(contactsData => {
-      this.isLoading = true;
-      this.fetchedData = contactsData;
-      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
-      this.isLoading = false;
-    },
-
-      error => {
-        console.log(error);
+    this.isLoading = true;
+    this.subscriptionsList.push(this.contactsService.fetchContacts().subscribe({
+      next: contactsData => {
+        this.fetchedData = contactsData;
+        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
         this.isLoading = false;
+        this.inError = false;
+      },
+      error: error => {
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The contacts could not be loaded",
+        });
+        this.isLoading = false;
+        this.inError = true;
 
-      }));
+      }
+    }));
   }
 
   onNewContact() {
