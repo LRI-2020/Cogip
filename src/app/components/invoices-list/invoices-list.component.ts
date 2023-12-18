@@ -4,6 +4,8 @@ import {InvoicesService} from "../../services/invoices.service";
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../shared/helpers";
+import {NotificationsService} from "../../services/notifications.service";
+import {NotificationType} from "../../models/notification.model";
 
 @Component({
   selector: 'app-invoices-list',
@@ -23,15 +25,17 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
 
   subscriptionsList:Subscription[]=[];
   isLoading=true;
-
+  inError=false;
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   constructor(private invoicesService: InvoicesService,
               private route: ActivatedRoute,
-              private helpers: Helpers) {
+              private helpers: Helpers,
+              private notificationsService:NotificationsService) {
   }
 
   ngOnInit(): void {
+    this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load Data
     this.loadData();
@@ -59,21 +63,28 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
+
   private loadData() {
+    this.isLoading=true;
+
     this.subscriptionsList.push(
-      this.invoicesService.fetchInvoices().subscribe(invoicesData => {
-        this.isLoading=true;
+      this.invoicesService.fetchInvoices().subscribe({
+        next : invoicesData => {
         this.fetchedData = invoicesData;
-        this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
         this.isLoading=false;
-
+        this.inError=false;
       },
 
-        error => {
-          console.log(error);
+        error:error => {
+          this.notificationsService.notify({
+            title: 'Oh Oh 😕',
+            type: NotificationType.error,
+            message: "The invoices could not be loaded.",
+          });
+          this.inError=true;
           this.isLoading = false;
 
-        }));
+        }}));
   }
 }
