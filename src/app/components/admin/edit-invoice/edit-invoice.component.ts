@@ -156,20 +156,35 @@ export class EditInvoiceComponent implements OnInit {
         new Date(this.invoiceForm.get('invoiceDueDate')?.value)).subscribe({
         next: (response) => {
           if (response.ok) {
+            this.notificationsService.notify({
+              title: 'Success',
+              type: NotificationType.success,
+              message: "The invoice has been created",
+            });
             this.router.navigate(['/invoices']);
           }
         },
         error: (error) => {
-          //TODO notifications here
-          console.log(error);
+          this.notificationsService.notify({
+            title: 'Oh Oh 😕',
+            type: NotificationType.error,
+            message: "The invoice has not been created",
+          });
         }
       })
     } catch (e) {
       if (e instanceof Error)
-        console.log('Error - Invoice has not been created : ' + e.message);
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice has not been created : " + e.message,
+        });
       else
-        console.log('Error - Invoice has not been created');
-    }
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The invoice has not been created",
+        });    }
   }
 
   private invoiceHasChanged() {
