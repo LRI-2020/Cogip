@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Invoice} from "../../../models/invoice.model";
 import {Subscription} from "rxjs";
 import {InvoicesService} from "../../../services/invoices.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
 
 @Component({
@@ -20,14 +20,15 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   fetchedData: Invoice[] = []
   dataToDisplay: Invoice[] = []
 
-  subscriptionsList:Subscription[]=[];
-  isLoading=true;
+  subscriptionsList: Subscription[] = [];
+  isLoading = true;
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   constructor(private invoicesService: InvoicesService,
               private route: ActivatedRoute,
-              private helpers: Helpers) {
+              private helpers: Helpers,
+              private router:Router) {
   }
 
   ngOnInit(): void {
@@ -61,15 +62,13 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   }
 
   private loadData() {
+    this.isLoading = true;
     this.subscriptionsList.push(
       this.invoicesService.fetchInvoices().subscribe(invoicesData => {
-          this.isLoading=true;
           this.fetchedData = invoicesData;
           this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
-          this.isLoading=false;
-
+          this.isLoading = false;
         },
-
         error => {
           console.log(error);
           this.isLoading = false;
@@ -77,7 +76,25 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
         }));
   }
 
-  onNewInvoice() {
+  onDelete(id: number) {
+    try {
+      this.invoicesService.deleteInvoice(id).subscribe(
+        response => {
+          if(response.ok){
+            this.router.navigate(['/invoices']);
+          }
+          console.log(JSON.stringify(response))
+        },
+        error => {
+          console.log(error.message)
+        });
+    } catch (e) {
+      if (e instanceof Error)
+        console.log('invoice has not been delete : ' + e.message)
+      else {
+        console.log('error - invoice has not been deleted')
+      }
+    }
 
   }
 }

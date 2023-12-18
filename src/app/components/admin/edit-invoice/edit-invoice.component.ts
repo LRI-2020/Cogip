@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Invoice} from "../../../models/invoice.model";
 import {InvoicesService} from "../../../services/invoices.service";
 import {Subscription} from "rxjs";
@@ -31,7 +31,8 @@ export class EditInvoiceComponent implements OnInit {
   constructor(private activeRoute: ActivatedRoute,
               private invoicesService: InvoicesService,
               private navigationService: NavigationService,
-              private datepipe: DatePipe) {
+              private datepipe: DatePipe,
+              private router:Router) {
   }
 
   ngOnInit(): void {
@@ -102,7 +103,14 @@ export class EditInvoiceComponent implements OnInit {
       this.originalInvoice.dueDate = new Date(this.invoiceForm.get('invoiceDueDate')?.value)
 
       try {
-        this.invoicesService.updateInvoice(this.originalInvoice);
+        this.invoicesService.updateInvoice(this.originalInvoice).subscribe(response => {
+            if(response.ok && this.originalInvoice){
+              this.fullFillForm(this.originalInvoice.id);
+            }
+           },
+          error => {
+            error.message;
+          });
       } catch (e) {
         if (e instanceof Error) {
           console.log(e.message);
@@ -121,8 +129,11 @@ export class EditInvoiceComponent implements OnInit {
         this.invoiceForm.get('invoiceCompany')?.value,
         new Date(this.invoiceForm.get('invoiceDueDate')?.value))
         .subscribe(responseData =>{
-        console.log(responseData)
+          if(responseData.ok){
+            this.router.navigate(['/invoices']);
+          }
       },error => {
+          //TODO what to do when error? displaying errors component?
         console.log(error);
       })
 
