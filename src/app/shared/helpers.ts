@@ -5,6 +5,21 @@ import {Injectable} from "@angular/core";
 import {SearchPipe} from "../pipes/search.pipe";
 import {Subscription} from "rxjs";
 
+export function dateToCorrectFormat(date:Date){
+  let year = date.getFullYear();
+  let month = date.getMonth()+1;
+  let day = date.getDate();
+  return `${year}-${month}-${day}`;
+
+}
+
+export function datesEquals(date1:Date,date2:Date){
+  return date1.getFullYear() === date2.getFullYear()
+    && date1.getMonth() === date2.getMonth()
+    && date1.getDate() === date2.getDate()
+}
+
+
 export function onWelcomePage(url: UrlSegment[]) {
   return url.length === 0;
 }

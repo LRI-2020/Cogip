@@ -41,6 +41,12 @@ export class CompaniesService {
     }));
   }
 
+  getCompanyByName(name:string){
+    return this.fetchCompanies().pipe(map(companies => {
+      return companies.find(c => c.name === name);
+    }))
+  }
+
   getContacts(companyId: number) {
     let companyName = '';
     this.getCompanytById(companyId).subscribe(companyData => {

@@ -5,7 +5,8 @@ import {InvoicesService} from "../../../services/invoices.service";
 import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
-import {DatePipe} from "@angular/common";
+import {DatePipe, formatDate} from "@angular/common";
+import {datesEquals, dateToCorrectFormat} from "../../../shared/helpers";
 
 @Component({
   selector: 'app-edit-invoice',
@@ -39,17 +40,15 @@ export class EditInvoiceComponent implements OnInit {
       if (this.editMode) {
         let id = +params['id'];
         this.fullFillForm(id);
-      }
-      else{
-        this.isLoading=false;
+      } else {
+        this.isLoading = false;
       }
     }));
   }
 
-
-  private fullFillForm(id: number) {
-    this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe(invoiceData => {
+    private fullFillForm(id: number) {
       this.isLoading = true;
+      this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe(invoiceData => {
       this.originalInvoice = invoiceData;
       if (this.originalInvoice) {
         this.setFormValue(this.originalInvoice);
@@ -59,14 +58,18 @@ export class EditInvoiceComponent implements OnInit {
   }
 
   onSave() {
-
+    if (this.editMode) {
+      this.updateInvoice()
+    } else {
+      this.createInvoice()
+    }
   }
 
   onCancel() {
-    if (this.originalInvoice) {
-      this.setFormValue(this.originalInvoice);
-    }
-    else{
+
+    if (this.editMode && this.originalInvoice) {
+      this.fullFillForm(this.originalInvoice.id);
+    } else {
       this.setFormValue();
     }
   }
@@ -77,11 +80,60 @@ export class EditInvoiceComponent implements OnInit {
 
   private setFormValue(invoice?: Invoice) {
     this.invoiceForm.setValue({
-      id: invoice? invoice.id:'',
-      invoiceNumber: invoice?invoice.invoiceNumber:'',
-      invoiceCompany: invoice?invoice.company:'',
-      invoiceDueDate: invoice?this.datepipe.transform(invoice.dueDate, 'yyyy-MM-dd'):'',
-      invoiceCreatedDate: invoice?this.datepipe.transform(invoice.createdAt, 'yyyy-MM-dd'):''
+      id: invoice ? invoice.id : '',
+      invoiceNumber: invoice ? invoice.invoiceNumber : '',
+      invoiceCompany: invoice ? invoice.company : '',
+      invoiceDueDate: invoice ? this.datepipe.transform(invoice.dueDate, 'yyyy-MM-dd') : '',
+      invoiceCreatedDate: invoice ? this.datepipe.transform(invoice.createdAt, 'yyyy-MM-dd') : ''
     })
   }
+
+  private updateInvoice() {
+    let id = +this.activeRoute.snapshot.params['id'];
+    if (this.originalInvoice && this.originalInvoice.id === id && this.invoiceHasChanged()) {
+
+      this.originalInvoice.invoiceNumber = this.invoiceForm.get('invoiceNumber')?.value
+      this.originalInvoice.company = this.invoiceForm.get('invoiceCompany')?.value
+      this.originalInvoice.dueDate = new Date(this.invoiceForm.get('invoiceDueDate')?.value)
+
+      try {
+        this.invoicesService.updateInvoice(this.originalInvoice);
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log(e.message);
+        }
+      }
+    } else {
+      console.log('Error - Invoice has not been updated');
+    }
+
+  }
+
+  private createInvoice() {
+
+    try{
+      this.invoicesService.createInvoice(this.invoiceForm.get('invoiceNumber')?.value,
+        this.invoiceForm.get('invoiceCompany')?.value,
+        new Date(this.invoiceForm.get('invoiceDueDate')?.value))
+        .subscribe(responseData =>{
+        console.log(responseData)
+      },error => {
+        console.log(error);
+      })
+
+    }catch(e){
+      if(e instanceof Error)
+        console.log('Error - Invoice has not been created : ' + e.message);
+      else
+        console.log('Error - Invoice has not been created');
+    }
+  }
+
+  private invoiceHasChanged() {
+   return (this.originalInvoice?.invoiceNumber !== this.invoiceForm.get('invoiceNumber')?.value)
+    || (this.originalInvoice?.company !== this.invoiceForm.get('invoiceCompany')?.value)
+    || !datesEquals(this.originalInvoice? this.originalInvoice.dueDate:new Date(), new Date(this.invoiceForm.get('invoiceDueDate')?.value));
+  }
+
+
 }

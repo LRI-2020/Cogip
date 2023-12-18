@@ -4,7 +4,7 @@ export class Invoice{
   private _invoiceNumber: string;
   private _company: string;
   private _dueDate;
-  private _id: Number;
+  private _id: number;
   private _createdAt: Date;
   get createdAt(): Date {
     return this._createdAt;
@@ -36,15 +36,15 @@ export class Invoice{
   set dueDate(value) {
     this._dueDate = value;
   }
-  get id(): Number {
+  get id(): number {
     return this._id;
   }
 
-  set id(value: Number) {
+  set id(value: number) {
     this._id = value;
   }
 
-  constructor(id:Number,invoiceNumber:string,dueDate:Date,company:string,createdAt:Date) {
+  constructor(id:number,invoiceNumber:string,dueDate:Date,company:string,createdAt:Date) {
 
     this._id=id;
     this._invoiceNumber=invoiceNumber;
