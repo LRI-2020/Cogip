@@ -15,10 +15,10 @@ import {NotificationsService} from "../../services/notifications.service";
 export class CompanyDetailsComponent implements OnInit, OnDestroy {
   company: Company | undefined;
   companyContacts: Contact[] = []
-
   isLoadingCompany = true;
+  errorCompany=false;
   isLoadingContacts = true;
-  inError=false;
+  errorContacts=false;
   subscriptionsList: Subscription[] = []
 
   constructor(private route: ActivatedRoute, private companiesService: CompaniesService, private notificationsService:NotificationsService) {
@@ -36,10 +36,12 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadData(id: number) {
+    this.isLoadingCompany = true;
+    this.isLoadingContacts = true;
+
     this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe({
       next:(companyData)=>{
-        this.inError=false;
-        this.isLoadingCompany = true;
+        this.errorCompany=false;
         this.company = companyData;
         this.isLoadingCompany = false;
       },
@@ -49,22 +51,28 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
           type: NotificationType.error,
           message: "The company details could not be loaded",
         });
-        this.inError=true;
+        this.errorCompany=true;
         this.isLoadingCompany = false;
       }
     }));
 
-    this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe(contacts => {
-        this.isLoadingContacts = true;
+    this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe({
+      next : contacts => {
         this.companyContacts = contacts;
         this.isLoadingContacts = false;
+        this.errorContacts=false;
       },
 
-      error => {
-        console.log(error);
+      error : error => {
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The contacts details could not be loaded",
+        });
+        this.errorContacts=true;
         this.isLoadingContacts = false;
 
-      }));
+      }}));
   }
 
   ngOnDestroy(): void {

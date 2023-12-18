@@ -7,7 +7,7 @@
       </div>
     </div>
   </ng-template>
-  <div class="component-data" *ngIf="!inError">
+  <div class="component-data" *ngIf="!errorCompany">
     <div class="row my-4 justify-content-center"  *ngIf="!isLoadingCompany; else loading">
       <div class="col-10">
         <h1>{{company?.name}}</h1>
@@ -22,24 +22,25 @@
       <div class="col-10 my-2">
         <h1>Contact People</h1>
       </div>
-      <div class="col-9 my-2 " *ngIf="!isLoadingContacts; else loading">
-        <div class="row">
-          <div class="col d-flex flex-inline" *ngFor="let contact of companyContacts">
-            <div class="col-5 d-flex flex-column justify-content-center align-items-center">
-              <img class="shadow contact_photo w-50 rounded-circle" alt="{{contact?.name}}_photo"  src="/assets/img/default-avatar.jpg">
-<!--                   [src]="contact?.photo!== undefined?contact?.photo : '/assets/img/default-avatar.jpg'">-->
+      <div *ngIf="!errorContacts">
+        <div class="col-9 my-2 " *ngIf="!isLoadingContacts; else loading">
+          <div class="row">
+            <div class="col d-flex flex-inline" *ngFor="let contact of companyContacts">
+              <div class="col-5 d-flex flex-column justify-content-center align-items-center">
+                <img class="shadow contact_photo w-50 rounded-circle" alt="{{contact?.name}}_photo"  src="/assets/img/default-avatar.jpg">
+                <!--                   [src]="contact?.photo!== undefined?contact?.photo : '/assets/img/default-avatar.jpg'">-->
 
-              <a class="attribution align-self-startr" *ngIf="contact?.photo=== undefined" href="https://www.vecteezy.com/free-vector/default-profile-picture">Default Profile Picture Vectors by
-                Vecteezy</a>
-            </div>
-            <div class="col-5">
-              <h3>{{contact.name}}</h3>
+                <a class="attribution align-self-startr" *ngIf="contact?.photo=== undefined" href="https://www.vecteezy.com/free-vector/default-profile-picture">Default Profile Picture Vectors by
+                  Vecteezy</a>
+              </div>
+              <div class="col-5">
+                <h3>{{contact.name}}</h3>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
 
     <div class="row my-4 justify-content-center">
       <div class="col-10">
