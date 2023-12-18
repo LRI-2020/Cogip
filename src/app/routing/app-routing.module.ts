@@ -42,7 +42,7 @@ const appRoutes: Routes = [
   {path: "admin/companies", component: AdminCompaniesComponent},
   {path: "admin/companies/:id", component: AdminCompanyDetailsComponent},
   {path: 'not-found', component: NotFoundComponent},
-   {path: '**', redirectTo: '/not-found'}
+  {path: '**', redirectTo: '/not-found'}
 ]
 
 @NgModule({

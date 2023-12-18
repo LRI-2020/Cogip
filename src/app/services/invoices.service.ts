@@ -67,6 +67,7 @@ export class InvoicesService{
   }
 
   deleteInvoice(id:number){
+
     if(this.getInvoiceBy(id)){
       return this.http.delete(this.apiUrl+'del-invoice/'+id, {observe:"response"});
     }

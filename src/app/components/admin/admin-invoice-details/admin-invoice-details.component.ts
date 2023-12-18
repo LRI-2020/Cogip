@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../../models/contact.model";
 import {Subscription} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ContactsService} from "../../../services/contacts.service";
 import {InvoicesService} from "../../../services/invoices.service";
 import {Invoice} from "../../../models/invoice.model";
@@ -17,7 +17,7 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
   isLoading = true;
   subscriptionsList: Subscription[] = [];
 
-  constructor(private route: ActivatedRoute, private invoicesService: InvoicesService) {
+  constructor(private route: ActivatedRoute, private invoicesService: InvoicesService, private router:Router) {
 
   }
 
@@ -49,4 +49,24 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
   }
 
 
+  onDelete(id: number) {
+    try {
+      this.invoicesService.deleteInvoice(id).subscribe(
+        response => {
+          if(response.ok){
+            this.router.navigate(['/invoices']);
+          }
+          console.log(JSON.stringify(response))
+        },
+        error => {
+          console.log(error.message)
+        });
+    } catch (e) {
+      if (e instanceof Error)
+        console.log('invoice has not been delete : ' + e.message)
+      else {
+        console.log('error - invoice has not been deleted')
+      }
+    }
+  }
 }

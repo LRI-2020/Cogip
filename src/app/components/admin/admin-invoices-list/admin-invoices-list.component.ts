@@ -77,24 +77,6 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id: number) {
-    try {
-      this.invoicesService.deleteInvoice(id).subscribe(
-        response => {
-          if(response.ok){
-            this.router.navigate(['/invoices']);
-          }
-          console.log(JSON.stringify(response))
-        },
-        error => {
-          console.log(error.message)
-        });
-    } catch (e) {
-      if (e instanceof Error)
-        console.log('invoice has not been delete : ' + e.message)
-      else {
-        console.log('error - invoice has not been deleted')
-      }
-    }
 
   }
 }
