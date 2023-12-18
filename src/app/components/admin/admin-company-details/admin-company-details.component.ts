@@ -4,19 +4,24 @@ import {Contact} from "../../../models/contact.model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
+import {NotificationType} from "../../../models/notification.model";
+import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
   selector: 'app-admin-company-details',
   templateUrl: './admin-company-details.component.html',
   styleUrl: './admin-company-details.component.scss'
 })
-export class AdminCompanyDetailsComponent implements OnInit,OnDestroy{
+export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
   company: Company | undefined;
-  companyContacts:Contact[]=[]
-  isLoadingCompanyDetails=true;
-  isLoadingContacts=true;
-  subscriptionsList:Subscription[]=[]
-  constructor(private route:ActivatedRoute, private companiesService:CompaniesService) {
+  companyContacts: Contact[] = []
+  isLoadingCompanyDetails = true;
+  isLoadingContacts = true;
+  subscriptionsList: Subscription[] = [];
+  contactsError = false;
+  companyError = false;
+
+  constructor(private route: ActivatedRoute, private companiesService: CompaniesService, private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -28,30 +33,43 @@ export class AdminCompanyDetailsComponent implements OnInit,OnDestroy{
     }))
   }
 
-  loadData(id:number){
-    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe(companyData => {
-      this.isLoadingCompanyDetails=true;
-      this.company = companyData;
-      this.isLoadingCompanyDetails=false;
-    },
+  loadData(id: number) {
+    this.isLoadingCompanyDetails = true;
+    this.isLoadingContacts = true;
 
-      error => {
-        console.log(error);
+    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe({
+      next: (companyData) => {
+        this.companyError = false;
+        this.company = companyData;
         this.isLoadingCompanyDetails = false;
+      },
+      error: (error) => {
+        this.companyError = true;
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The company details could not be loaded",
+        });
+        this.isLoadingCompanyDetails = false;
+      }
+    }));
 
-      }));
-
-    this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe(contacts =>{
-       this.isLoadingContacts=true;
-      this.companyContacts = contacts;
-       this.isLoadingContacts=false;
-    },
-
-      error => {
-        console.log(error);
+    this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe({
+      next: (contacts) => {
+        this.contactsError = false;
+        this.companyContacts = contacts;
         this.isLoadingContacts = false;
-
-      }));
+      },
+      error: (error) => {
+        this.contactsError = true;
+        this.notificationsService.notify({
+          title: 'Oh Oh 😕',
+          type: NotificationType.error,
+          message: "The contacts details could not be loaded",
+        });
+        this.isLoadingContacts = false;
+      }
+    }));
   }
 
   ngOnDestroy(): void {

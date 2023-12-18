@@ -3,6 +3,7 @@ import {Contact} from "../../../models/contact.model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {ContactsService} from "../../../services/contacts.service";
+import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
   selector: 'app-admin-contact-details',
@@ -13,9 +14,10 @@ export class AdminContactDetailsComponent implements OnInit, OnDestroy {
 
   contact: Contact | undefined;
   isLoading = true;
+  inError = false;
   subscriptionsList: Subscription[] = [];
 
-  constructor(private route: ActivatedRoute, private contactsService: ContactsService) {
+  constructor(private route: ActivatedRoute, private contactsService: ContactsService, private notificationsService: NotificationsService) {
 
   }
 
@@ -35,16 +37,17 @@ export class AdminContactDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadData(id: number) {
+    this.isLoading = true;
     this.subscriptionsList.push(this.contactsService.getContactById(id).subscribe(
       contactData => {
-      this.isLoading = true;
-      console.log('contact : ' + JSON.stringify(contactData));
-      this.contact = contactData;
-      this.isLoading = false;
-    },
+        this.inError = false;
+        this.contact = contactData;
+        this.isLoading = false;
+      },
       error => {
-        console.log(error);
-        this.isLoading=false;
+        this.inError = true;
+        this.isLoading = false;
+
       }));
   }
 
