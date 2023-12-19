@@ -26,7 +26,7 @@ import { ListHeaderComponent } from './components/list-header/list-header.compon
 import { FilterPipe } from './pipes/filter.pipe';
 import {Helpers} from "./shared/helpers";
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
-import { AdminCompaniesComponent } from './components/admin/admin-companies/admin-companies.component';
+import { AdminCompaniesListComponent } from './components/admin/admin-companies-list/admin-companies-list.component';
 import { AdminHeaderComponent } from './components/admin/admin-header/admin-header.component';
 import { AdminListHeaderComponent } from './components/admin/admin-list-header/admin-list-header.component';
 import { AdminContactsComponent } from './components/admin/admin-contacts/admin-contacts.component';
@@ -38,6 +38,8 @@ import { EditInvoiceComponent } from './components/admin/edit-invoice/edit-invoi
 import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
 import {DatePipe} from "@angular/common";
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { EditCompanyComponent } from './components/admin/edit-company/edit-company.component';
+import { AdminCompaniesComponent } from './components/admin/admin-companies/admin-companies.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,7 +61,7 @@ import { NotificationsComponent } from './components/notifications/notifications
     ListHeaderComponent,
     FilterPipe,
     AdminDashboardComponent,
-    AdminCompaniesComponent,
+    AdminCompaniesListComponent,
     AdminHeaderComponent,
     AdminListHeaderComponent,
     AdminContactsComponent,
@@ -69,7 +71,9 @@ import { NotificationsComponent } from './components/notifications/notifications
     AdminInvoiceDetailsComponent,
     EditInvoiceComponent,
     AdminInvoicesComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    EditCompanyComponent,
+    AdminCompaniesComponent
   ],
   imports: [
     BrowserModule,
