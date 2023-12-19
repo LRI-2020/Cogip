@@ -1,10 +1,11 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Company, CompanyRawModel} from "../models/company.model";
+import {Company, RawCompanyModel} from "../models/company.model";
 import {map} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
 import {CompanyConverterService} from "./converters/company-converter.service";
+import {API_KEY} from "../../../secret";
 
 
 @Injectable()
@@ -16,9 +17,9 @@ export class CompaniesService {
   }
 
   fetchCompanies() {
-
+    console.log(' api key : ' + API_KEY)
     return this.http.get<any[]>( this.apiUrl+'company', {headers:{
-        "X-API-Key": ""
+        "X-API-Key": API_KEY
       }}).pipe(map(responseData => {
       return this.responseToCompanies(responseData);
     }));
@@ -26,7 +27,8 @@ export class CompaniesService {
 
   getCompanytById(id: string) {
 
-    return this.http.get<any>(this.apiUrl + 'companies/' + id).pipe(map(responseData => {
+    return this.http.get<any>(this.apiUrl + 'company/' + id,{headers:{
+        "X-API-Key": API_KEY     }}).pipe(map(responseData => {
       let company = this.responseToCompany(responseData)
         if(company)
           return company;
@@ -56,7 +58,7 @@ export class CompaniesService {
     let companies:Company[]=[]
     responseData.forEach((d: any) => {
       if(this.companyConverter.isRawCompany(d)){
-        let company = this.companyConverter.rawToCompany(d as CompanyRawModel);
+        let company = this.companyConverter.rawToCompany(d as RawCompanyModel);
         if (company) {
           companies.push(company);
         }
@@ -68,8 +70,10 @@ export class CompaniesService {
   private responseToCompany(responseData:any):Company|undefined {
 
       if(this.companyConverter.isRawCompany(responseData)){
-        return this.companyConverter.rawToCompany(responseData as CompanyRawModel);
+        console.log('response is a rawCompany : ' + JSON.stringify(responseData as RawCompanyModel))
+        return this.companyConverter.rawToCompany(responseData as RawCompanyModel);
         }
+      console.log('response not a rawCompany')
       return undefined;
 
   }

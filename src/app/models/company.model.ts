@@ -34,7 +34,7 @@
 
   private _country: string;
 
-  get tva(): string {
+  get tva(): string | undefined {
     return this._tva;
   }
 
@@ -42,7 +42,7 @@
     this._tva = value;
   }
 
-  private _tva: string;
+  private _tva?: string;
 
   get name(): string {
     return this._name;
@@ -64,7 +64,7 @@
 
   }
 }
-export class CompanyRawModel {
+export class RawCompanyModel {
   get creationDate(): string {
     return this._creationDate;
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Company, CompanyRawModel, CompanyType} from "../../models/company.model";
+import {Company, RawCompanyModel, CompanyType} from "../../models/company.model";
 
 @Injectable({
   providedIn: 'root'
@@ -9,20 +9,21 @@ export class CompanyConverterService {
   constructor() {
   }
 
-  rawToCompany(rawCompany: CompanyRawModel):Company|undefined {
-    if(this.isCompany(rawCompany)){
+  rawToCompany(rawCompany: RawCompanyModel):Company {
+    let creationDate = !isNaN(Date.parse(rawCompany.creationDate))?new Date(rawCompany.creationDate): new Date('1970-01-01');
+    if(isNaN(Date.parse(rawCompany.creationDate))){
+
+    }
       return new Company(rawCompany.id,
         rawCompany.company_name,
-        rawCompany.tva,
-        rawCompany.country,
+        rawCompany.tva?rawCompany.tva:"",
+        rawCompany.country?rawCompany.country:"Belgium",
         rawCompany.type_name === 'client' ? CompanyType.client : CompanyType.supplier,
-        new Date(rawCompany.creationDate))
-    }
-    return undefined;
+        creationDate)
 
   }
 
-  isRawCompany(value: unknown): value is CompanyRawModel {
+  isRawCompany(value: unknown): value is RawCompanyModel {
 
     if (!value || typeof value !== 'object') {
       return false
@@ -32,18 +33,13 @@ export class CompanyConverterService {
     return typeof object['id'] === 'string' &&
       typeof object['company_name'] === 'string' &&
       typeof object['type_name'] === 'string' &&
-      typeof object['country'] === 'string' &&
-      typeof object['tva'] === 'string' &&
       typeof object['creationDate'] === 'string'
 
   }
 
-  isCompany(rawCompany: CompanyRawModel) {
+  isCompany(rawCompany: RawCompanyModel) {
 
-    let expectedValues = [
-      {propName: "type_name", acceptedValues: ["client", 'supplier']}    ]
-
-    return !isNaN(Date.parse(rawCompany.creationDate)) && this.hasExpectedValues(rawCompany as Record<string, any>,expectedValues)
+    return !isNaN(Date.parse(rawCompany.creationDate))
   }
 
   private hasExpectedValues(object: Record<string, any>, expectedValues: { propName: string, acceptedValues: string[] }[]) {

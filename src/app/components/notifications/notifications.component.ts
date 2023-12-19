@@ -20,9 +20,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.notificationSubscription = this.notificationService.notifyRequest$.subscribe(notificationData => {
       this.notifications.push(notificationData);
-      console.log('all notifications : '+ JSON.stringify(this.notifications))
       setTimeout(() => {
-        console.log('notif removed : ' + notificationData.id)
         this.notifications = this.notifications.filter(n => n.id !== notificationData.id);
       }, notificationData.timeout ? notificationData.timeout : 3000);
 

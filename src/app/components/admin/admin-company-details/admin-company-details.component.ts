@@ -24,22 +24,33 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let id = this.route.snapshot.params['id'];
-    this.loadData(id);
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
-      let id = params['id'];
-      this.loadData(id);
+      this.loadData(params['id']);
     }))
   }
 
   loadData(id: string) {
-    this.isLoadingCompanyDetails = true;
-    this.isLoadingContacts = true;
+    this.loadCompany(id);
+    this.loadCompanyContacts(id);
+  }
 
-    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe({
+  ngOnDestroy(): void {
+    this.subscriptionsList.forEach(s => s.unsubscribe());
+  }
+
+  private loadCompany(companyId: string) {
+    this.isLoadingCompanyDetails = true;
+    this.companyError = false;
+
+    this.subscriptionsList.push(this.companiesService.getCompanytById(companyId).subscribe({
       next: (companyData) => {
-        this.companyError = false;
-        this.company = companyData;
+        if(!companyData){
+          this.companyError = true;
+          this.notificationsService.error('Oh Oh 😕', "The company details could not be loaded");
+        }
+        else{
+          this.company = companyData;
+        }
         this.isLoadingCompanyDetails = false;
       },
       error: () => {
@@ -48,8 +59,13 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
         this.isLoadingCompanyDetails = false;
       }
     }));
+  }
 
-    this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe({
+  private loadCompanyContacts(companyId: string) {
+    this.isLoadingCompanyDetails = true;
+    this.isLoadingContacts = true;
+
+       this.subscriptionsList.push(this.companiesService.getContacts(companyId).subscribe({
       next: (contacts) => {
         this.contactsError = false;
         this.companyContacts = contacts;
@@ -61,9 +77,5 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
         this.isLoadingContacts = false;
       }
     }));
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 }
