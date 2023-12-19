@@ -1,5 +1,4 @@
-﻿
-export class Company {
+﻿export class Company {
   get createdAt(): Date {
     return this._createdAt;
   }
@@ -19,15 +18,15 @@ export class Company {
   private _createdAt: Date;
   private _id: number;
 
-  get type(): string {
+  get type(): CompanyType {
     return this._type;
   }
 
-  set type(value: string) {
+  set type(value: CompanyType) {
     this._type = value;
   }
 
-  private _type: string;
+  private _type: CompanyType;
 
   get country(): string {
     return this._country;
@@ -59,7 +58,7 @@ export class Company {
 
   private _name: string;
 
-  constructor(id: number, name: string, tva: string, country: string, type: string, createdAt: Date) {
+  constructor(id: number, name: string, tva: string, country: string, type: CompanyType, createdAt: Date) {
     this._id = id;
     this._name = name;
     this._tva = tva;
@@ -69,20 +68,22 @@ export class Company {
 
   }
 }
+
 export class CompanyConverter {
 
   constructor() {
   }
 
   static rawToCompany(rawCompany: CompanyRawModel) {
+    if (rawCompany.type_name.toLowerCase() != 'client' && rawCompany.type_name.toLowerCase() != 'supplier')
+      throw new Error('invalid company type');
     return new Company(rawCompany.id,
       rawCompany.company_name,
       rawCompany.tva,
       rawCompany.country,
-      rawCompany.type_name,
+      rawCompany.type_name === 'client' ? CompanyType.client : CompanyType.supplier,
       new Date(rawCompany.company_creation));
   }
-
 
 
 }
@@ -149,6 +150,12 @@ export class CompanyRawModel {
     this._company_creation = company_creation;
   }
 }
+
+export enum CompanyType {
+  client = 0,
+  supplier = 1,
+}
+
 
 
 

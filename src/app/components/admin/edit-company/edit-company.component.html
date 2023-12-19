@@ -1,1 +1,58 @@
-<p>edit-company works!</p>
+<ng-template #loading>
+  <div class="row my-4" >
+    <div class="col-12  justify-content-center text-center">
+      <span class="adminLoader"></span>
+    </div>
+  </div>
+</ng-template>
+<div class="row mt-4 align-items-center justify-content-center" *ngIf="!isLoading;else loading">
+
+  <div class="col-6">
+    <form (ngSubmit)="onSave()" [formGroup]="companyForm">
+      <div class="row">
+        <div class="col-12 mx-2">
+          <div *ngIf="this.editMode">
+            <label for="company_id" class="form-label"> Company Id : </label>
+            <input class="readonly form-control readonly" readonly placeholder="auto-generated" type="number" id="company_id" formControlName="id">
+          </div>
+          <div>
+            <label for="company_name" class="form-label"> Name : </label>
+            <span class="on-error" *ngIf="!companyForm.get('companyNumber')?.valid  && companyForm.get('companyNumber')?.touched"> * Company name is required</span>
+            <input type="text" id="company_name" class="form-control" formControlName="companyNumber">
+          </div>
+          <div>
+            <label for="company_type" class="form-label"> Type : </label>
+            <span class="on-error" *ngIf="!companyForm.get('company_type')?.valid  && companyForm.get('company_type')?.touched"> * Company type is required</span>
+            <select id="company_type" class="form-control" formControlName="company_type">
+              <option [ngValue]="CompanyType.client"> Client</option>
+              <option [ngValue]="CompanyType.supplier"> Supplier</option>
+            </select>
+          </div>
+          <div>
+            <label for="company_country" class="form-label"> Country : </label>
+            <select id="company_country" class="form-control" formControlName="company_country">
+              <option *ngFor="let country of countriesData" value="{{country.countryCode}}"> {{country.countryNameEn}}</option>
+            </select>
+            <span class="on-error" *ngIf="!companyForm.get('company_country')?.valid  && companyForm.get('company_country')?.touched"> * Country is required</span>
+          </div>
+
+          <div>
+            <label for="vta_number" class="form-label"> VTA Number : </label>
+            <span class="on-error" *ngIf="!companyForm.get('vta_number')?.valid  && companyForm.get('vta_number')?.touched"> * VTA number is required</span>
+            <input type="text" id="vta_number" class="form-control" formControlName="company_tva">
+          </div>
+
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-4 d-flex justify-content-sm-around mx-auto my-2">
+          <button class="btn btn-light" type="submit">Save</button>
+          <button class="btn btn-light" type="button" (click)="onCancel()">Cancel</button>
+          <button class="btn btn-light" type="button" (click)="onBack()">Back</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
