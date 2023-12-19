@@ -24,15 +24,15 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let id = +this.route.snapshot.params['id'];
+    let id = this.route.snapshot.params['id'];
     this.loadData(id);
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
-      let id = +params['id'];
+      let id = params['id'];
       this.loadData(id);
     }))
   }
 
-  loadData(id: number) {
+  loadData(id: string) {
     this.isLoadingCompanyDetails = true;
     this.isLoadingContacts = true;
 
@@ -42,7 +42,7 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
         this.company = companyData;
         this.isLoadingCompanyDetails = false;
       },
-      error: (error) => {
+      error: () => {
         this.companyError = true;
         this.notificationsService.error('Oh Oh 😕', "The company details could not be loaded");
         this.isLoadingCompanyDetails = false;
@@ -55,7 +55,7 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
         this.companyContacts = contacts;
         this.isLoadingContacts = false;
       },
-      error: (error) => {
+      error: () => {
         this.contactsError = true;
         this.notificationsService.error('Oh Oh 😕',"The contacts details could not be loaded");
         this.isLoadingContacts = false;

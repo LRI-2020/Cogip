@@ -25,23 +25,25 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let id = +this.route.snapshot.params['id'];
-    this.loadData(id);
-
-    this.subscriptionsList.push(this.route.params.subscribe((params) => {
-      let id = +params['id'];
-      this.loadData(id);
-    }))
+    this.loadData(this.route.snapshot.params['id']);
+    this.listenUrlParams();
   }
 
-  loadData(id: number) {
-    this.isLoadingCompany = true;
-    this.isLoadingContacts = true;
+  loadData(companyId: string) {
+    this.loadCompany(companyId);
+    this.loadCompanyContacts(companyId);
+  }
 
-    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe({
+  private loadCompany(companyId: string) {
+    this.isLoadingCompany = true;
+    this.errorCompany=false;
+
+    this.subscriptionsList.push(this.companiesService.getCompanytById(companyId).subscribe({
       next:(companyData)=>{
-        this.errorCompany=false;
         this.company = companyData;
+        if(!companyData){
+          this.errorCompany=true;
+        }
         this.isLoadingCompany = false;
       },
       error:()=>{
@@ -51,7 +53,12 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
       }
     }));
 
-    this.subscriptionsList.push(this.companiesService.getContacts(id).subscribe({
+  }
+
+  private loadCompanyContacts(companyId: string) {
+    this.isLoadingContacts = true;
+    this.errorContacts=false;
+    this.subscriptionsList.push(this.companiesService.getContacts(companyId).subscribe({
       next : contacts => {
         this.companyContacts = contacts;
         this.isLoadingContacts = false;
@@ -65,9 +72,13 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
 
       }}));
   }
+  private listenUrlParams() {
+    this.subscriptionsList.push(this.route.params.subscribe((params) => {
+      this.loadData(params['id']);
+    }))
+  }
 
   ngOnDestroy(): void {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
-
 }

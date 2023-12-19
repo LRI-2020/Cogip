@@ -1,42 +1,36 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Company, CompanyConverter,CompanyRawModel} from "../models/company.model";
+import {Company, CompanyRawModel} from "../models/company.model";
 import {map} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
+import {CompanyConverterService} from "./converters/company-converter.service";
 
 
 @Injectable()
 export class CompaniesService {
 
-  apiUrl='https://api-cogip-329f9c72c66d.herokuapp.com/api/';
-  constructor(private http: HttpClient, private contactsService: ContactsService) {
+  // apiUrl='https://api-cogip-329f9c72c66d.herokuapp.com/api/';
+  apiUrl='https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
+  constructor(private http: HttpClient, private contactsService: ContactsService, private companyConverter:CompanyConverterService) {
   }
 
   fetchCompanies() {
 
-    return this.http.get<any>( this.apiUrl+'companies').pipe(map(responseData => {
-      let companies:Company[] = [];
-      if (responseData.data) {
-        responseData.data.forEach((d: any) => {
-          let company = CompanyConverter.rawToCompany(d as CompanyRawModel);
-          if (company) {
-            companies.push(company);
-          }
-        })
-      }
-      return companies;
+    return this.http.get<any[]>( this.apiUrl+'company', {headers:{
+        "X-API-Key": ""
+      }}).pipe(map(responseData => {
+      return this.responseToCompanies(responseData);
     }));
   }
 
-  getCompanytById(id: number) {
+  getCompanytById(id: string) {
 
-    return this.http.get<any>(this.apiUrl + 'companies/' + id.toString()).pipe(map(responseData => {
-      if (responseData.data) {
-        return CompanyConverter.rawToCompany(responseData.data as CompanyRawModel);
-      }
-      throw new Error('no company found with id ' + id);
-
+    return this.http.get<any>(this.apiUrl + 'companies/' + id).pipe(map(responseData => {
+      let company = this.responseToCompany(responseData)
+        if(company)
+          return company;
+      return undefined
     }));
   }
 
@@ -46,7 +40,7 @@ export class CompaniesService {
     }))
   }
 
-  getContacts(companyId: number) {
+  getContacts(companyId: string) {
     let companyName = '';
     this.getCompanytById(companyId).subscribe(companyData => {
       if (companyData != undefined)
@@ -56,5 +50,27 @@ export class CompaniesService {
       let companyContact = contactsData.filter(c => c.company === companyName);
       return companyContact.sort(sortByAsc('id')).slice(0,2);
     }))
+  }
+
+  private responseToCompanies(responseData:any[]) {
+    let companies:Company[]=[]
+    responseData.forEach((d: any) => {
+      if(this.companyConverter.isRawCompany(d)){
+        let company = this.companyConverter.rawToCompany(d as CompanyRawModel);
+        if (company) {
+          companies.push(company);
+        }
+      }
+    })
+    return companies;
+  }
+
+  private responseToCompany(responseData:any):Company|undefined {
+
+      if(this.companyConverter.isRawCompany(responseData)){
+        return this.companyConverter.rawToCompany(responseData as CompanyRawModel);
+        }
+      return undefined;
+
   }
 }
