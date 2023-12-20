@@ -25,42 +25,54 @@
     </div>
     <div class="row adminItemsList ps-2">
       <div class="col-12">
-        <div class="row adminTitleRow justify-content-start">
-          <div class="col-2">
+        <div class="row adminTitleRow align-items-start">
+          <div class="col">
             <p class="title my-2">Name</p>
           </div>
-          <div class="col-2">
+          <div class="col">
             <p class="title my-2">TVA</p>
           </div>
-          <div class="col-3">
+          <div class="col">
             <p class="title my-2">Country</p>
           </div>
-          <div class="col-2">
+          <div class="col">
             <p class="title my-2">Type</p>
           </div>
-          <div class="col-2">
+          <div class="col">
             <p class="title my-2">Created At</p>
+          </div>
+          <div class="col">
+            <p class="title my-2"></p>
+          </div>
+          <div class="col">
+            <p class="title my-2"></p>
           </div>
         </div>
 
-        <div class="row adminItemsData justify-content-start"
+        <div class="row adminItemsData align-items-start"
              *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
            :dataToDisplay)" routerLink="/admin/companies/{{company.id}}">
 
-          <div class="col-2 overflow-hidden">
+          <div class="col overflow-hidden">
             <p class="data my-2">{{company.name}}</p>
           </div>
-          <div class="col-2">
+          <div class="col overflow-hidden">
             <p class="data my-2">{{company.tva}}</p>
           </div>
-          <div class="col-3 overflow-hidden">
+          <div class="col overflow-hidden">
             <p class="data my-2">{{company.country}}</p>
           </div>
-          <div class="col-2 overflow-hidden">
+          <div class="col overflow-hidden">
             <p class="data my-2">{{company.type}}</p>
           </div>
-          <div class="col-2">
-            <p class="data my-2">{{company.createdAt | date:'longDate'}}</p>
+          <div class="col overflow-hidden ">
+            <p class="data my-2">{{company.createdAt | date:'mediumDate'}}</p>
+          </div>
+          <div class="col">
+            <button type="button" class="editBtn btn btn-light my-2" routerLink="{{company.id}}"> Edit</button>
+          </div>
+          <div class="col">
+            <button type="button" class="delete Btn btn btn-light my-2" (click)="onDelete(company.id)"> Delete</button>
           </div>
         </div>
       </div>

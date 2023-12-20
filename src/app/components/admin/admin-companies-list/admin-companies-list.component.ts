@@ -81,4 +81,7 @@ export class AdminCompaniesListComponent {
       }));
   }
 
+  onDelete(id:string) {
+    
+  }
 }
