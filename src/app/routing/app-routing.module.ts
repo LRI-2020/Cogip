@@ -35,8 +35,7 @@ const appRoutes: Routes = [
   {path: "admin/invoices", component:AdminInvoicesComponent, children:[
       {path: "", component: AdminInvoicesListComponent},
       {path: "new", component: EditInvoiceComponent},
-      {path: ":id", component: AdminInvoiceDetailsComponent},
-      {path: ":id/edit", component: EditInvoiceComponent},
+      {path: ":id", component: EditInvoiceComponent},
     ]},
 
   {path: "admin/contacts", component: AdminContactsComponent},

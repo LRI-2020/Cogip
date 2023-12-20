@@ -31,7 +31,7 @@ export class InvoicesService {
   }
 
   getInvoiceBy(id: string) {
-    return this.http.get<any>(this.apiUrl + 'invoice/' + id,{headers:{
+    return this.http.get(this.apiUrl + 'invoice/' + id,{headers:{
         "X-API-Key": API_KEY
       }})
       .pipe(map(responseData => {

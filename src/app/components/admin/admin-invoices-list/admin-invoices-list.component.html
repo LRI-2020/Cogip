@@ -61,7 +61,7 @@
             <p class="data my-2">{{invoice.createdAt |date:'longDate'}}</p>
           </div>
           <div class="col-2">
-            <button type="button" class="editBtn btn btn-light my-2" routerLink="{{invoice.id}}/edit"> Edit</button>
+            <button type="button" class="editBtn btn btn-light my-2" routerLink="{{invoice.id}}"> Edit</button>
           </div>
           <div class="col-2">
             <button type="button" class="delete Btn btn btn-light my-2" (click)="onDelete(invoice.id)"> Delete</button>
