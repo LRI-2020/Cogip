@@ -12,6 +12,6 @@ input[type="date"]:in-range::-webkit-datetime-edit-text { 	color: transparent; }
 }
 
 input.ng-invalid.ng-touched,
-textarea.ng-invalid.ng-touched{
+textarea.ng-invalid.ng-touched, select.ng-invalid.ng-touched{
   border:solid red 1px;
 }
