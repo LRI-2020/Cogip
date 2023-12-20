@@ -136,15 +136,15 @@ export class EditCompanyComponent implements OnInit {
 
   private createCompany() {
     let name = this.companyForm.get('company_name')?.value
-    let type = this.companyForm.get('company_name')?.value
-    let country = this.companyForm.get('company_name')?.value
-    let tva = this.companyForm.get('company_name')?.value
+    let type = CompanyType[+this.companyForm.get('company_type')?.value]
+    let country = getCountryName(this.companyForm.get('company_country')?.value)
+    let tva = this.companyForm.get('vta_number')?.value
     try {
       this.companiesService.createcompany(name,type,country,tva).subscribe({
         next: (response) => {
           if (response.ok) {
             this.notificationsService.success('Success', "The company has been created");
-            this.router.navigate(['/companys']);
+            this.router.navigate(['/admin/companies']);
           }
         },
         error: () => {

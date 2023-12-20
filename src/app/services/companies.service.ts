@@ -88,7 +88,7 @@ export class CompaniesService {
       }})
   }
 
-  createcompany(name:string,type:CompanyType,country:string,tva?:string) {
+  createcompany(name:string,type:string,country:string,tva?:string) {
     let body={
       company_name: name,
       type_name: type,
