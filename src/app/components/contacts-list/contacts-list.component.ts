@@ -56,7 +56,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   searchData(event: Event) {
-    console.log('search triggered!');
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
       (<HTMLInputElement>event.target).value,
       ['name', 'phone', 'email', 'company', 'createdAt']);

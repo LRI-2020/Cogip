@@ -30,10 +30,10 @@
           </div>
           <div>
             <label for="company_country" class="form-label"> Country : </label>
+            <span class="on-error" *ngIf="!companyForm.get('company_country')?.valid  && companyForm.get('company_country')?.touched"> * Country is required</span>
             <select id="company_country" class="form-control" formControlName="company_country">
               <option *ngFor="let country of countriesData" value="{{country.countryCode}}"> {{country.countryNameEn}}</option>
             </select>
-            <span class="on-error" *ngIf="!companyForm.get('company_country')?.valid  && companyForm.get('company_country')?.touched"> * Country is required</span>
           </div>
 
           <div>

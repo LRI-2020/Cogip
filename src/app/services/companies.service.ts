@@ -16,7 +16,6 @@ export class CompaniesService {
   }
 
   fetchCompanies() {
-    console.log(' api key : ' + API_KEY)
     return this.http.get<any[]>( this.apiUrl+'company', {headers:{
         "X-API-Key": API_KEY
       }}).pipe(map(responseData => {
@@ -69,10 +68,8 @@ export class CompaniesService {
   private responseToCompany(responseData:any):Company|undefined {
 
       if(this.companyConverter.isRawCompany(responseData)){
-        console.log('response is a rawCompany : ' + JSON.stringify(responseData as RawCompanyModel))
         return this.companyConverter.rawToCompany(responseData as RawCompanyModel);
         }
-      console.log('response not a rawCompany')
       return undefined;
 
   }
@@ -86,7 +83,6 @@ export class CompaniesService {
       tva: company.tva
     }
 
-    console.log(JSON.stringify(body))
     return this.http.put(this.apiUrl+'company',JSON.stringify(body),{observe:"response", headers:{
         "X-API-Key": API_KEY
       }})
@@ -99,7 +95,6 @@ export class CompaniesService {
       country: country,
       tva: tva
     }
-    console.log(JSON.stringify(body))
     return this.http.post(this.apiUrl+'company',JSON.stringify(body),{observe:"response", headers:{
         "X-API-Key": API_KEY
       }})

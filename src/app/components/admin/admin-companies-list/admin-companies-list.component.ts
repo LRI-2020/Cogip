@@ -56,7 +56,6 @@ export class AdminCompaniesListComponent {
   }
 
   searchData(event: Event) {
-    console.log('search triggered!');
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
       (<HTMLInputElement>event.target).value,
       ['name', 'tva', 'country', 'type', 'createdAt']);
@@ -82,6 +81,6 @@ export class AdminCompaniesListComponent {
   }
 
   onDelete(id:string) {
-    
+
   }
 }
