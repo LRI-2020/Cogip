@@ -12,7 +12,6 @@ import {NotificationsService} from "../../../services/notifications.service";
   styleUrl: './admin-companies-list.component.scss'
 })
 export class AdminCompaniesListComponent {
-
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
               private helpers: Helpers,

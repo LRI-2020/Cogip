@@ -4031,4 +4031,14 @@
   }
 ]
 
+export function getCountryCode(countryName:string){
+  let country = countriesData.find(c => c.countryNameEn === countryName)
+  return country?country.countryCode:"";
+}
+
+export function getCountryName(countryCode:string){
+  let country = countriesData.find(c => c.countryCode === countryCode)
+  return country?country.countryNameEn:"";
+}
+
 export {countriesData}

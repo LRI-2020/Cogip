@@ -30,7 +30,6 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadData(id: string) {
-    this.loadCompany(id);
     this.loadCompanyContacts(id);
   }
 
@@ -38,28 +37,7 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
-  private loadCompany(companyId: string) {
-    this.isLoadingCompanyDetails = true;
-    this.companyError = false;
 
-    this.subscriptionsList.push(this.companiesService.getCompanytById(companyId).subscribe({
-      next: (companyData) => {
-        if(!companyData){
-          this.companyError = true;
-          this.notificationsService.error('Oh Oh 😕', "The company details could not be loaded");
-        }
-        else{
-          this.company = companyData;
-        }
-        this.isLoadingCompanyDetails = false;
-      },
-      error: () => {
-        this.companyError = true;
-        this.notificationsService.error('Oh Oh 😕', "The company details could not be loaded");
-        this.isLoadingCompanyDetails = false;
-      }
-    }));
-  }
 
   private loadCompanyContacts(companyId: string) {
     this.isLoadingCompanyDetails = true;

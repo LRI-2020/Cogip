@@ -128,8 +128,8 @@ export class RawCompanyModel {
 }
 
 export enum CompanyType {
-  client = 0,
-  supplier = 1,
+  Client = 0,
+  Supplier = 1,
 }
 
 

@@ -8,19 +8,7 @@
   </ng-template>
 
   <div class="component-data">
-    <div *ngIf="!companyError">
-      <div class="row my-4 justify-content-center" *ngIf="!isLoadingCompanyDetails; else loading">
-        <div class="col-10">
-          <h1>{{company?.name}}</h1>
-          <div >
-            <p><strong>Name : </strong>{{company?.name}}</p>
-            <p><strong>TVA : </strong>{{company?.tva}}</p>
-            <p><strong>Country : </strong>{{company?.country}}</p>
-            <p><strong>Type : </strong>{{company?.type}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-edit-company></app-edit-company>
 
 
     <div class="row my-4 justify-content-center">

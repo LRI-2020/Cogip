@@ -1,6 +1,6 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Company, RawCompanyModel} from "../models/company.model";
+import {Company, CompanyType, RawCompanyModel} from "../models/company.model";
 import {map} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
@@ -11,7 +11,6 @@ import {API_KEY} from "../../../secret";
 @Injectable()
 export class CompaniesService {
 
-  // apiUrl='https://api-cogip-329f9c72c66d.herokuapp.com/api/';
   apiUrl='https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
   constructor(private http: HttpClient, private contactsService: ContactsService, private companyConverter:CompanyConverterService) {
   }
@@ -76,5 +75,33 @@ export class CompaniesService {
       console.log('response not a rawCompany')
       return undefined;
 
+  }
+
+  updateCompany(company: Company) {
+    let body={
+      id:company.id,
+      company_name: company.name,
+      type_name: CompanyType[company.type],
+      country: company.country,
+      tva: company.tva
+    }
+
+    console.log(JSON.stringify(body))
+    return this.http.put(this.apiUrl+'company',JSON.stringify(body),{observe:"response", headers:{
+        "X-API-Key": API_KEY
+      }})
+  }
+
+  createcompany(name:string,type:CompanyType,country:string,tva?:string) {
+    let body={
+      company_name: name,
+      type_name: type,
+      country: country,
+      tva: tva
+    }
+    console.log(JSON.stringify(body))
+    return this.http.post(this.apiUrl+'company',JSON.stringify(body),{observe:"response", headers:{
+        "X-API-Key": API_KEY
+      }})
   }
 }

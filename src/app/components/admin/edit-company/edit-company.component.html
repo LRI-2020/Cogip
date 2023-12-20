@@ -13,19 +13,19 @@
         <div class="col-12 mx-2">
           <div *ngIf="this.editMode">
             <label for="company_id" class="form-label"> Company Id : </label>
-            <input class="readonly form-control readonly" readonly placeholder="auto-generated" type="number" id="company_id" formControlName="id">
+            <input class="readonly form-control readonly" readonly placeholder="auto-generated" type="text" id="company_id" formControlName="company_id">
           </div>
           <div>
             <label for="company_name" class="form-label"> Name : </label>
-            <span class="on-error" *ngIf="!companyForm.get('companyNumber')?.valid  && companyForm.get('companyNumber')?.touched"> * Company name is required</span>
-            <input type="text" id="company_name" class="form-control" formControlName="companyNumber">
+            <span class="on-error" *ngIf="!companyForm.get('company_name')?.valid  && companyForm.get('company_name')?.touched"> * Company name is required</span>
+            <input type="text" id="company_name" class="form-control" formControlName="company_name">
           </div>
           <div>
             <label for="company_type" class="form-label"> Type : </label>
             <span class="on-error" *ngIf="!companyForm.get('company_type')?.valid  && companyForm.get('company_type')?.touched"> * Company type is required</span>
             <select id="company_type" class="form-control" formControlName="company_type">
-              <option [ngValue]="CompanyType.client"> Client</option>
-              <option [ngValue]="CompanyType.supplier"> Supplier</option>
+              <option [value]="CompanyType.Client"> Client</option>
+              <option [value]="CompanyType.Supplier"> Supplier</option>
             </select>
           </div>
           <div>
@@ -39,9 +39,14 @@
           <div>
             <label for="vta_number" class="form-label"> VTA Number : </label>
             <span class="on-error" *ngIf="!companyForm.get('vta_number')?.valid  && companyForm.get('vta_number')?.touched"> * VTA number is required</span>
-            <input type="text" id="vta_number" class="form-control" formControlName="company_tva">
+            <input type="text" id="vta_number" class="form-control" formControlName="vta_number">
           </div>
 
+        </div>
+
+        <div *ngIf="this.editMode">
+          <label for="company_created_at" class="form-label"> Created at : </label>
+          <input type="date" id="company_created_at" class="form-control readonly" readonly formControlName="created_at">
         </div>
 
       </div>
