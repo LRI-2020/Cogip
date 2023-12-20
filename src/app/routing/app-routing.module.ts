@@ -15,7 +15,6 @@ import {AdminCompanyDetailsComponent} from "../components/admin/admin-company-de
 import {AdminContactsComponent} from "../components/admin/admin-contacts/admin-contacts.component";
 import {AdminContactDetailsComponent} from "../components/admin/admin-contact-details/admin-contact-details.component";
 import {AdminInvoicesListComponent} from "../components/admin/admin-invoices-list/admin-invoices-list.component";
-import {AdminInvoiceDetailsComponent} from "../components/admin/admin-invoice-details/admin-invoice-details.component";
 import {EditInvoiceComponent} from "../components/admin/edit-invoice/edit-invoice.component";
 import {AdminInvoicesComponent} from "../components/admin/admin-invoices/admin-invoices.component";
 import {AdminCompaniesComponent} from "../components/admin/admin-companies/admin-companies.component";
