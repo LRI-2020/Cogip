@@ -14,18 +14,17 @@
           <h1>Invoice {{invoice?.invoiceNumber}}</h1>
           <p><strong>invoice : </strong>{{invoice?.invoiceNumber}}</p>
           <p><strong>Due Date : </strong>{{invoice?.dueDate | date:'longDate'}}</p>
-          <p><strong>Company : </strong>{{invoice?.company}}</p>
+          <p><strong>Company : </strong>{{invoice?.company_id}}</p>
           <p><strong>Created at : </strong>{{invoice?.createdAt | date:'longDate'}}</p>
         </div>
         <div class="row justify-content-around my-4">
           <div class="col-5 d-flex flex-inline justify-content-center">
             <button type="button" class="editBtn btn btn-light mx-2 " routerLink="/admin/invoices/{{invoice?.id}}/edit"> Edit</button>
-            <button type="button" class="delete Btn btn btn-light mx-2" (click)="onDelete(invoice?invoice.id:-1)"> Delete</button>
+            <button type="button" class="delete Btn btn btn-light mx-2" (click)="onDelete(invoice?invoice.id:'')"> Delete</button>
           </div>
         </div>
       </div>
     </div>
 
   </div>
-
-
+</div>

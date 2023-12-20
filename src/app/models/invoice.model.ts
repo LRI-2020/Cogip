@@ -2,9 +2,9 @@
 export class Invoice{
 
   private _invoiceNumber: string;
-  private _company: string;
+  private _company_id: string;
   private _dueDate;
-  private _id: number;
+  private _id: string;
   private _createdAt: Date;
   get createdAt(): Date {
     return this._createdAt;
@@ -15,12 +15,12 @@ export class Invoice{
   }
 
 
-  get company(): string {
-    return this._company;
+  get company_id(): string {
+    return this._company_id;
   }
 
-  set company(value: string) {
-    this._company = value;
+  set company_id(value: string) {
+    this._company_id = value;
   }
   get invoiceNumber(): string {
     return this._invoiceNumber;
@@ -36,73 +36,61 @@ export class Invoice{
   set dueDate(value) {
     this._dueDate = value;
   }
-  get id(): number {
+  get id(): string {
     return this._id;
   }
 
-  set id(value: number) {
-    this._id = value;
-  }
-
-  constructor(id:number,invoiceNumber:string,dueDate:Date,company:string,createdAt:Date) {
+  constructor(id:string,invoiceNumber:string,dueDate:Date,company:string,createdAt:Date) {
 
     this._id=id;
     this._invoiceNumber=invoiceNumber;
     this._dueDate=dueDate;
-    this._company = company;
+    this._company_id = company;
     this._createdAt=createdAt;
   }
 }
 
 export class RawInvoice{
-  get company_name(): string {
-    return this._company_name;
+  get company_id(): string {
+    return this._company_id;
   }
 
-  set company_name(value: string) {
-    this._company_name = value;
+  set company_id(value: string) {
+    this._company_id = value;
   }
-  get invoice_creation(): string {
-    return this._invoice_creation;
-  }
-
-  get date_due(): string {
-    return this._date_due;
+  get creationDate(): string {
+    return this._creationDate;
   }
 
-  set date_due(value: string) {
-    this._date_due = value;
-  }
-  get ref(): string {
-    return this._ref;
+  get due_date(): string {
+    return this._due_date;
   }
 
-  set ref(value: string) {
-    this._ref = value;
+  set due_date(value: string) {
+    this._due_date = value;
   }
-  get id(): number {
+  get invoice_number(): string {
+    return this._invoice_number;
+  }
+
+  set invoice_number(value: string) {
+    this._invoice_number = value;
+  }
+  get id(): string {
     return this._id;
   }
 
-  private readonly _id: number;
-  private _ref: string;
-  private _date_due: string;
-  private readonly _invoice_creation: string;
-  private _company_name: string;
-  constructor(id:number,ref:string,date_due:string,invoice_creation:string,company_name:string) {
+  private readonly _id: string;
+  private _invoice_number: string;
+  private _due_date: string;
+  private readonly _creationDate: string;
+  private _company_id: string;
+  constructor(id:string,ref:string,date_due:string,invoice_creation:string,company_id:string) {
     this._id = id;
-    this._ref = ref;
-    this._date_due = date_due;
-    this._invoice_creation = invoice_creation;
-    this._company_name = company_name;
+    this._invoice_number = ref;
+    this._due_date = date_due;
+    this._creationDate = invoice_creation;
+    this._company_id = company_id;
   }
 }
 
-export class InvoiceConverter{
-
-  static toInvoice(rawInvoice:RawInvoice){
-
-    return new Invoice(rawInvoice.id, rawInvoice.ref, new Date(rawInvoice.date_due), rawInvoice.company_name, new Date(rawInvoice.invoice_creation))
-  }
-
-}

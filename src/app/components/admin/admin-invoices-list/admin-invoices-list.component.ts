@@ -56,7 +56,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   searchData(event: Event) {
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
       (<HTMLInputElement>event.target).value,
-      ['invoiceNumber', 'dueDate', 'company', 'createdAt']);
+      ['invoiceNumber', 'dueDate', 'company_id', 'createdAt']);
   }
 
   ngOnDestroy(): void {
@@ -81,7 +81,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
         }}));
   }
 
-  onDelete(id: number) {
+  onDelete(id: string) {
     try {
       this.invoicesService.deleteInvoice(id).subscribe({
         next: response => {

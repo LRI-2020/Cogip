@@ -41,7 +41,7 @@ export class EditInvoiceComponent implements OnInit {
     this.subscriptionsList.push(this.activeRoute.params.subscribe((params) => {
       this.editMode = params['id'] != null;
       if (this.editMode) {
-        let id = +params['id'];
+        let id = params['id'];
         this.fullFillForm(id);
       } else {
         this.isLoading = false;
@@ -49,7 +49,7 @@ export class EditInvoiceComponent implements OnInit {
     }));
   }
 
-  private fullFillForm(id: number) {
+  private fullFillForm(id: string) {
     this.isLoading = true;
     this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe({
       next: invoiceData => {
@@ -93,18 +93,18 @@ export class EditInvoiceComponent implements OnInit {
     this.invoiceForm.setValue({
       id: invoice ? invoice.id : '',
       invoiceNumber: invoice ? invoice.invoiceNumber : '',
-      invoiceCompany: invoice ? invoice.company : '',
+      invoiceCompany: invoice ? invoice.company_id : '',
       invoiceDueDate: invoice ? this.datepipe.transform(invoice.dueDate, 'yyyy-MM-dd') : '',
       invoiceCreatedDate: invoice ? this.datepipe.transform(invoice.createdAt, 'yyyy-MM-dd') : ''
     })
   }
 
   private updateInvoice() {
-    let id = +this.activeRoute.snapshot.params['id'];
+    let id = this.activeRoute.snapshot.params['id'];
     if (this.originalInvoice && this.originalInvoice.id === id && this.invoiceHasChanged()) {
 
       this.originalInvoice.invoiceNumber = this.invoiceForm.get('invoiceNumber')?.value
-      this.originalInvoice.company = this.invoiceForm.get('invoiceCompany')?.value
+      this.originalInvoice.company_id = this.invoiceForm.get('invoiceCompany')?.value
       this.originalInvoice.dueDate = new Date(this.invoiceForm.get('invoiceDueDate')?.value)
 
       try {
@@ -162,7 +162,7 @@ export class EditInvoiceComponent implements OnInit {
 
   private invoiceHasChanged() {
     return (this.originalInvoice?.invoiceNumber !== this.invoiceForm.get('invoiceNumber')?.value)
-      || (this.originalInvoice?.company !== this.invoiceForm.get('invoiceCompany')?.value)
+      || (this.originalInvoice?.company_id !== this.invoiceForm.get('invoiceCompany')?.value)
       || !datesEquals(this.originalInvoice ? this.originalInvoice.dueDate : new Date(), new Date(this.invoiceForm.get('invoiceDueDate')?.value));
   }
 

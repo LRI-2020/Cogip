@@ -22,11 +22,11 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let id = +this.route.snapshot.params['id'];
+    let id = this.route.snapshot.params['id'];
     this.loadData(id);
 
     this.subscriptionsList.push(this.route.params.subscribe((params) => {
-      let id = +params['id'];
+      let id = params['id'];
       this.loadData(id);
     }))
 
@@ -36,7 +36,7 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
-  loadData(id: number) {
+  loadData(id: string) {
     this.isLoading = true;
     this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe({
       next: invoicesData => {
@@ -54,7 +54,7 @@ export class AdminInvoiceDetailsComponent implements OnInit, OnDestroy {
   }
 
 
-  onDelete(id: number) {
+  onDelete(id: string) {
     try {
       this.invoicesService.deleteInvoice(id).subscribe({
         next: response => {

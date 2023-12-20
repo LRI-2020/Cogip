@@ -1,41 +1,45 @@
 ﻿import {HttpClient} from "@angular/common/http";
-import {Invoice, InvoiceConverter, RawInvoice} from "../models/invoice.model";
+import {Invoice, RawInvoice} from "../models/invoice.model";
 import {Injectable} from "@angular/core";
 import {map} from "rxjs";
 import {CompaniesService} from "./companies.service";
 import {dateToCorrectFormat} from "../shared/helpers";
+import {InvoiceConverterService} from "./converters/invoice-converter.service";
+import {API_KEY} from "../../../secret";
 
 @Injectable()
 export class InvoicesService {
-  apiUrl = 'https://api-cogip-329f9c72c66d.herokuapp.com/api/';
+  apiUrl = 'https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
 
-  constructor(private http: HttpClient, private companiesService: CompaniesService) {
+  constructor(private http: HttpClient, private companiesService: CompaniesService, private invoiceConverter: InvoiceConverterService) {
   }
 
   fetchInvoices() {
 
-    return this.http.get<any>(this.apiUrl + 'invoices',{observe:"response"}).pipe(map(responseData => {
+    return this.http.get<any[]>(this.apiUrl + 'invoice',{headers:{
+        "X-API-Key": API_KEY
+      }}).pipe(map(responseData => {
       let invoices: Invoice[] = [];
-      if (responseData.body.data) {
-        responseData.body.data.forEach((d: any) => {
-          let invoice = InvoiceConverter.toInvoice(d as RawInvoice);
-          if (invoice) {
-            invoices.push(invoice);
-          }
-        })
-      }
+      responseData.forEach((d: any) => {
+        if (this.invoiceConverter.isRawInvoice(d)) {
+          let invoice = this.invoiceConverter.rawToInvoice(d as RawInvoice);
+          invoices.push(invoice);
+        }
+      })
       return invoices;
     }));
   }
 
-  getInvoiceBy(id: number) {
-    return this.http.get<any>(this.apiUrl + 'invoices/' + id.toString(),{observe:"response"})
+  getInvoiceBy(id: string) {
+    return this.http.get<any>(this.apiUrl + 'invoice/' + id,{headers:{
+        "X-API-Key": API_KEY
+      }})
       .pipe(map(responseData => {
-      if (responseData.body.data && responseData.body.data[0]) {
-        return InvoiceConverter.toInvoice(responseData.body.data[0] as RawInvoice);
-      }
-      throw new Error('no invoice found with id ' + id);
-    }));
+        if(this.invoiceConverter.isRawInvoice(responseData)){
+          return this.invoiceConverter.rawToInvoice(responseData)
+        }
+        return undefined;
+       }));
   }
 
   updateInvoice(invoice: Invoice) {
@@ -44,7 +48,7 @@ export class InvoicesService {
       "ref": invoice.invoiceNumber,
       "date_due": invoice.dueDate,
       "invoice_creation": invoice.createdAt,
-      "company_name": invoice.company
+      "company_name": invoice.company_id
     }
     return this.http.put(this.apiUrl + 'update-invoice/' + invoice.id, body, {
       observe: 'response'
@@ -68,7 +72,7 @@ export class InvoicesService {
 
   }
 
-  deleteInvoice(id: number) {
+  deleteInvoice(id: string) {
 
     if (this.getInvoiceBy(id)) {
       return this.http.delete(this.apiUrl + 'del-invoice/' + id, {observe: "response"});
