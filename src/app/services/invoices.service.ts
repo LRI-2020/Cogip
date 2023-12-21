@@ -12,7 +12,7 @@ export class InvoicesService {
   apiUrl = 'https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
 
   constructor(private http: HttpClient,
-              private datePipe:DatePipe,
+              private datePipe: DatePipe,
               private companiesService: CompaniesService,
               private invoiceConverter: InvoiceConverterService) {
   }
@@ -83,7 +83,7 @@ export class InvoicesService {
     let body = {
       "id": invoice.id,
       "invoice_number": invoice.invoiceNumber,
-      "due_date": this.datePipe.transform(invoice.dueDate,'yyyy-MM-dd'),
+      "due_date": this.datePipe.transform(invoice.dueDate, 'yyyy-MM-dd'),
       "company_id": invoice.company_id
     }
     return this.http.put(this.apiUrl + 'invoice/', body, {
@@ -98,7 +98,7 @@ export class InvoicesService {
 
     let body = {
       "invoice_number": invoiceNumber,
-      "due_date": this.datePipe.transform(dueDate,'yyyy-MM-dd'),
+      "due_date": this.datePipe.transform(dueDate, 'yyyy-MM-dd'),
       "company_id": companyId
     };
 
@@ -121,7 +121,12 @@ export class InvoicesService {
   deleteInvoice(id: string) {
 
     if (this.fetchInvoiceById(id)) {
-      return this.http.delete(this.apiUrl + 'del-invoice/' + id, {observe: "response"});
+      return this.http.delete(this.apiUrl + 'invoice/' + id, {
+        observe: "response",
+        headers: {
+          "X-API-Key": API_KEY
+        }
+      });
     } else {
       throw new Error('no invoice found with id ' + id);
     }

@@ -43,14 +43,14 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
     this.loadData();
 
     //Listen url for pagination pipe
-      if(this.pagination)
-          this.setPagination();
+    if (this.pagination)
+      this.setPagination();
   }
 
   searchData(event: Event) {
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
       (<HTMLInputElement>event.target).value,
-      ['invoiceNumber', 'dueDate', 'createdAt','company_name']);
+      ['invoiceNumber', 'dueDate', 'createdAt', 'company_name']);
   }
 
   ngOnDestroy(): void {
@@ -58,7 +58,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   }
 
   private loadData() {
-    this.isLoading=true;
+    this.isLoading = true;
     this.subscriptionsList.push(this.invoicesService.getInvoicesWithCompany().subscribe({
       next: result => {
         this.fetchedData = result;
@@ -73,34 +73,30 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
 
   onDelete(id: string) {
     try {
-      this.invoicesService.deleteInvoice(id).subscribe({
-        next: response => {
-          if (response.ok) {
-            this.notificationsService.success('Success', "The invoice has been deleted");
-            this.router.navigate(['/admin/invoices']);
-          }
+      this.subscriptionsList.push(this.invoicesService.deleteInvoice(id).subscribe({
+        next: () => {
+          this.notificationsService.success('Success', "The invoice has been deleted");
+          this.loadData();
         },
         error: () => {
           this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted");
         }
-      });
+      }));
     } catch (e) {
-      if (e instanceof Error) {
-        this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted : " + e.message);
-      } else {
-        this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted");
-      }
+      let error = (e instanceof Error) ? e.message : 'An error occured.'
+      this.notificationsService.error('Oh Oh 😕', error + "The invoice has not been deleted : ");
+
     }
   }
 
 
   private setPagination() {
-      this.subscriptionsList.push(
-        this.route.queryParams.subscribe(params => {
-          {
-            this.helpers.listenPagination(params, this.paginationInfos);
-          }
-        }));
+    this.subscriptionsList.push(
+      this.route.queryParams.subscribe(params => {
+        {
+          this.helpers.listenPagination(params, this.paginationInfos);
+        }
+      }));
   }
 
 }
