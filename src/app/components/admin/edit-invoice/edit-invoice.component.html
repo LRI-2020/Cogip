@@ -21,9 +21,11 @@
             <input type="text" id="invoice_number" class="form-control" formControlName="invoiceNumber">
           </div>
           <div>
-            <label for="invoice_company" class="form-label"> Company : </label>
+            <label for="invoiceCompany" class="form-label"> Company : </label>
             <span class="on-error" *ngIf="!invoiceForm.get('invoiceCompany')?.valid  && invoiceForm.get('invoiceCompany')?.touched"> * Company is required</span>
-            <input id="invoice_company" type="text" class="form-control" formControlName="invoiceCompany">
+            <select id="invoiceCompany" class="form-control" formControlName="invoiceCompany">
+              <option *ngFor="let company of companiesNames" value="{{company.company_id}}"> {{company.company_name}}</option>
+            </select>
           </div>
           <div>
             <label for="invoiceDueDate" class="form-label"> invoice due date : </label>

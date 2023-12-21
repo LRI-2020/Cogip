@@ -3,24 +3,27 @@ import {Invoice, RawInvoice} from "../models/invoice.model";
 import {Injectable} from "@angular/core";
 import {map, mergeAll, mergeMap, toArray} from "rxjs";
 import {CompaniesService} from "./companies.service";
-import {dateToCorrectFormat} from "../shared/helpers";
 import {InvoiceConverterService} from "./converters/invoice-converter.service";
 import {API_KEY} from "../../../secret";
+import {DatePipe} from "@angular/common";
 
 @Injectable()
 export class InvoicesService {
   apiUrl = 'https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
 
-  constructor(private http: HttpClient, private companiesService: CompaniesService, private invoiceConverter: InvoiceConverterService) {
+  constructor(private http: HttpClient,
+              private datePipe:DatePipe,
+              private companiesService: CompaniesService,
+              private invoiceConverter: InvoiceConverterService) {
   }
 
-  getInvoicesWithCompany(){
+  getInvoicesWithCompany() {
     return this.fetchInvoices().pipe(
       mergeAll(),
       mergeMap(
         invoice => {
           return this.companiesService.getCompanytById(invoice.company_id).pipe(map(company => {
-              invoice.company_name = company?company.name:invoice.company_name;
+              invoice.company_name = company ? company.name : invoice.company_name;
               return invoice;
             }
           ))
@@ -30,9 +33,11 @@ export class InvoicesService {
 
   private fetchInvoices() {
 
-    return this.http.get<any[]>(this.apiUrl + 'invoice',{headers:{
+    return this.http.get<any[]>(this.apiUrl + 'invoice', {
+      headers: {
         "X-API-Key": API_KEY
-      }}).pipe(map(responseData => {
+      }
+    }).pipe(map(responseData => {
       let invoices: Invoice[] = [];
       responseData.forEach((d: any) => {
         if (this.invoiceConverter.isRawInvoice(d)) {
@@ -45,21 +50,22 @@ export class InvoicesService {
   }
 
   fetchInvoiceById(id: string) {
-    return this.http.get(this.apiUrl + 'invoice/' + id,{headers:{
+    return this.http.get(this.apiUrl + 'invoice/' + id, {
+      headers: {
         "X-API-Key": API_KEY
-      }})
+      }
+    })
       .pipe(map(responseData => {
-        if(this.invoiceConverter.isRawInvoice(responseData)){
+        if (this.invoiceConverter.isRawInvoice(responseData)) {
           return this.invoiceConverter.rawToInvoice(responseData)
         }
         return undefined;
-       }));
+      }));
   }
 
-  getInvoiceWithCompany(id:string)
-  {
+  getInvoiceWithCompany(id: string) {
     return this.fetchInvoiceById(id).pipe(map(invoice => {
-        if(invoice)
+        if (invoice)
           return invoice
         throw new Error('no invoice found with this id')
       }),
@@ -76,28 +82,37 @@ export class InvoicesService {
   updateInvoice(invoice: Invoice) {
     let body = {
       "id": invoice.id,
-      "ref": invoice.invoiceNumber,
-      "date_due": invoice.dueDate,
-      "invoice_creation": invoice.createdAt,
-      "company_name": invoice.company_id
+      "invoice_number": invoice.invoiceNumber,
+      "due_date": this.datePipe.transform(invoice.dueDate,'yyyy-MM-dd'),
+      "company_id": invoice.company_id
     }
-    return this.http.put(this.apiUrl + 'update-invoice/' + invoice.id, body, {
-      observe: 'response'
+    return this.http.put(this.apiUrl + 'invoice/', body, {
+      observe: 'response',
+      headers: {
+        "X-API-Key": API_KEY
+      }
     })
   }
 
-  createInvoice(invoiceNumber: string, companyName: string, dueDate: Date) {
+  createInvoice(invoiceNumber: string, companyId: string, dueDate: Date) {
 
     let body = {
-      "ref": invoiceNumber,
-      "date_due": dateToCorrectFormat(dueDate),
-      "company_name": companyName
+      "invoice_number": invoiceNumber,
+      "due_date": this.datePipe.transform(dueDate,'yyyy-MM-dd'),
+      "company_id": companyId
     };
 
-    if (this.companyExist(companyName)) {
-      return this.http.post(this.apiUrl + 'add-invoice', body, {observe: "response"});
+
+    if (this.companyExist(companyId)) {
+      return this.http.post(this.apiUrl + 'invoice/', body,
+        {
+          observe: "response",
+          headers: {
+            "X-API-Key": API_KEY
+          }
+        });
     } else {
-      throw new Error('this company does not exist')
+      throw new Error('this company does not exist');
     }
 
 
@@ -112,8 +127,8 @@ export class InvoicesService {
     }
   }
 
-  private companyExist(companyName: string) {
-    return this.companiesService.getCompanyByName(companyName).subscribe(c => c) !== undefined;
+  private companyExist(companyId: string) {
+    return this.companiesService.getCompanytById(companyId).subscribe(c => c) !== undefined;
   }
 }
 
