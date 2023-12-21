@@ -21,7 +21,7 @@
             <input type="text" id="invoice_number" class="form-control" formControlName="invoiceNumber">
           </div>
           <div>
-            <label for="invoice_company" class="form-label"> invoice Company : </label>
+            <label for="invoice_company" class="form-label"> Company : </label>
             <span class="on-error" *ngIf="!invoiceForm.get('invoiceCompany')?.valid  && invoiceForm.get('invoiceCompany')?.touched"> * Company is required</span>
             <input id="invoice_company" type="text" class="form-control" formControlName="invoiceCompany">
           </div>

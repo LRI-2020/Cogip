@@ -67,7 +67,7 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
     this.isLoading=true;
 
     this.subscriptionsList.push(
-      this.invoicesService.fetchInvoices().subscribe({
+      this.invoicesService.getInvoicesWithCompany().subscribe({
         next : invoicesData => {
         this.fetchedData = invoicesData;
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];

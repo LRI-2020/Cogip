@@ -40,7 +40,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load Data
-    this.getDataToDisplay();
+    this.loadData();
 
     //Listen url for pagination pipe
       if(this.pagination)
@@ -58,24 +58,8 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   }
 
   private loadData() {
-    return this.invoicesService.fetchInvoices()
-      .pipe(
-        mergeAll(),
-        mergeMap(
-          invoice => {
-            return this.companiesService.getCompanytById(invoice.company_id).pipe(map(company => {
-              invoice.company_name = company?company.name:invoice.company_name;
-              return invoice;
-              }
-            ))
-          }),
-        toArray()
-      )
-  }
-
-  private getDataToDisplay() {
     this.isLoading=true;
-   this.subscriptionsList.push(this.loadData().subscribe({
+    this.subscriptionsList.push(this.invoicesService.getInvoicesWithCompany().subscribe({
       next: result => {
         this.fetchedData = result;
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams)

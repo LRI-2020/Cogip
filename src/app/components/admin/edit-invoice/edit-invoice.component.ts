@@ -2,12 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Invoice} from "../../../models/invoice.model";
 import {InvoicesService} from "../../../services/invoices.service";
-import {Subscription} from "rxjs";
+import {map, mergeAll, mergeMap, Subscription, toArray} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
 import {DatePipe} from "@angular/common";
 import {datesEquals} from "../../../shared/helpers";
 import {NotificationsService} from "../../../services/notifications.service";
+import {CompaniesService} from "../../../services/companies.service";
 
 @Component({
   selector: 'app-edit-invoice',
@@ -51,7 +52,7 @@ export class EditInvoiceComponent implements OnInit {
 
   private fullFillForm(id: string) {
     this.isLoading = true;
-    this.subscriptionsList.push(this.invoicesService.getInvoiceBy(id).subscribe({
+    this.subscriptionsList.push(this.invoicesService.getInvoiceWithCompany(id).subscribe({
       next: invoiceData => {
         this.originalInvoice = invoiceData;
         this.setFormValue(this.originalInvoice);
@@ -63,6 +64,7 @@ export class EditInvoiceComponent implements OnInit {
       }
     }));
   }
+
 
   onSave() {
     if (this.invoiceForm.valid) {
@@ -89,17 +91,17 @@ export class EditInvoiceComponent implements OnInit {
     this.navigationService.back("/admin");
   }
 
-  private setFormValue(invoice?: Invoice) {
+  private setFormValue(invoice ?: Invoice) {
     this.invoiceForm.setValue({
       id: invoice ? invoice.id : '',
       invoiceNumber: invoice ? invoice.invoiceNumber : '',
-      invoiceCompany: invoice ? invoice.company_id : '',
+      invoiceCompany: invoice ? invoice.company_name : '',
       invoiceDueDate: invoice ? this.datepipe.transform(invoice.dueDate, 'yyyy-MM-dd') : '',
       invoiceCreatedDate: invoice ? this.datepipe.transform(invoice.createdAt, 'yyyy-MM-dd') : ''
     })
   }
 
-  private updateInvoice() {
+  private  updateInvoice() {
     let id = this.activeRoute.snapshot.params['id'];
     if (this.originalInvoice && this.originalInvoice.id === id && this.invoiceHasChanged()) {
 
@@ -126,7 +128,7 @@ export class EditInvoiceComponent implements OnInit {
         })
       } catch (e) {
         if (e instanceof Error) {
-          this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated : "+e.message);
+          this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated : " + e.message);
         }
       }
     } else {
@@ -135,7 +137,7 @@ export class EditInvoiceComponent implements OnInit {
 
   }
 
-  private createInvoice() {
+  private  createInvoice() {
 
     try {
       this.invoicesService.createInvoice(this.invoiceForm.get('invoiceNumber')?.value,
@@ -153,14 +155,14 @@ export class EditInvoiceComponent implements OnInit {
       })
     } catch (e) {
       if (e instanceof Error)
-        this.notificationsService.error('Oh Oh 😕', "The invoice has not been created : "+e.message);
+        this.notificationsService.error('Oh Oh 😕', "The invoice has not been created : " + e.message);
 
       else
         this.notificationsService.error('Oh Oh 😕', "The invoice has not been created");
     }
   }
 
-  private invoiceHasChanged() {
+  private  invoiceHasChanged() {
     return (this.originalInvoice?.invoiceNumber !== this.invoiceForm.get('invoiceNumber')?.value)
       || (this.originalInvoice?.company_id !== this.invoiceForm.get('invoiceCompany')?.value)
       || !datesEquals(this.originalInvoice ? this.originalInvoice.dueDate : new Date(), new Date(this.invoiceForm.get('invoiceDueDate')?.value));
