@@ -33,7 +33,6 @@ import { AdminContactsComponent } from './components/admin/admin-contacts/admin-
 import { AdminInvoicesListComponent } from './components/admin/admin-invoices-list/admin-invoices-list.component';
 import { AdminContactDetailsComponent } from './components/admin/admin-contact-details/admin-contact-details.component';
 import { AdminCompanyDetailsComponent } from './components/admin/admin-company-details/admin-company-details.component';
-import { AdminInvoiceDetailsComponent } from './components/admin/admin-invoice-details/admin-invoice-details.component';
 import { EditInvoiceComponent } from './components/admin/edit-invoice/edit-invoice.component';
 import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
 import {DatePipe} from "@angular/common";
@@ -68,7 +67,6 @@ import { AdminCompaniesComponent } from './components/admin/admin-companies/admi
     AdminInvoicesListComponent,
     AdminContactDetailsComponent,
     AdminCompanyDetailsComponent,
-    AdminInvoiceDetailsComponent,
     EditInvoiceComponent,
     AdminInvoicesComponent,
     NotificationsComponent,
