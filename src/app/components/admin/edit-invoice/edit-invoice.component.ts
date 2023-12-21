@@ -22,7 +22,7 @@ export class EditInvoiceComponent implements OnInit {
   isLoading = false;
   originalInvoice: Invoice | undefined;
   subscriptionsList: Subscription[] = [];
-  companiesNames: { company_id:string,company_name:string }[] = []
+  companiesNames: { company_id: string, company_name: string }[] = []
 
   invoiceForm: FormGroup = new FormGroup({
     "id": new FormControl(''),
@@ -96,14 +96,14 @@ export class EditInvoiceComponent implements OnInit {
       this.invoiceForm.get('invoiceCompany')?.value,
       new Date(this.invoiceForm.get('invoiceDueDate')?.value))
       .subscribe({
-      next: (response) => {
-        this.notificationsService.success('Success', "The invoice has been created");
-        this.router.navigate(['/admin/invoices']);
-      },
-      error: () => {
-        this.notificationsService.error('Oh Oh 😕', "The invoice has not been created");
-      }
-    })
+        next: (response) => {
+          this.notificationsService.success('Success', "The invoice has been created");
+          this.router.navigate(['/admin/invoices']);
+        },
+        error: () => {
+          this.notificationsService.error('Oh Oh 😕', "The invoice has not been created");
+        }
+      })
 
   }
 
@@ -120,7 +120,7 @@ export class EditInvoiceComponent implements OnInit {
     //load companies names for select
     return this.companiesService.fetchCompanies().pipe(
       tap(companies => {
-        companies.forEach(c => this.companiesNames.push({company_id:c.id, company_name:c.name}));
+        companies.forEach(c => this.companiesNames.push({company_id: c.id, company_name: c.name}));
       }),
       //listen for params url
       concatMap(() => {
@@ -195,4 +195,25 @@ export class EditInvoiceComponent implements OnInit {
   }
 
 
+  onDelete() {
+    let id = this.activeRoute.snapshot.params['id'];
+    if(this.originalInvoice?.id === id){
+      try {
+        this.subscriptionsList.push(this.invoicesService.deleteInvoice(id).subscribe({
+          next: () => {
+            this.notificationsService.success('Success', "The invoice has been deleted");
+            this.router.navigate(['/admin/invoices'])
+          },
+          error: () => {
+            this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted");
+          }
+        }));
+      } catch (e) {
+        let error = (e instanceof Error) ? e.message : 'An error occured.'
+        this.notificationsService.error('Oh Oh 😕', error + "The invoice has not been deleted : ");
+
+      }
+    }
+
+  }
 }
