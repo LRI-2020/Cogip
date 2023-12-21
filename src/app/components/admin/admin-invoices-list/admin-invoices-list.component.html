@@ -46,25 +46,25 @@
         </div>
       </div>
       <div *ngIf="!inError">
-        <div class="row adminItemsData align-items-center" *ngFor="let data of (pagination?
+        <div class="row adminItemsData align-items-center" *ngFor="let invoice of (pagination?
       (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay)">
-          <div class="col-2" routerLink="/admin/invoices/{{data.invoice.id}}">
-            <p class="data clickable my-2">{{data.invoice.invoiceNumber}}</p>
+          <div class="col-2" routerLink="/admin/invoices/{{invoice.id}}">
+            <p class="data clickable my-2">{{invoice.invoiceNumber}}</p>
           </div>
           <div class="col-2">
-            <p class="data my-2">{{data.invoice.dueDate|date:'longDate'}}</p>
+            <p class="data my-2">{{invoice.dueDate|date:'longDate'}}</p>
           </div>
           <div class="col-2">
-            <p class="data my-2">{{data.companyName}}</p>
+            <p class="data my-2">{{invoice.company_name}}</p>
           </div>
           <div class="col-2">
-            <p class="data my-2">{{data.invoice.createdAt |date:'longDate'}}</p>
+            <p class="data my-2">{{invoice.createdAt |date:'longDate'}}</p>
           </div>
           <div class="col-2">
-            <button type="button" class="editBtn btn btn-light my-2" routerLink="{{data.invoice.id}}"> Edit</button>
+            <button type="button" class="editBtn btn btn-light my-2" routerLink="{{invoice.id}}"> Edit</button>
           </div>
           <div class="col-2">
-            <button type="button" class="delete Btn btn btn-light my-2" (click)="onDelete(data.invoice.id)"> Delete</button>
+            <button type="button" class="delete Btn btn btn-light my-2" (click)="onDelete(invoice.id)"> Delete</button>
           </div>
         </div>
       </div>

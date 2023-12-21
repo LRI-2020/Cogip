@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Invoice} from "../../../models/invoice.model";
-import {concatMap, map, mergeMap, Subscription, toArray} from "rxjs";
+import {concatMap, forkJoin, map, merge, mergeAll, mergeMap, Subscription, toArray} from "rxjs";
 import {InvoicesService} from "../../../services/invoices.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
@@ -19,9 +19,8 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   @Input() pagination = true;
   @Input() dataFilter: { prop: string, value: any } = {prop: '', value: ''};
 
-  fetchedData: { invoice: Invoice, companyName: string }[] = []
-  // dataToDisplay: Invoice[] = []
-  dataToDisplay: { invoice: Invoice, companyName: string }[] = []
+  fetchedData: Invoice[] = []
+  dataToDisplay: Invoice[] = []
 
   subscriptionsList: Subscription[] = [];
   isLoading = true;
@@ -38,28 +37,20 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load Data
-    this.loadData();
+    this.getDataToDisplay();
 
     //Listen url for pagination pipe
-    if (this.pagination) {
-      this.subscriptionsList.push(
-        this.route.queryParams.subscribe(params => {
-          {
-            this.helpers.listenPagination(params, this.paginationInfos);
-          }
-        }));
-    }
-
+      if(this.pagination)
+          this.setPagination();
   }
 
   searchData(event: Event) {
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
       (<HTMLInputElement>event.target).value,
-      ['invoiceNumber', 'dueDate', 'company_id', 'createdAt']);
+      ['invoiceNumber', 'dueDate', 'createdAt','company_name']);
   }
 
   ngOnDestroy(): void {
@@ -67,36 +58,33 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   }
 
   private loadData() {
-
-    this.invoicesService.fetchInvoices()
+    return this.invoicesService.fetchInvoices()
       .pipe(
-        mergeMap(invoices => invoices),
+        mergeAll(),
         mergeMap(
           invoice => {
             return this.companiesService.getCompanytById(invoice.company_id).pipe(map(company => {
-              return{
-                invoice:invoice,
-                companyName:company?company.name:''
+              invoice.company_name = company?company.name:invoice.company_name;
+              return invoice;
               }
-            }))
+            ))
           }),
         toArray()
       )
+  }
 
-      .subscribe({
-        next: result => {
-          this.fetchedData=result;
-          console.log(JSON.stringify(this.fetchedData))
-          this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams)
-          console.log(JSON.stringify(this.dataToDisplay))
-
-          this.isLoading=false;
-        },
-        error:()=>{
-          this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
-        }
-  });
-
+  private getDataToDisplay() {
+    this.isLoading=true;
+   this.subscriptionsList.push(this.loadData().subscribe({
+      next: result => {
+        this.fetchedData = result;
+        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams)
+        this.isLoading = false;
+      },
+      error: () => {
+        this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
+      }
+    }));
   }
 
   onDelete(id: string) {
@@ -121,5 +109,14 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  private setPagination() {
+      this.subscriptionsList.push(
+        this.route.queryParams.subscribe(params => {
+          {
+            this.helpers.listenPagination(params, this.paginationInfos);
+          }
+        }));
+  }
 
 }

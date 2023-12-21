@@ -1,11 +1,19 @@
 
 export class Invoice{
+  get company_name(): string {
+    return this._company_name;
+  }
+
+  set company_name(value: string) {
+    this._company_name = value;
+  }
 
   private _invoiceNumber: string;
   private _company_id: string;
   private _dueDate;
-  private _id: string;
+  private readonly _id: string;
   private _createdAt: Date;
+  private _company_name:string='';
   get createdAt(): Date {
     return this._createdAt;
   }
