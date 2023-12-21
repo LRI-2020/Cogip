@@ -1,7 +1,7 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {Company, CompanyType, RawCompanyModel} from "../models/company.model";
-import {map} from "rxjs";
+import {map, mergeMap} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
 import {CompanyConverterService} from "./converters/company-converter.service";
@@ -47,14 +47,15 @@ export class CompaniesService {
   }
 
   getContacts(companyId: string) {
-    let companyName = '';
-    this.getCompanytById(companyId).subscribe(companyData => {
-      if (companyData != undefined)
-        companyName = companyData.name
-    });
-    return this.contactsService.fetchContacts().pipe(map(contactsData => {
-      let companyContact = contactsData.filter(c => c.company === companyName);
-      return companyContact.sort(sortByAsc('id')).slice(0, 2);
+    return this.getCompanytById(companyId).pipe(map(company => {
+      if(company){
+        return company;
+      }
+      throw new Error('no company for this id');
+    }),mergeMap(company =>{
+      return this.contactsService.fetchContacts().pipe(map(contacts=>{
+        return contacts.filter(c => c.company === companyId).sort(sortByAsc('id')).slice(0, 2);
+      }))
     }))
   }
 

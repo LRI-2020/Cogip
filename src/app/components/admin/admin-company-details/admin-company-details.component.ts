@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Company} from "../../../models/company.model";
 import {Contact} from "../../../models/contact.model";
-import {Subscription} from "rxjs";
+import {mergeMap, of, Subscription, tap} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
 import {NotificationsService} from "../../../services/notifications.service";
@@ -12,46 +12,46 @@ import {NotificationsService} from "../../../services/notifications.service";
   styleUrl: './admin-company-details.component.scss'
 })
 export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
-  company: Company | undefined;
   companyContacts: Contact[] = []
-  isLoadingCompanyDetails = true;
+  companyId: string = '';
   isLoadingContacts = true;
   subscriptionsList: Subscription[] = [];
   contactsError = false;
-  companyError = false;
 
   constructor(private route: ActivatedRoute, private companiesService: CompaniesService, private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
-    this.subscriptionsList.push(this.route.params.subscribe((params) => {
-      this.loadData(params['id']);
-    }))
+    this.loadCompanyContacts();
   }
 
-  loadData(id: string) {
-    this.loadCompanyContacts(id);
+  loadData() {
+    this.isLoadingContacts = true;
+    //listen id in url
+    return this.route.params.pipe(tap(params => {
+        this.companyId = params['id'];
+      }),
+      mergeMap((params) => {
+        //get observables with contact after getting company id
+        return this.companiesService.getContacts(this.companyId);
+      }));
   }
 
   ngOnDestroy(): void {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
+  private loadCompanyContacts() {
 
-
-  private loadCompanyContacts(companyId: string) {
-    this.isLoadingCompanyDetails = true;
-    this.isLoadingContacts = true;
-
-       this.subscriptionsList.push(this.companiesService.getContacts(companyId).subscribe({
+    this.subscriptionsList.push(this.loadData().subscribe({
       next: (contacts) => {
-        this.contactsError = false;
         this.companyContacts = contacts;
+        this.contactsError = false;
         this.isLoadingContacts = false;
       },
       error: () => {
+        this.notificationsService.error('Oh Oh 😕', "The contacts details could not be loaded");
         this.contactsError = true;
-        this.notificationsService.error('Oh Oh 😕',"The contacts details could not be loaded");
         this.isLoadingContacts = false;
       }
     }));

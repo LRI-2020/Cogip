@@ -39,9 +39,9 @@
     </div>
 
 
-    <div class="row my-4 justify-content-center">
+    <div class="row my-4 justify-content-center" *ngIf="!isLoadingContacts">
       <div class="col-10">
-        <app-admin-list-invoices [lastItemsParams]="{count:3,prop:'createdAt'}" [dataFilter]="{prop:'company',value:company?.name}" [pagination]="false"></app-admin-list-invoices>
+        <app-admin-list-invoices [lastItemsParams]="{count:3,prop:'createdAt'}" [dataFilter]="{prop:'company_id',value:companyId}" [pagination]="false"></app-admin-list-invoices>
       </div>
     </div>
   </div>
