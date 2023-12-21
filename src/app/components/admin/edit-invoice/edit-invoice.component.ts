@@ -211,7 +211,6 @@ export class EditInvoiceComponent implements OnInit {
       } catch (e) {
         let error = (e instanceof Error) ? e.message : 'An error occured.'
         this.notificationsService.error('Oh Oh 😕', error + "The invoice has not been deleted : ");
-
       }
     }
 

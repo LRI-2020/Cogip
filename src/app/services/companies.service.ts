@@ -11,30 +11,36 @@ import {API_KEY} from "../../../secret";
 @Injectable()
 export class CompaniesService {
 
-  apiUrl='https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
-  constructor(private http: HttpClient, private contactsService: ContactsService, private companyConverter:CompanyConverterService) {
+  apiUrl = 'https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
+
+  constructor(private http: HttpClient, private contactsService: ContactsService, private companyConverter: CompanyConverterService) {
   }
 
   fetchCompanies() {
-    return this.http.get<any[]>( this.apiUrl+'company', {headers:{
+    return this.http.get<any[]>(this.apiUrl + 'company', {
+      headers: {
         "X-API-Key": API_KEY
-      }}).pipe(map(responseData => {
+      }
+    }).pipe(map(responseData => {
       return this.responseToCompanies(responseData);
     }));
   }
 
   getCompanytById(id: string) {
 
-    return this.http.get<any>(this.apiUrl + 'company/' + id,{headers:{
-        "X-API-Key": API_KEY     }}).pipe(map(responseData => {
+    return this.http.get<any>(this.apiUrl + 'company/' + id, {
+      headers: {
+        "X-API-Key": API_KEY
+      }
+    }).pipe(map(responseData => {
       let company = this.responseToCompany(responseData)
-        if(company)
-          return company;
+      if (company)
+        return company;
       return undefined
     }));
   }
 
-  getCompanyByName(name:string){
+  getCompanyByName(name: string) {
     return this.fetchCompanies().pipe(map(companies => {
       return companies.find(c => c.name === name);
     }))
@@ -48,14 +54,14 @@ export class CompaniesService {
     });
     return this.contactsService.fetchContacts().pipe(map(contactsData => {
       let companyContact = contactsData.filter(c => c.company === companyName);
-      return companyContact.sort(sortByAsc('id')).slice(0,2);
+      return companyContact.sort(sortByAsc('id')).slice(0, 2);
     }))
   }
 
-  private responseToCompanies(responseData:any[]) {
-    let companies:Company[]=[]
+  private responseToCompanies(responseData: any[]) {
+    let companies: Company[] = []
     responseData.forEach((d: any) => {
-      if(this.companyConverter.isRawCompany(d)){
+      if (this.companyConverter.isRawCompany(d)) {
         let company = this.companyConverter.rawToCompany(d as RawCompanyModel);
         if (company) {
           companies.push(company);
@@ -65,38 +71,54 @@ export class CompaniesService {
     return companies;
   }
 
-  private responseToCompany(responseData:any):Company|undefined {
+  private responseToCompany(responseData: any): Company | undefined {
 
-      if(this.companyConverter.isRawCompany(responseData)){
-        return this.companyConverter.rawToCompany(responseData as RawCompanyModel);
-        }
-      return undefined;
+    if (this.companyConverter.isRawCompany(responseData)) {
+      return this.companyConverter.rawToCompany(responseData as RawCompanyModel);
+    }
+    return undefined;
 
   }
 
   updateCompany(company: Company) {
-    let body={
-      id:company.id,
+    let body = {
+      id: company.id,
       company_name: company.name,
       type_name: CompanyType[company.type],
       country: company.country,
       tva: company.tva
     }
 
-    return this.http.put(this.apiUrl+'company',JSON.stringify(body),{observe:"response", headers:{
+    return this.http.put(this.apiUrl + 'company', JSON.stringify(body), {
+      observe: "response", headers: {
         "X-API-Key": API_KEY
-      }})
+      }
+    })
   }
 
-  createcompany(name:string,type:string,country:string,tva?:string) {
-    let body={
+  createCompany(name: string, type: string, country: string, tva?: string) {
+    let body = {
       company_name: name,
       type_name: type,
       country: country,
       tva: tva
     }
-    return this.http.post(this.apiUrl+'company',JSON.stringify(body),{observe:"response", headers:{
+    return this.http.post(this.apiUrl + 'company', JSON.stringify(body), {
+      observe: "response", headers: {
         "X-API-Key": API_KEY
-      }})
+      }
+    })
+  }
+
+  deleteCompany(id: string) {
+    if (this.getCompanytById(id)) {
+      return this.http.delete(this.apiUrl + 'company/' + id, {
+        observe: "response",
+        headers: {
+          "X-API-Key": API_KEY
+        }
+      })
+    }
+    throw new Error('no company with this id');
   }
 }

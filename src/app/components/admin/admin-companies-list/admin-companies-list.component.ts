@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {CompaniesService} from "../../../services/companies.service";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
-import {Company} from "../../../models/company.model";
+import {Company, CompanyType} from "../../../models/company.model";
 import {Subscription} from "rxjs";
 import {NotificationsService} from "../../../services/notifications.service";
 
@@ -38,17 +38,11 @@ export class AdminCompaniesListComponent {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load data, displayed data and listen for changes
-    this.loadData();
+    this.displayData();
 
     //Listen url for pagination pipe
-    if (this.pagination) {
-      this.subscriptionsList.push(
-        this.route.queryParams.subscribe(params => {
-          {
-            this.helpers.listenPagination(params, this.paginationInfos);
-          }
-        }));
-    }
+    if (this.pagination)
+      this.listenRoute();
   }
 
   ngOnDestroy(): void {
@@ -61,7 +55,7 @@ export class AdminCompaniesListComponent {
       ['name', 'tva', 'country', 'type', 'createdAt']);
   }
 
-  loadData() {
+  displayData() {
     this.isLoading = true;
     this.subscriptionsList.push(
       this.companiesService.fetchCompanies().subscribe({
@@ -75,12 +69,36 @@ export class AdminCompaniesListComponent {
           this.inError = true;
           this.isLoading = false;
           this.notificationsService.error('Oh Oh 😕', "The companies could not be loaded");
-
         }
       }));
   }
 
-  onDelete(id:string) {
+  onDelete(id: string) {
+    try {
+      this.subscriptionsList.push(this.companiesService.deleteCompany(id).subscribe({
+        next: () => {
+          this.notificationsService.success('Success', "The company has been deleted");
+          this.displayData();
+        },
+        error: () => {
+          this.notificationsService.error('Oh Oh 😕', "The company has not been deleted : ");
+        }
+      }))
+    } catch (e) {
+      let error = (e instanceof Error) ? e.message : 'An error occured.'
+      this.notificationsService.error('Oh Oh 😕', error + "The company has not been deleted : ");
+    }
 
   }
+
+  private listenRoute() {
+    this.subscriptionsList.push(
+      this.route.queryParams.subscribe(params => {
+        {
+          this.helpers.listenPagination(params, this.paginationInfos);
+        }
+      }));
+  }
+
+  protected readonly CompanyType = CompanyType;
 }

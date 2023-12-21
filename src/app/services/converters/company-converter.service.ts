@@ -18,7 +18,7 @@ export class CompanyConverterService {
         rawCompany.company_name,
         rawCompany.tva?rawCompany.tva:"",
         rawCompany.country?rawCompany.country:"Belgium",
-        rawCompany.type_name === 'client' ? CompanyType.Client : CompanyType.Supplier,
+        rawCompany.type_name.toLowerCase() === 'client' ? CompanyType.Client : CompanyType.Supplier,
         creationDate)
 
   }

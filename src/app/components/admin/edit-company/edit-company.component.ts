@@ -90,6 +90,28 @@ export class EditCompanyComponent implements OnInit {
     this.navigationService.back("/admin");
   }
 
+  onDelete() {
+    let id = this.activeRoute.snapshot.params['id'];
+    if(this.originalCompany?.id === id){
+      try {
+        this.subscriptionsList.push(this.companiesService.deleteCompany(id).subscribe({
+          next: () => {
+            this.notificationsService.success('Success', "The company has been deleted");
+            this.loadData();
+          },
+          error: () => {
+            this.notificationsService.error('Oh Oh 😕', "The company has not been deleted : ");
+          }
+        }))
+      } catch (e) {
+        let error = (e instanceof Error) ? e.message : 'An error occured.'
+        this.notificationsService.error('Oh Oh 😕', error + "The company has not been deleted : ");
+      }
+    }
+
+
+  }
+
   private setErrorState(message: string) {
     this.companyError = true;
     this.notificationsService.error('Oh Oh 😕', message);
@@ -140,7 +162,7 @@ export class EditCompanyComponent implements OnInit {
     let country = getCountryName(this.companyForm.get('company_country')?.value)
     let tva = this.companyForm.get('vta_number')?.value
     try {
-      this.companiesService.createcompany(name,type,country,tva).subscribe({
+      this.companiesService.createCompany(name,type,country,tva).subscribe({
         next: (response) => {
           if (response.ok) {
             this.notificationsService.success('Success', "The company has been created");

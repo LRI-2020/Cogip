@@ -51,10 +51,10 @@
 
         <div class="row adminItemsData align-items-start"
              *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
-           :dataToDisplay)" routerLink="/admin/companies/{{company.id}}">
+           :dataToDisplay)">
 
-          <div class="col overflow-hidden">
-            <p class="data my-2">{{company.name}}</p>
+          <div class="col overflow-hidden" routerLink="/admin/companies/{{company.id}}">
+            <p class="data clickable my-2">{{company.name}}</p>
           </div>
           <div class="col overflow-hidden">
             <p class="data my-2">{{company.tva}}</p>
@@ -63,7 +63,7 @@
             <p class="data my-2">{{company.country}}</p>
           </div>
           <div class="col overflow-hidden">
-            <p class="data my-2">{{company.type}}</p>
+            <p class="data my-2">{{CompanyType[company.type]}}</p>
           </div>
           <div class="col overflow-hidden ">
             <p class="data my-2">{{company.createdAt | date:'mediumDate'}}</p>
