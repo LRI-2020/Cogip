@@ -33,13 +33,14 @@
             <p class="title my-2">Created At</p>
           </div>
 
+      </div>
 
-          <div *ngIf="dataToDisplay.length===0 && !inError" class="col-12 justify-content-center">
-            <p class="fs-3 align-self-center text-center">There is no company to display</p>
-          </div>
-          <ng-template class="col-12" #error>
-            <p class="fs-3 align-self-center text-center">Error - data could not be loaded</p>
-          </ng-template>
+        <div *ngIf="dataToDisplay.length===0 && !inError" class="col-12 justify-content-center">
+          <p class="fs-3 align-self-center text-center">There is no company to display</p>
+        </div>
+        <ng-template class="col-12" #error>
+          <p class="fs-3 align-self-center text-center">Error - data could not be loaded</p>
+        </ng-template>
         <div *ngIf="!inError; else error">
           <div class="row itemsData justify-content-start"
                *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/companies/{{company.id}}">
@@ -57,11 +58,10 @@
               <p class="data my-2">{{company.type}}</p>
             </div>
             <div class="col-2">
-              <p class="data my-2">{{company.createdAt | date:'longDate'}}</p>
+              <p class="data my-2">{{company.createdAt | date:'dd-MM-yyyy'}}</p>
             </div>
           </div>
         </div>
-      </div>
     </div>
     <div class="row my-2" *ngIf="pagination">
       <div class="col-12 d-flex justify-content-center">
