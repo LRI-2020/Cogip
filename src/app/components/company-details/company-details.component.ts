@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {Company} from "../../models/company.model";
+import {Company, CompanyType} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Contact} from "../../models/contact.model";
 import {Subscription} from "rxjs";
@@ -81,4 +81,6 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
+
+  protected readonly CompanyType = CompanyType;
 }

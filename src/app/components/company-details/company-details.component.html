@@ -14,7 +14,7 @@
         <p><strong>Name : </strong>{{company?.name}}</p>
         <p><strong>TVA : </strong>{{company?.tva}}</p>
         <p><strong>Country : </strong>{{company?.country}}</p>
-        <p><strong>Type : </strong>{{company?.type}}</p>
+        <p><strong>Type : </strong>{{company?CompanyType[company.type]:''}}</p>
       </div>
     </div>
 

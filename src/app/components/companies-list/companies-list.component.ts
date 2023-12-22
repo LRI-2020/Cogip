@@ -1,5 +1,5 @@
 import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
-import {Company} from "../../models/company.model";
+import {Company, CompanyType} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
@@ -13,10 +13,11 @@ import {NotificationsService} from "../../services/notifications.service";
   styleUrl: './companies-list.component.scss'
 })
 export class CompaniesListComponent implements OnInit, OnDestroy {
+  protected readonly CompanyType = CompanyType;
 
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
-              private helpers: Helpers, private notificationsService:NotificationsService) {
+              private helpers: Helpers, private notificationsService: NotificationsService) {
   }
 
   @Input() lastItemsParams = {count: -1, prop: ''};
@@ -26,7 +27,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   fetchedData: Company[] = [];
   dataToDisplay: Company[] = [];
   onlyLastItems = false;
-  inError=false;
+  inError = false;
 
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
@@ -67,21 +68,19 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
     this.subscriptionsList.push(
       this.companiesService.fetchCompanies().subscribe({
-        next:(companiesData)=>{
-          this.inError=false;
+        next: (companiesData) => {
+          this.inError = false;
           this.fetchedData = companiesData;
           this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
           this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
           this.isLoading = false;
         },
-        error:()=>{
-          this.inError=true;
+        error: () => {
+          this.inError = true;
           this.notificationsService.error('Oh Oh 😕', "The companies could not be loaded");
-          this.isLoading=false;
+          this.isLoading = false;
         }
       }));
 
   }
-
-  protected readonly Error = Error;
 }
