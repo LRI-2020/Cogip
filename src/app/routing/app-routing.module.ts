@@ -31,20 +31,24 @@ const appRoutes: Routes = [
   {path: "register", component: RegisterComponent},
   {path: "login", component: LoginComponent},
   {path: "admin", component: AdminDashboardComponent},
-  {path: "admin/invoices", component:AdminInvoicesComponent, children:[
+  {
+    path: "admin/invoices", component: AdminInvoicesComponent, children: [
       {path: "", component: AdminInvoicesListComponent},
       {path: "new", component: EditInvoiceComponent},
       {path: ":id", component: EditInvoiceComponent},
-    ]},
+    ]
+  },
 
   {path: "admin/contacts", component: AdminContactsComponent},
   {path: "admin/contacts/:id", component: AdminContactDetailsComponent},
-  {path: "admin/companies", component: AdminCompaniesComponent, children:[
+  {
+    path: "admin/companies", component: AdminCompaniesComponent, children: [
       {path: "", component: AdminCompaniesListComponent},
       {path: "new", component: EditCompanyComponent},
       {path: ":id", component: AdminCompanyDetailsComponent},
       {path: ":id/edit", component: EditCompanyComponent},
-    ]},
+    ]
+  },
   {path: 'not-found', component: NotFoundComponent},
   {path: '**', redirectTo: '/not-found'}
 ]

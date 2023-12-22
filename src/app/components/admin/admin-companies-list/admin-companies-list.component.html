@@ -69,7 +69,7 @@
             <p class="data my-2">{{company.createdAt | date:'mediumDate'}}</p>
           </div>
           <div class="col">
-            <button type="button" class="editBtn btn btn-light my-2" routerLink="{{company.id}}"> Edit</button>
+            <button type="button" class="editBtn btn btn-light my-2" routerLink="/admin/companies/{{company.id}}"> Edit</button>
           </div>
           <div class="col">
             <button type="button" class="delete Btn btn btn-light my-2" (click)="onDelete(company.id)"> Delete</button>
