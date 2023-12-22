@@ -83,4 +83,5 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   }
 
+  protected readonly Error = Error;
 }

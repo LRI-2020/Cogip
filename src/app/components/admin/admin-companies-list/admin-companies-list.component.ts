@@ -101,4 +101,5 @@ export class AdminCompaniesListComponent {
   }
 
   protected readonly CompanyType = CompanyType;
+  protected readonly Error = Error;
 }

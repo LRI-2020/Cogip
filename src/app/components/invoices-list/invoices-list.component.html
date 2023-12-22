@@ -32,7 +32,13 @@
             <p class="title my-2">Created At</p>
           </div>
         </div>
-        <div *ngIf="!inError">
+        <div *ngIf="dataToDisplay.length===0 && !inError" class="col-12 justify-content-center">
+          <p class="fs-3 align-self-center text-center">There is no company to display</p>
+        </div>
+        <ng-template class="col-12" #error>
+          <p class="fs-3 align-self-center text-center">Error - data could not be loaded</p>
+        </ng-template>
+        <div *ngIf="!inError; else error">
           <div class="row itemsData align-items-center" *ngFor="let invoice of
         (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage) : dataToDisplay) ">
             <div class="col-2">

@@ -16,39 +16,44 @@
   </div>
 </ng-template>
 
-<div *ngIf="!inError">
-  <div class="component-data" *ngIf="!isLoading; else loading">
-    <div class="row">
-      <div class="col admin-new d-flex justify-content-end">
-        <button class="btn newBtn fw-bold mt-3 me-3" routerLink="/admin/companies/new" type="button">New Company</button>
-      </div>
+<div class="component-data" *ngIf="!isLoading; else loading">
+  <div class="row">
+    <div class="col admin-new d-flex justify-content-end">
+      <button class="btn newBtn fw-bold mt-3 me-3" routerLink="/admin/companies/new" type="button">New Company</button>
     </div>
-    <div class="row adminItemsList ps-2">
-      <div class="col-12">
-        <div class="row adminTitleRow align-items-start">
-          <div class="col">
-            <p class="title my-2">Name</p>
-          </div>
-          <div class="col">
-            <p class="title my-2">TVA</p>
-          </div>
-          <div class="col">
-            <p class="title my-2">Country</p>
-          </div>
-          <div class="col">
-            <p class="title my-2">Type</p>
-          </div>
-          <div class="col">
-            <p class="title my-2">Created At</p>
-          </div>
-          <div class="col">
-            <p class="title my-2"></p>
-          </div>
-          <div class="col">
-            <p class="title my-2"></p>
-          </div>
+  </div>
+  <div class="row adminItemsList ps-2">
+    <div class="col-12">
+      <div class="row adminTitleRow align-items-start">
+        <div class="col">
+          <p class="title my-2">Name</p>
         </div>
-
+        <div class="col">
+          <p class="title my-2">TVA</p>
+        </div>
+        <div class="col">
+          <p class="title my-2">Country</p>
+        </div>
+        <div class="col">
+          <p class="title my-2">Type</p>
+        </div>
+        <div class="col">
+          <p class="title my-2">Created At</p>
+        </div>
+        <div class="col">
+          <p class="title my-2"></p>
+        </div>
+        <div class="col">
+          <p class="title my-2"></p>
+        </div>
+      </div>
+      <div *ngIf="dataToDisplay.length===0 && !inError" class="col-12 justify-content-center">
+        <p class="fs-3 align-self-center text-center">There is no company to display</p>
+      </div>
+      <ng-template class="col-12" #error>
+        <p class="fs-3 align-self-center text-center">Error - data could not be loaded</p>
+      </ng-template>
+      <div *ngIf="!inError; else error">
         <div class="row adminItemsData align-items-start"
              *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
            :dataToDisplay)">
