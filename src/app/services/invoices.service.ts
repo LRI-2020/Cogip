@@ -25,7 +25,7 @@ export class InvoicesService {
         invoice => {
           return this.companiesService.getCompanytById(invoice.company_id).pipe(
             //When company has been deleted but not invoice - catch error && continue
-            catchError(error=>{console.log(error); return of(true)}),
+            catchError(error=> of(true)),
             map(company => {
             invoice.company_name = company && company instanceof Company? company.name : invoice.company_name;
               return invoice;
@@ -137,7 +137,9 @@ export class InvoicesService {
   }
 
   private companyExist(companyId: string) {
-    return this.companiesService.getCompanytById(companyId).subscribe(c => c) !== undefined;
+        return this.companiesService.getCompanytById(companyId).subscribe(c =>{
+          return c
+        }) !== undefined;
   }
 }
 
