@@ -3,7 +3,7 @@ import {CompaniesService} from "../../../services/companies.service";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
 import {Company, CompanyType} from "../../../models/company.model";
-import {mergeMap, of, Subscription, tap} from "rxjs";
+import {concatMap, of, Subscription, tap} from "rxjs";
 import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
@@ -40,7 +40,8 @@ export class AdminCompaniesListComponent {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load data, displayed data and listen for changes
-      this.subscribeToData();
+    this.subscriptionsList.push(this.displayData().subscribe());
+
     //Listen url for pagination pipe
     if (this.pagination)
       this.listenRoute();
@@ -56,33 +57,26 @@ export class AdminCompaniesListComponent {
       ['name', 'tva', 'country', 'type', 'createdAt']);
   }
 
-  private subscribeToData(){
-    this.subscriptionsList.push(this.displayData().subscribe({
-      next : data => data,
-      error: ()=>{
-        this.isLoading = false;
-        this.notificationsService.error('Oh Oh 😕', "The company could not been loaded : ");
-      }
-    }));
-  }
-
   private displayData() {
     this.isLoading = true;
-
-    return this.companiesService.fetchCompanies().pipe(tap(companiesData => {
+    return this.companiesService.fetchCompanies().pipe(tap({
+      next : companiesData => {
       this.fetchedData = companiesData;
       this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
       this.isLoading = false;
-    }))
+    },
+    error: ()=>{
+      this.isLoading = false;
+      this.notificationsService.error('Oh Oh 😕', "The company could not been loaded : ");
+    }}))
 
   }
 
   onDelete(id: string) {
     try {
-      this.subscriptionsList.push(this.companiesService.deleteCompany(id).pipe(mergeMap(response => {
-        if (response.ok){
+      this.subscriptionsList.push(this.companiesService.deleteCompany(id).pipe(concatMap(response => {
+        if (response.ok)
           return this.displayData();
-        }
         return of(response);
       })).subscribe({
         next: () => {

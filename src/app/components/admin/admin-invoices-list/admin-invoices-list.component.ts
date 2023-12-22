@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Invoice} from "../../../models/invoice.model";
-import {concatMap, forkJoin, map, merge, mergeAll, mergeMap, Subscription, toArray} from "rxjs";
+import {concatMap, of, Subscription, tap} from "rxjs";
 import {InvoicesService} from "../../../services/invoices.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
@@ -41,7 +41,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
     console.log('company id received in list invoices component : '+this.dataFilter.value)
 
     //load Data
-    this.loadData();
+    this.loadData().subscribe();
 
     //Listen url for pagination pipe
     if (this.pagination)
@@ -60,25 +60,28 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
 
   private loadData() {
     this.isLoading = true;
-    this.subscriptionsList.push(this.invoicesService.getInvoicesWithCompany().subscribe({
+    return  this.invoicesService.getInvoicesWithCompany().pipe(tap({
       next: result => {
         this.fetchedData = result;
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams)
         this.isLoading = false;
       },
-      error: () => {
+        error: () => {
         this.isLoading=false;
         this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
       }
-    }));
+    }))
   }
 
   onDelete(id: string) {
     try {
-      this.subscriptionsList.push(this.invoicesService.deleteInvoice(id).subscribe({
+      this.subscriptionsList.push(this.invoicesService.deleteInvoice(id).pipe(concatMap(response =>{
+          if(response.ok)
+               return this.loadData();
+          return of(response)
+      })).subscribe({
         next: () => {
           this.notificationsService.success('Success', "The invoice has been deleted");
-          this.loadData();
         },
         error: () => {
           this.notificationsService.error('Oh Oh 😕', "The invoice has not been deleted");
