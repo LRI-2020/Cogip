@@ -1,11 +1,12 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Invoice, RawInvoice} from "../models/invoice.model";
 import {Injectable} from "@angular/core";
-import {map, mergeAll, mergeMap, toArray} from "rxjs";
+import {catchError, empty, map, mergeAll, mergeMap, of, toArray} from "rxjs";
 import {CompaniesService} from "./companies.service";
 import {InvoiceConverterService} from "./converters/invoice-converter.service";
 import {API_KEY} from "../../../secret";
 import {DatePipe} from "@angular/common";
+import {Company} from "../models/company.model";
 
 @Injectable()
 export class InvoicesService {
@@ -22,8 +23,11 @@ export class InvoicesService {
       mergeAll(),
       mergeMap(
         invoice => {
-          return this.companiesService.getCompanytById(invoice.company_id).pipe(map(company => {
-              invoice.company_name = company ? company.name : invoice.company_name;
+          return this.companiesService.getCompanytById(invoice.company_id).pipe(
+            //When company has been deleted but not invoice - catch error && continue
+            catchError(error=>{console.log(error); return of(true)}),
+            map(company => {
+            invoice.company_name = company && company instanceof Company? company.name : invoice.company_name;
               return invoice;
             }
           ))

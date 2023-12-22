@@ -38,6 +38,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
+    console.log('company id received in list invoices component : '+this.dataFilter.value)
 
     //load Data
     this.loadData();
@@ -66,6 +67,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error: () => {
+        this.isLoading=false;
         this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
       }
     }));

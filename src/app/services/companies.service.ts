@@ -33,10 +33,7 @@ export class CompaniesService {
         "X-API-Key": API_KEY
       }
     }).pipe(map(responseData => {
-      let company = this.responseToCompany(responseData)
-      if (company)
-        return company;
-      return undefined
+      return this.responseToCompany(responseData);
     }));
   }
 
