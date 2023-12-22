@@ -60,7 +60,7 @@ export class EditCompanyComponent implements OnInit {
       },
       error: () => {
         this.setErrorState("The company could not be loaded")
-        this.router.navigate(['/admin/companys']);
+        this.router.navigate(['/admin/companies']);
       }
     }));
   }
@@ -97,7 +97,7 @@ export class EditCompanyComponent implements OnInit {
         this.subscriptionsList.push(this.companiesService.deleteCompany(id).subscribe({
           next: () => {
             this.notificationsService.success('Success', "The company has been deleted");
-            this.loadData();
+            this.router.navigate(['/admin/companies'])
           },
           error: () => {
             this.notificationsService.error('Oh Oh 😕', "The company has not been deleted : ");

@@ -3,7 +3,7 @@ import {CompaniesService} from "../../../services/companies.service";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
 import {Company, CompanyType} from "../../../models/company.model";
-import {Subscription} from "rxjs";
+import {mergeMap, of, Subscription, tap} from "rxjs";
 import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
@@ -38,8 +38,11 @@ export class AdminCompaniesListComponent {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load data, displayed data and listen for changes
-    this.displayData();
-
+    this.subscriptionsList.push(this.displayData().subscribe((data) => data,
+      (error)=>{
+        this.isLoading = false;
+        this.notificationsService.error('Oh Oh 😕', "The company could not been loaded : ");
+      }));
     //Listen url for pagination pipe
     if (this.pagination)
       this.listenRoute();
@@ -57,30 +60,31 @@ export class AdminCompaniesListComponent {
 
   displayData() {
     this.isLoading = true;
-    this.subscriptionsList.push(
-      this.companiesService.fetchCompanies().subscribe({
-        next: (companiesData) => {
-          this.inError = false;
-          this.fetchedData = companiesData;
-          this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
-          this.isLoading = false;
-        },
-        error: () => {
-          this.inError = true;
-          this.isLoading = false;
-          this.notificationsService.error('Oh Oh 😕', "The companies could not be loaded");
-        }
-      }));
+
+    return this.companiesService.fetchCompanies().pipe(tap(companiesData => {
+      this.fetchedData = companiesData;
+      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
+      this.isLoading = false;
+      console.log('tap du display')
+    }))
+
   }
 
   onDelete(id: string) {
     try {
-      this.subscriptionsList.push(this.companiesService.deleteCompany(id).subscribe({
+      this.subscriptionsList.push(this.companiesService.deleteCompany(id).pipe(mergeMap(response => {
+        if (response.ok){
+          console.log('mergeMap du delete')
+          return this.displayData();
+        }
+        return of(response);
+      })).subscribe({
         next: () => {
+          console.log('subscribe next du delete')
           this.notificationsService.success('Success', "The company has been deleted");
-          this.displayData();
         },
         error: () => {
+          console.log('subscribe error du delete')
           this.notificationsService.error('Oh Oh 😕', "The company has not been deleted : ");
         }
       }))
@@ -101,5 +105,4 @@ export class AdminCompaniesListComponent {
   }
 
   protected readonly CompanyType = CompanyType;
-  protected readonly Error = Error;
 }
