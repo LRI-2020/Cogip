@@ -12,6 +12,8 @@ import {NotificationsService} from "../../../services/notifications.service";
   styleUrl: './admin-companies-list.component.scss'
 })
 export class AdminCompaniesListComponent {
+  protected readonly CompanyType = CompanyType;
+
   constructor(private companiesService: CompaniesService,
               private route: ActivatedRoute,
               private helpers: Helpers,
@@ -38,11 +40,7 @@ export class AdminCompaniesListComponent {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load data, displayed data and listen for changes
-    this.subscriptionsList.push(this.displayData().subscribe((data) => data,
-      (error)=>{
-        this.isLoading = false;
-        this.notificationsService.error('Oh Oh 😕', "The company could not been loaded : ");
-      }));
+      this.subscribeToData();
     //Listen url for pagination pipe
     if (this.pagination)
       this.listenRoute();
@@ -58,14 +56,23 @@ export class AdminCompaniesListComponent {
       ['name', 'tva', 'country', 'type', 'createdAt']);
   }
 
-  displayData() {
+  private subscribeToData(){
+    this.subscriptionsList.push(this.displayData().subscribe({
+      next : data => data,
+      error: ()=>{
+        this.isLoading = false;
+        this.notificationsService.error('Oh Oh 😕', "The company could not been loaded : ");
+      }
+    }));
+  }
+
+  private displayData() {
     this.isLoading = true;
 
     return this.companiesService.fetchCompanies().pipe(tap(companiesData => {
       this.fetchedData = companiesData;
       this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
       this.isLoading = false;
-      console.log('tap du display')
     }))
 
   }
@@ -74,17 +81,14 @@ export class AdminCompaniesListComponent {
     try {
       this.subscriptionsList.push(this.companiesService.deleteCompany(id).pipe(mergeMap(response => {
         if (response.ok){
-          console.log('mergeMap du delete')
           return this.displayData();
         }
         return of(response);
       })).subscribe({
         next: () => {
-          console.log('subscribe next du delete')
           this.notificationsService.success('Success', "The company has been deleted");
         },
         error: () => {
-          console.log('subscribe error du delete')
           this.notificationsService.error('Oh Oh 😕', "The company has not been deleted : ");
         }
       }))
@@ -104,5 +108,4 @@ export class AdminCompaniesListComponent {
       }));
   }
 
-  protected readonly CompanyType = CompanyType;
 }
