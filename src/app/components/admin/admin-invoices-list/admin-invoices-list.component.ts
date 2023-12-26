@@ -41,7 +41,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
     console.log('company id received in list invoices component : '+this.dataFilter.value)
 
     //load Data
-    this.loadData().subscribe();
+    this.subscriptionsList.push(this.loadData().subscribe());
 
     //Listen url for pagination pipe
     if (this.pagination)

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Invoice} from "../../../models/invoice.model";
 import {InvoicesService} from "../../../services/invoices.service";
-import {concatMap, forkJoin, map, mergeMap, of, Subscription, tap} from "rxjs";
+import {catchError, concatMap, of, Subscription, tap} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
 import {DatePipe} from "@angular/common";
@@ -54,7 +54,7 @@ export class EditInvoiceComponent implements OnInit {
   }
 
   onCancel() {
-    this.displayData();
+    this.displayData()
   }
 
   onBack() {
@@ -74,36 +74,49 @@ export class EditInvoiceComponent implements OnInit {
   private updateInvoice(originalInvoice: Invoice) {
     let invoiceToUpdate = this.getUpdatedValues(originalInvoice);
 
-    this.subscriptionsList.push(this.invoicesService.updateInvoice(invoiceToUpdate).subscribe({
-      next: (response) => {
-        this.displayData();
-        this.notificationsService.success('Success', "The invoice has been updated");
-        console.log(response);
-      },
-      error: (error) => {
-        this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated");
-        this.displayData();
-        console.log(error);
-      }
-    }))
+    this.subscriptionsList.push(
+      this.invoicesService.updateInvoice(invoiceToUpdate).pipe(
+        concatMap(response => {
+          this.isLoading = true;
+          return this.LoadData();
+        })
+      )
+        .subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.notificationsService.success('Success', "The invoice has been updated");
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated");
+          }
+        }))
 
   }
 
   private createInvoice() {
+    try {
+        this.invoicesService.createInvoice(
+          this.invoiceForm.get('invoiceNumber')?.value,
+          this.invoiceForm.get('invoiceCompany')?.value,
+          new Date(this.invoiceForm.get('invoiceDueDate')?.value))
+           .subscribe({
+            next: () => {
+              this.notificationsService.success('Success', "The invoice has been created");
+              this.router.navigate(['/admin/invoices']);
+            },
+            error: (e) => {
+              let error = e instanceof Error ? e.message + '.' : '';
+              this.notificationsService.error('Oh Oh 😕', error + "The invoice has not been created");
+              this.displayData();
+            }
+           })
+    } catch (e) {
+      let error = e instanceof Error ? e.message + '.' : '';
+      this.notificationsService.error('Oh Oh 😕', error + " The invoice has not been created");
+      this.displayData();
+    }
 
-    this.invoicesService.createInvoice(
-      this.invoiceForm.get('invoiceNumber')?.value,
-      this.invoiceForm.get('invoiceCompany')?.value,
-      new Date(this.invoiceForm.get('invoiceDueDate')?.value))
-      .subscribe({
-        next: (response) => {
-          this.notificationsService.success('Success', "The invoice has been created");
-          this.router.navigate(['/admin/invoices']);
-        },
-        error: () => {
-          this.notificationsService.error('Oh Oh 😕', "The invoice has not been created");
-        }
-      })
 
   }
 
@@ -115,52 +128,38 @@ export class EditInvoiceComponent implements OnInit {
         new Date(), new Date(this.invoiceForm.get('invoiceDueDate')?.value));
   }
 
-  private LoadData() {
-    this.isLoading = true;
-    //load companies names for select
+  private loadCompaniesNames() {
     return this.companiesService.fetchCompanies().pipe(
       tap(companies => {
-        companies.forEach(c => this.companiesNames.push({company_id: c.id, company_name: c.name}));
-      }),
-      //listen for params url
+        this.setCompaniesNames(companies);
+      }));
+  }
+
+  private LoadData() {
+    return this.loadCompaniesNames().pipe(
       concatMap(() => {
-        return this.activeRoute.params
-      }),
-      //fulfill form if edit mode
-      concatMap((params) => {
-        this.editMode = params['id'] != null;
-        if (this.editMode) {
-          return this.invoicesService.getInvoiceWithCompany(params['id'])
-        }
-        return of(true)
+        return this.loadInvoice();
       }))
 
   }
 
   private displayData() {
-    //fulfillForm regarding data loaded
-    this.subscriptionsList.push(this.LoadData().subscribe({
-      next: result => {
-        if (result instanceof Invoice) {
-          this.setFormValue(result)
-          this.originalInvoice = result;
-        } else {
-          this.setFormValue();
+    this.isLoading = true;
+    this.subscriptionsList.push(
+      this.LoadData().subscribe({
+        next: () => {
+          this.isLoading = false
+        },
+        error: () => {
+          this.isLoading = false;
+          this.notificationsService.error('Oh Oh 😕', "The invoice could not be loaded");
+          this.router.navigate(['/admin/invoices']);
         }
-        this.isLoading = false;
-      },
-      error: () => {
-        this.notificationsService.error('Oh Oh 😕', "The invoice could not be loaded");
-        this.router.navigate(['/admin/invoices']);
-        this.isLoading = false;
-      },
-      complete: () => {
-        this.isLoading = false;
-      }
-    }))
+      })
+    )
   }
 
-  //return invoice with forms values
+  //return invoice with updated values
   private getUpdatedValues(invoice: Invoice) {
 
     invoice.invoiceNumber = this.invoiceForm.get('invoiceNumber')?.value
@@ -176,24 +175,13 @@ export class EditInvoiceComponent implements OnInit {
 
   private processForm() {
     if (!this.editMode) {
-      try {
-        this.createInvoice();
-      } catch (e) {
-        let error = (e instanceof Error ? e.message : 'An error has occured.');
-        this.notificationsService.error('Oh Oh 😕', error + " The invoice has not been created");
-      }
+      this.createInvoice();
     } else {
       if (this.validForUpdate() && this.originalInvoice) {
-        try {
-          this.updateInvoice(this.originalInvoice)
-        } catch (e) {
-          let error = (e instanceof Error ? e.message : 'An error has occured.');
-          this.notificationsService.error('Oh Oh 😕', error + " The invoice has not been updated");
-        }
+        this.updateInvoice(this.originalInvoice)
       }
     }
   }
-
 
   onDelete() {
     let id = this.activeRoute.snapshot.params['id'];
@@ -214,5 +202,29 @@ export class EditInvoiceComponent implements OnInit {
       }
     }
 
+  }
+
+  private setCompaniesNames(companies: Company[]) {
+    this.companiesNames = [];
+    companies.forEach(c => this.companiesNames.push({company_id: c.id, company_name: c.name}));
+  }
+
+  private loadInvoice() {
+    return this.activeRoute.params.pipe(
+      concatMap(params => {
+        this.editMode = params['id'] != null;
+        if (this.editMode) {
+          return this.invoicesService.getInvoiceWithCompany(params['id']).pipe(
+            tap(result => {
+              this.setFormValue(result)
+              this.originalInvoice = result;
+            })
+          )
+        } else {
+          this.setFormValue();
+          return of(true)
+        }
+      }),
+    )
   }
 }

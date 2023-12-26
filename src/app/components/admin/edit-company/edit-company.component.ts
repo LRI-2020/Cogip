@@ -102,7 +102,7 @@ export class EditCompanyComponent implements OnInit {
     if (this.originalCompany && this.originalCompany.id === id && this.newValues()) {
       this.setNewCompanyValues();
       try {
-        this.companiesService.updateCompany(this.originalCompany).subscribe({
+        this.subscriptionsList.push(this.companiesService.updateCompany(this.originalCompany).subscribe({
           next: (response) => {
             if (response.ok && this.originalCompany) {
               this.displayData();
@@ -113,7 +113,7 @@ export class EditCompanyComponent implements OnInit {
             this.notificationsService.error('Oh Oh 😕', "The company has not been updated");
             this.displayData();
           }
-        })
+        }))
       } catch (e) {
         if (e instanceof Error) {
           this.notificationsService.error('Oh Oh 😕', "The company has not been updated : " + e.message);
@@ -129,7 +129,8 @@ export class EditCompanyComponent implements OnInit {
     let country = getCountryName(this.companyForm.get('company_country')?.value)
     let tva = this.companyForm.get('vta_number')?.value
     try {
-      this.companiesService.createCompany(name, type, country, tva).subscribe({
+      this.subscriptionsList.push(
+        this.companiesService.createCompany(name, type, country, tva).subscribe({
         next: (response) => {
           if (response.ok) {
             this.notificationsService.success('Success', "The company has been created");
@@ -139,7 +140,7 @@ export class EditCompanyComponent implements OnInit {
         error: () => {
           this.notificationsService.error('Oh Oh 😕', "The company has not been created");
         }
-      })
+      }))
     } catch (e) {
       if (e instanceof Error)
         this.notificationsService.error('Oh Oh 😕', "The company has not been created : " + e.message);
@@ -179,7 +180,8 @@ export class EditCompanyComponent implements OnInit {
 
   private displayData() {
     this.isLoading = true;
-    this.loadData().subscribe({
+    this.subscriptionsList.push(
+      this.loadData().subscribe({
       next: result => {
         if (result instanceof Company) {
           this.setFormValue(result)
@@ -198,6 +200,6 @@ export class EditCompanyComponent implements OnInit {
       complete: () => {
         this.isLoading = false;
       }
-    })
+    }))
   }
 }
