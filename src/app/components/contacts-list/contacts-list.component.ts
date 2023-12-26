@@ -45,12 +45,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
     //Listen url for pagination pipe
     if (this.pagination) {
-      this.subscriptionsList.push(
-        this.route.queryParams.subscribe(params => {
-          {
-            this.helpers.listenPagination(params, this.paginationInfos);
-          }
-        }));
+      this.listenParams();
     }
 
   }
@@ -86,4 +81,12 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       }}));
   }
 
+  private listenParams() {
+    this.subscriptionsList.push(
+      this.route.queryParams.subscribe(params => {
+        {
+          this.helpers.listenPagination(params, this.paginationInfos);
+        }
+      }));
+  }
 }

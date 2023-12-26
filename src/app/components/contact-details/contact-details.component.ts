@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../models/contact.model";
 import {ActivatedRoute} from "@angular/router";
 import {ContactsService} from "../../services/contacts.service";
-import {Subscription} from "rxjs";
+import {catchError, concatMap, of, Subscription, tap} from "rxjs";
 import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
@@ -22,13 +22,8 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let id = +this.route.snapshot.params['id'];
-    this.loadData(id);
 
-    this.subscriptionsList.push(this.route.params.subscribe((params) => {
-      let id = +params['id'];
-      this.loadData(id);
-    }))
+    this.loadData()
 
   }
 
@@ -36,21 +31,30 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
-  loadData(id: number) {
-    this.isLoading = true;
+  loadData() {
 
-    this.subscriptionsList.push(this.contactsService.getContactById(id).subscribe({
-      next: contactData => {
-        this.contact = contactData;
-        this.isLoading = false;
-        this.inError = false;
-      },
-      error: () => {
-        this.notificationsService.error('Oh Oh 😕', "The contact details could not be loaded");
-        this.inError = true;
-        this.isLoading = false;
-      }
-    }));
+    this.subscriptionsList.push(
+      this.route.params.pipe(
+        concatMap(params=>{
+          this.isLoading = true;
+          return this.contactsService.getContactById(+params['id'])
+            .pipe(
+              tap(contactData => {
+                this.contact = contactData;
+                return of(contactData)
+              }))
+        }))
+        .subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.inError = false;
+          },
+          error: () => {
+            this.notificationsService.error('Oh Oh 😕', "The contact details could not be loaded");
+            this.inError = true;
+            this.isLoading = false;
+          }
+        }));
   }
 
 

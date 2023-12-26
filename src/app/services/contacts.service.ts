@@ -30,8 +30,8 @@ export class ContactsService {
 
   getContactById(id: number) {
     return this.http.get<any>(this.apiUrl + 'contacts/' + id.toString()).pipe(map(responseData => {
-      if (responseData.data && responseData.data[0]) {
-        return ContactConverter.toContact(responseData.data[0] as RawContact);
+      if (responseData.data) {
+        return ContactConverter.toContact(responseData.data as RawContact);
       }
         throw new Error('no contact found with id ' + id);
     }));
