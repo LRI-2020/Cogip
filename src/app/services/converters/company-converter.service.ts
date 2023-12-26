@@ -11,9 +11,6 @@ export class CompanyConverterService {
 
   rawToCompany(rawCompany: RawCompanyModel):Company {
     let creationDate = !isNaN(Date.parse(rawCompany.creationDate))?new Date(rawCompany.creationDate): new Date('1970-01-01');
-    if(isNaN(Date.parse(rawCompany.creationDate))){
-
-    }
       return new Company(rawCompany.id,
         rawCompany.company_name,
         rawCompany.tva?rawCompany.tva:"",

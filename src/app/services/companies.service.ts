@@ -74,8 +74,7 @@ export class CompaniesService {
     if (this.companyConverter.isRawCompany(responseData)) {
       return this.companyConverter.rawToCompany(responseData as RawCompanyModel);
     }
-    return undefined;
-
+    throw new Error('No company');
   }
 
   updateCompany(company: Company) {
