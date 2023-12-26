@@ -11,7 +11,7 @@ import {API_KEY} from "../../../secret";
 @Injectable()
 export class CompaniesService {
 
-  apiUrl = 'https://securd-dev-agent.frendsapp.com/api/accounting/ v1/';
+  apiUrl = 'https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
 
   constructor(private http: HttpClient, private contactsService: ContactsService, private companyConverter: CompanyConverterService) {
   }

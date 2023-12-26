@@ -3,7 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
 import {Company, CompanyType} from "../../../models/company.model";
 import {countriesData, getCountryCode, getCountryName} from "../../../shared/countriesData";
-import {catchError, mergeMap, of, Subscription} from "rxjs";
+import {concatMap, of, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
 import {NotificationsService} from "../../../services/notifications.service";
@@ -42,31 +42,7 @@ export class EditCompanyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.loadData();
-  }
-
-  private fullFillForm(id: string) {
-    this.isLoading = true;
-    return this.companiesService.getCompanytById(id).pipe(
-      mergeMap(company => {
-      if (company!==undefined) {
-        this.originalCompany = company;
-        this.setFormValue(this.originalCompany);
-      } else {
-        this.setErrorState("The company could not be loaded");
-        this.router.navigate(['/admin/companies']);
-      }
-      this.isLoading = false;
-      return of(company)
-    }),
-      catchError(()=> {
-        this.isLoading = false;
-        this.setErrorState("The company could not be loaded");
-        this.router.navigate(['/admin/companies']);
-        return of(true);
-      }
-    ))
+    this.displayData();
   }
 
   onSave() {
@@ -82,11 +58,7 @@ export class EditCompanyComponent implements OnInit {
   }
 
   onCancel() {
-    if (this.editMode && this.originalCompany) {
-      this.subscriptionsList.push(this.fullFillForm(this.originalCompany.id).subscribe());
-    } else {
-      this.setFormValue();
-    }
+    this.displayData();
   }
 
   onBack() {
@@ -111,15 +83,7 @@ export class EditCompanyComponent implements OnInit {
         this.notificationsService.error('Oh Oh 😕', error + "The company has not been deleted : ");
       }
     }
-
-
   }
-
-  private setErrorState(message: string) {
-    this.companyError = true;
-    this.notificationsService.error('Oh Oh 😕', message);
-  }
-
   private setFormValue(company?: Company) {
     let countryCode = company ? getCountryCode(company.country) : '';
     this.companyForm.setValue({
@@ -141,13 +105,13 @@ export class EditCompanyComponent implements OnInit {
         this.companiesService.updateCompany(this.originalCompany).subscribe({
           next: (response) => {
             if (response.ok && this.originalCompany) {
-              this.resetUpdateForm();
+              this.displayData();
               this.notificationsService.success('Success', "The company has been updated");
             }
           },
           error: () => {
             this.notificationsService.error('Oh Oh 😕', "The company has not been updated");
-            this.resetUpdateForm();
+            this.displayData();
           }
         })
       } catch (e) {
@@ -194,15 +158,13 @@ export class EditCompanyComponent implements OnInit {
   }
 
   private loadData() {
-    this.subscriptionsList.push(this.activeRoute.params.pipe(mergeMap(params =>{
+
+    return this.activeRoute.params.pipe(concatMap(params => {
       this.editMode = params['id'] != null;
-      if (this.editMode) {
-        return this.fullFillForm(params['id']);
-      } else {
-        this.isLoading = false;
-        return of(true);
-      }
-    })).subscribe());
+      if (this.editMode)
+        return this.companiesService.getCompanytById(params['id']);
+      return of(true);
+    }));
   }
 
   private setNewCompanyValues() {
@@ -215,7 +177,27 @@ export class EditCompanyComponent implements OnInit {
 
   }
 
-  private resetUpdateForm() {
-      this.subscriptionsList.push(this.fullFillForm(this.originalCompany?this.originalCompany.id:'-1').subscribe());
+  private displayData() {
+    this.isLoading = true;
+    this.loadData().subscribe({
+      next: result => {
+        if (result instanceof Company) {
+          this.setFormValue(result)
+          this.originalCompany = result;
+        } else {
+          this.setFormValue();
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.companyError=true;
+        this.notificationsService.error('Oh Oh 😕', "The company could not be loaded");
+        this.router.navigate(['/admin/invoices']);
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    })
   }
 }

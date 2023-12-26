@@ -139,7 +139,7 @@ export class EditInvoiceComponent implements OnInit {
 
   private displayData() {
     //fulfillForm regarding data loaded
-    this.LoadData().subscribe({
+    this.subscriptionsList.push(this.LoadData().subscribe({
       next: result => {
         if (result instanceof Invoice) {
           this.setFormValue(result)
@@ -157,7 +157,7 @@ export class EditInvoiceComponent implements OnInit {
       complete: () => {
         this.isLoading = false;
       }
-    })
+    }))
   }
 
   //return invoice with forms values
@@ -197,7 +197,7 @@ export class EditInvoiceComponent implements OnInit {
 
   onDelete() {
     let id = this.activeRoute.snapshot.params['id'];
-    if(this.originalInvoice?.id === id){
+    if (this.originalInvoice?.id === id) {
       try {
         this.subscriptionsList.push(this.invoicesService.deleteInvoice(id).subscribe({
           next: () => {
