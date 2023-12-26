@@ -41,12 +41,8 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
 
     //Listen url for pagination pipe
     if (this.pagination) {
-      this.subscriptionsList.push(
-        this.route.queryParams.subscribe(params => {
-          {
-            this.helpers.listenPagination(params, this.paginationInfos);
-          }
-        }));
+      this.listenParams();
+
     }
 
   }
@@ -61,7 +57,6 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
-
 
   private loadData() {
     this.isLoading=true;
@@ -81,5 +76,14 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
           this.isLoading = false;
 
         }}));
+  }
+
+  private listenParams() {
+    this.subscriptionsList.push(
+      this.route.queryParams.subscribe(params => {
+        {
+          this.helpers.listenPagination(params, this.paginationInfos);
+        }
+      }));
   }
 }
