@@ -3,7 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
 import {Company, CompanyType} from "../../../models/company.model";
 import {countriesData, getCountryCode, getCountryName} from "../../../shared/countriesData";
-import {Subscription} from "rxjs";
+import {catchError, mergeMap, of, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
 import {NotificationsService} from "../../../services/notifications.service";
@@ -48,21 +48,25 @@ export class EditCompanyComponent implements OnInit {
 
   private fullFillForm(id: string) {
     this.isLoading = true;
-    this.subscriptionsList.push(this.companiesService.getCompanytById(id).subscribe({
-      next: companyData => {
-        if (companyData) {
-          this.originalCompany = companyData;
-          this.setFormValue(this.originalCompany);
-          this.isLoading = false;
-        } else {
-          this.setErrorState("The company could not be loaded")
-        }
-      },
-      error: () => {
-        this.setErrorState("The company could not be loaded")
+    return this.companiesService.getCompanytById(id).pipe(
+      mergeMap(company => {
+      if (company!==undefined) {
+        this.originalCompany = company;
+        this.setFormValue(this.originalCompany);
+      } else {
+        this.setErrorState("The company could not be loaded");
         this.router.navigate(['/admin/companies']);
       }
-    }));
+      this.isLoading = false;
+      return of(company)
+    }),
+      catchError(()=> {
+        this.isLoading = false;
+        this.setErrorState("The company could not be loaded");
+        this.router.navigate(['/admin/companies']);
+        return of(true);
+      }
+    ))
   }
 
   onSave() {
@@ -78,9 +82,8 @@ export class EditCompanyComponent implements OnInit {
   }
 
   onCancel() {
-
     if (this.editMode && this.originalCompany) {
-      this.fullFillForm(this.originalCompany.id);
+      this.subscriptionsList.push(this.fullFillForm(this.originalCompany.id).subscribe());
     } else {
       this.setFormValue();
     }
@@ -92,7 +95,7 @@ export class EditCompanyComponent implements OnInit {
 
   onDelete() {
     let id = this.activeRoute.snapshot.params['id'];
-    if(this.originalCompany?.id === id){
+    if (this.originalCompany?.id === id) {
       try {
         this.subscriptionsList.push(this.companiesService.deleteCompany(id).subscribe({
           next: () => {
@@ -162,7 +165,7 @@ export class EditCompanyComponent implements OnInit {
     let country = getCountryName(this.companyForm.get('company_country')?.value)
     let tva = this.companyForm.get('vta_number')?.value
     try {
-      this.companiesService.createCompany(name,type,country,tva).subscribe({
+      this.companiesService.createCompany(name, type, country, tva).subscribe({
         next: (response) => {
           if (response.ok) {
             this.notificationsService.success('Success', "The company has been created");
@@ -175,7 +178,7 @@ export class EditCompanyComponent implements OnInit {
       })
     } catch (e) {
       if (e instanceof Error)
-        this.notificationsService.error('Oh Oh 😕', "The company has not been created : "+e.message);
+        this.notificationsService.error('Oh Oh 😕', "The company has not been created : " + e.message);
 
       else
         this.notificationsService.error('Oh Oh 😕', "The company has not been created");
@@ -187,18 +190,19 @@ export class EditCompanyComponent implements OnInit {
     return (this.originalCompany?.name !== this.companyForm.get('company_name')?.value)
       || (this.originalCompany?.tva !== this.companyForm.get('vta_number')?.value)
       || (this.originalCompany?.type !== +this.companyForm.get('company_type')?.value)
-      || (getCountryCode(this.originalCompany? this.originalCompany.country : "") !== this.companyForm.get('company_country')?.value)
+      || (getCountryCode(this.originalCompany ? this.originalCompany.country : "") !== this.companyForm.get('company_country')?.value)
   }
 
   private loadData() {
-    this.subscriptionsList.push(this.activeRoute.params.subscribe((params) => {
+    this.subscriptionsList.push(this.activeRoute.params.pipe(mergeMap(params =>{
       this.editMode = params['id'] != null;
       if (this.editMode) {
-        this.fullFillForm(params['id']);
+        return this.fullFillForm(params['id']);
       } else {
         this.isLoading = false;
+        return of(true);
       }
-    }));
+    })).subscribe());
   }
 
   private setNewCompanyValues() {
@@ -212,10 +216,6 @@ export class EditCompanyComponent implements OnInit {
   }
 
   private resetUpdateForm() {
-    if (this.originalCompany) {
-      this.fullFillForm(this.originalCompany.id);
-    } else {
-      this.router.navigate(['/admin/companys']);
-    }
+      this.subscriptionsList.push(this.fullFillForm(this.originalCompany?this.originalCompany.id:'-1').subscribe());
   }
 }
