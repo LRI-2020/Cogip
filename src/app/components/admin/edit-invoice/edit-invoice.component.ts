@@ -86,7 +86,7 @@ export class EditInvoiceComponent implements OnInit {
             this.isLoading = false;
             this.notificationsService.success('Success', "The invoice has been updated");
           },
-          error: (error) => {
+          error: () => {
             this.isLoading = false;
             this.notificationsService.error('Oh Oh 😕', "The invoice has not been updated");
           }
@@ -218,8 +218,7 @@ export class EditInvoiceComponent implements OnInit {
             tap(result => {
               this.setFormValue(result)
               this.originalInvoice = result;
-            })
-          )
+            }))
         } else {
           this.setFormValue();
           return of(true)

@@ -75,10 +75,13 @@ export class InvoicesService {
       }),
       mergeMap(
         invoice => {
-          return this.companiesService.getCompanytById(invoice.company_id).pipe(map(company => {
+          return this.companiesService.getCompanytById(invoice.company_id).pipe(
+            map(company => {
             invoice.company_name = company ? company.name : invoice.company_name;
             return invoice
-          }))
+          }),
+            catchError((err)=> of(invoice))
+          )
         }
       ))
   }
