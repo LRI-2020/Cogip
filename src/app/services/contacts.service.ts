@@ -1,40 +1,48 @@
 ﻿import {HttpClient} from "@angular/common/http";
-import {Contact, ContactConverter, RawContact} from "../models/contact.model";
+import {Contact, RawContact} from "../models/contact.model";
 import {Injectable} from "@angular/core";
-import {map} from "rxjs";
+import {catchError, map} from "rxjs";
+import {ContactConverterService} from "./converters/contact-converter.service";
+import {API_KEY} from "../../../secret";
 
 @Injectable()
 export class ContactsService {
 
-  apiUrl = 'https://api-cogip-329f9c72c66d.herokuapp.com/api/';
+  apiUrl = 'https://securd-dev-agent.frendsapp.com/api/accounting/v1/';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private contactConverter: ContactConverterService) {
   }
 
   fetchContacts() {
 
-    return this.http.get<any>(this.apiUrl + 'contacts').pipe(map(responseData => {
-      let contacts: Contact[] = [];
-      if (responseData.data) {
-        responseData.data.forEach((d: any) => {
-          let contact = ContactConverter.toContact(d as RawContact);
-          if (contact) {
-            contacts.push(contact);
-          }
-        })
+    return this.http.get<any[]>(this.apiUrl + 'contact', {
+      headers: {
+        "X-API-Key": API_KEY
       }
+    }).pipe(map(responseData => {
+      let contacts: Contact[] = []
+      responseData.forEach((d: any) => {
+        if (this.contactConverter.isRawContact(d)) {
+          contacts.push(this.contactConverter.rawToContact(d as RawContact));
+        }
+      })
       return contacts;
     }));
   }
 
 
-  getContactById(id: number) {
-    return this.http.get<any>(this.apiUrl + 'contacts/' + id.toString()).pipe(map(responseData => {
-      if (responseData.data) {
-        return ContactConverter.toContact(responseData.data as RawContact);
+  getContactById(id: string) {
+    return this.http.get<any>(this.apiUrl + 'contact/' + id, {
+      headers: {
+        "X-API-Key": API_KEY
       }
-        throw new Error('no contact found with id ' + id);
-    }));
-    // return this.fetchContacts().pipe(map(contactsData => contactsData.find(c => c.id === id)))
+    }).pipe(
+      map(response => {
+        if (this.contactConverter.isRawContact(response))
+          return this.contactConverter.rawToContact(response as RawContact)
+
+        throw new Error('contact not found')
+      }))
   }
 }

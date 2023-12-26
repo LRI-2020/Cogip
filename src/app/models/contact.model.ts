@@ -77,19 +77,19 @@ export class Contact {
 }
 
 export class RawContact {
-  get contact_creation(): string {
-    return this._contact_creation;
+  get creation_date(): string {
+    return this._creation_date;
   }
 
-  private readonly _contact_creation: string;
-  get company_name(): string {
-    return this._company_name;
+  private readonly _creation_date: string;
+  get company_id(): string {
+    return this._company_id;
   }
 
-  set company_name(value: string) {
-    this._company_name = value;
+  set company_id(value: string) {
+    this._company_id = value;
   }
-  private _company_name: string;
+  private _company_id: string;
   get phone(): string {
     return this._phone;
   }
@@ -119,23 +119,17 @@ export class RawContact {
   private readonly _id: number;
   private _name: string;
 
-  constructor(id: number, name: string, email: string, phone: string, company_name: string, contact_creation: string) {
+  constructor(id: number, name: string, email: string, phone: string, company_id: string, creation_date: string) {
     this._id = id;
     this._name = name;
     this._email = email;
     this._phone = phone;
-    this._company_name = company_name;
-    this._contact_creation = contact_creation;
+    this._company_id = company_id;
+    this._creation_date = creation_date;
   }
+
+
 }
 
-export class ContactConverter{
-
- static toContact(rawContact:RawContact){
-    return new Contact(rawContact.id,rawContact.name,
-      rawContact.phone, rawContact.email,
-      rawContact.company_name, new Date(rawContact.contact_creation));
-  }
-}
 
 

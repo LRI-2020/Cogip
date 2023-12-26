@@ -37,7 +37,7 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
       this.route.params.pipe(
         concatMap(params=>{
           this.isLoading = true;
-          return this.contactsService.getContactById(+params['id'])
+          return this.contactsService.getContactById(params['id'])
             .pipe(
               tap(contactData => {
                 this.contact = contactData;
@@ -45,11 +45,11 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
               }))
         }))
         .subscribe({
-          next: () => {
+          next: (d) => {
             this.isLoading = false;
             this.inError = false;
           },
-          error: () => {
+          error: (d) => {
             this.notificationsService.error('Oh Oh 😕', "The contact details could not be loaded");
             this.inError = true;
             this.isLoading = false;
