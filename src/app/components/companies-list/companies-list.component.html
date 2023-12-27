@@ -43,10 +43,11 @@
         </ng-template>
         <div *ngIf="!inError; else error">
           <div class="row itemsData justify-content-start"
-               *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)" routerLink="/companies/{{company.id}}">
+               *ngFor="let company of (pagination? (dataToDisplay | pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage):dataToDisplay)"
+               >
 
-            <div class="col-2 overflow-hidden">
-              <p class="data my-2">{{company.name}}</p>
+            <div class="col-2 overflow-hidden" routerLink="/companies/{{company.id}}">
+              <p class="data clickable my-2">{{company.name}}</p>
             </div>
             <div class="col-2">
               <p class="data my-2">{{company.tva}}</p>

@@ -49,9 +49,9 @@
       <div *ngIf="!inError; else error">
         <div class="row adminItemsData justify-content-start"
              *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
-           :dataToDisplay)" routerLink="/admin/contacts/{{contact.id}}">
-          <div class="col-2 overflow-hidden">
-            <p class="data my-2">{{contact.name}}</p>
+           :dataToDisplay)">
+          <div class="col-2 overflow-hidden"  routerLink="/admin/contacts/{{contact.id}}">
+            <p class="data clickable my-2">{{contact.name}}</p>
           </div>
           <div class="col-2">
             <p class="data my-2">{{contact.phone}}</p>

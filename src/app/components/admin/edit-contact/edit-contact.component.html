@@ -5,8 +5,6 @@
     </div>
   </div>
 </ng-template>
-<button routerLink="/admin/contacts/-NmCg79fxnmLR5yUJdb9">click</button>
-<button routerLink="/admin/contacts/new">new</button>
 <div class="row mt-4 align-items-center justify-content-center" *ngIf="!isLoading;else loading">
 
   <div class="col-6">
@@ -55,7 +53,7 @@
           <button class="btn btn-light" type="submit">Save</button>
           <button class="btn btn-light" type="button" (click)="onCancel()">Cancel</button>
           <button class="btn btn-light" type="button" (click)="onBack()">Back</button>
-          <button class="btn btn-light" type="button" (click)="onDelete()">Delete</button>
+          <button class="btn btn-light" type="button" *ngIf="editMode" (click)="onDelete()">Delete</button>
         </div>
       </div>
     </form>
