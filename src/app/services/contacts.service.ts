@@ -41,8 +41,25 @@ export class ContactsService {
       map(response => {
         if (this.contactConverter.isRawContact(response))
           return this.contactConverter.rawToContact(response as RawContact)
-
         throw new Error('contact not found')
       }))
+  }
+
+  updateContact(contact:Contact){
+    let body={
+      "id":contact.id,
+      "name": contact.name,
+      "email": contact.email,
+      "phone": contact.phone,
+      "company_id": contact.company
+    }
+
+    console.log(JSON.stringify(body))
+    return this.http.put(this.apiUrl+'contact/',body,{
+      headers: {
+        //"X-API-Key": API_KEY
+      },
+      observe:"response"
+    })
   }
 }

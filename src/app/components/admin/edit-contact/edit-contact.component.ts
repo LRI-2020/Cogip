@@ -1,12 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../../models/contact.model";
-import {catchError, forkJoin, mergeMap, of, Subscription, tap, toArray} from "rxjs";
+import {forkJoin, mergeMap, of, Subscription, tap} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
 import {DatePipe} from "@angular/common";
 import {NavigationService} from "../../../services/navigation.service";
+import {datesEquals} from "../../../shared/helpers";
+import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
   selector: 'app-edit-contact',
@@ -35,8 +37,9 @@ export class EditContactComponent implements OnInit, OnDestroy {
               private companiesService: CompaniesService,
               private activatedRoute: ActivatedRoute,
               private datePipe: DatePipe,
-              private navigationService:NavigationService,
-              private router: Router) {
+              private navigationService: NavigationService,
+              private router: Router,
+              private notificationsService: NotificationsService) {
   }
 
   onCancel() {
@@ -52,18 +55,22 @@ export class EditContactComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-
+    if (!this.contactForm.valid) {
+      this.contactForm.markAllAsTouched()
+    } else {
+      this.processForm();
+    }
   }
 
   loadData() {
     this.listenParams().pipe(
-      mergeMap(params=>{
-        return forkJoin({params:of(params),companies:this.loadCompanies()});
+      mergeMap(params => {
+        return forkJoin({params: of(params), companies: this.loadCompanies()});
       }),
       mergeMap(res => {
-         return this.fulfillForm(res.params);
+        return this.fulfillForm(res.params);
       })
-     ).subscribe({
+    ).subscribe({
       next: () => {
         this.inError = false;
         this.isLoading = false;
@@ -100,6 +107,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
       "contact_created_at": c ? this.datePipe.transform(c.createdAt, 'yyyy-MM-dd') : ''
     })
   }
+
   private listenParams() {
     return this.activatedRoute.params.pipe(
       mergeMap(params => {
@@ -125,5 +133,58 @@ export class EditContactComponent implements OnInit, OnDestroy {
       tap(companies => {
         companies.forEach(c => this.companiesNames.push({company_id: c.id, company_name: c.name}));
       }));
+  }
+
+  private processForm() {
+    if (!this.editMode) {
+      this.createContact();
+    } else {
+      if (this.validForUpdate() && this.originalContact) {
+        this.updateContact(this.originalContact)
+      }
+    }
+  }
+
+  private createContact() {
+
+  }
+
+  private validForUpdate() {
+    let id = this.activatedRoute.snapshot.params['id'];
+    return this.originalContact && this.originalContact.id === id && this.contactHasChanged();
+  }
+
+  private updateContact(originalContact: Contact) {
+    let contactToUpdate = this.getUpdatedValues(originalContact);
+
+    this.contactsService.updateContact(contactToUpdate).pipe(
+      tap(() => {
+        return this.loadData();
+      })).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.notificationsService.success('Success', "The contact has been updated");
+      },
+      error: () => {
+        this.isLoading = false;
+        this.notificationsService.error('Oh Oh 😕', "The contact has not been updated");
+      }
+    })
+  }
+
+  private contactHasChanged() {
+    return (
+        this.originalContact?.name !== this.contactForm.get('contact_name')?.value)
+      || (this.originalContact?.company !== this.contactForm.get('contact_company')?.value)
+      || (this.originalContact?.phone !== this.contactForm.get('contact_phone')?.value)
+      || (this.originalContact?.email !== this.contactForm.get('contact_email')?.value)
+  }
+
+  private getUpdatedValues(contact: Contact) {
+    contact.name = this.contactForm.get('contact_name')?.value
+    contact.company = this.contactForm.get('contact_company')?.value
+    contact.phone = this.contactForm.get('contact_phone')?.value
+    contact.email = this.contactForm.get('contact_email')?.value
+    return contact;
   }
 }
