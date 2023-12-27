@@ -21,14 +21,14 @@ export class Contact {
   private _createdAt: Date;
   private _company: string;
   private _company_name: string='';
-  private _id: number;
+  private _id: string;
   private _photo: string;
 
-  get id(): number {
+  get id(): string {
     return this._id;
   }
 
-  set id(value: number) {
+  set id(value: string) {
     this._id = value;
   }
 
@@ -73,7 +73,7 @@ export class Contact {
   }
 
 
-  constructor(id: number, name: string, phone: string, email: string, company: string, createdAt: Date, photo?: string) {
+  constructor(id: string, name: string, phone: string, email: string, company: string, createdAt: Date, photo?: string) {
     this._id = id;
     this._name = name;
     this._phone = phone;
@@ -114,7 +114,7 @@ export class RawContact {
     this._email = value;
   }
   private _email: string;
-  get id(): number {
+  get id(): string {
     return this._id;
   }
   get name(): string {
@@ -124,10 +124,10 @@ export class RawContact {
   set name(value: string) {
     this._name = value;
   }
-  private readonly _id: number;
+  private readonly _id: string;
   private _name: string;
 
-  constructor(id: number, name: string, email: string, phone: string, company_id: string, creation_date: string) {
+  constructor(id: string, name: string, email: string, phone: string, company_id: string, creation_date: string) {
     this._id = id;
     this._name = name;
     this._email = email;

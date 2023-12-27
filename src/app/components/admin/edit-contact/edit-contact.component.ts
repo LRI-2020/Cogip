@@ -7,7 +7,6 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
 import {DatePipe} from "@angular/common";
 import {NavigationService} from "../../../services/navigation.service";
-import {datesEquals} from "../../../shared/helpers";
 import {NotificationsService} from "../../../services/notifications.service";
 
 @Component({
@@ -186,7 +185,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
       tap(() => {
         return this.loadData();
       })).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
         this.notificationsService.success('Success', "The contact has been updated");
       },

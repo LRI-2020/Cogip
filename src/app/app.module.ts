@@ -31,7 +31,6 @@ import { AdminHeaderComponent } from './components/admin/admin-header/admin-head
 import { AdminListHeaderComponent } from './components/admin/admin-list-header/admin-list-header.component';
 import { AdminContactsListComponent } from './components/admin/admin-contacts-list/admin-contacts-list.component';
 import { AdminInvoicesListComponent } from './components/admin/admin-invoices-list/admin-invoices-list.component';
-import { AdminContactDetailsComponent } from './components/admin/admin-contact-details/admin-contact-details.component';
 import { AdminCompanyDetailsComponent } from './components/admin/admin-company-details/admin-company-details.component';
 import { EditInvoiceComponent } from './components/admin/edit-invoice/edit-invoice.component';
 import { AdminInvoicesComponent } from './components/admin/admin-invoices/admin-invoices.component';
@@ -67,7 +66,6 @@ import { EditContactComponent } from './components/admin/edit-contact/edit-conta
     AdminListHeaderComponent,
     AdminContactsListComponent,
     AdminInvoicesListComponent,
-    AdminContactDetailsComponent,
     AdminCompanyDetailsComponent,
     EditInvoiceComponent,
     AdminInvoicesComponent,

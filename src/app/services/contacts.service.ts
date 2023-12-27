@@ -53,7 +53,6 @@ export class ContactsService {
       "company_id": contact.company
     }
 
-    console.log(JSON.stringify(body))
     return this.http.put(this.apiUrl+'contact/',body,{
       headers: {
         "X-API-Key": API_KEY
@@ -69,7 +68,6 @@ export class ContactsService {
       "company_id": companyId
     }
 
-    console.log(JSON.stringify(body))
     return this.http.post(this.apiUrl+'contact/',body,{
       headers: {
         "X-API-Key": API_KEY
