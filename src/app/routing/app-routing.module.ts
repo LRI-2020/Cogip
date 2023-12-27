@@ -12,13 +12,14 @@ import {LoginComponent} from "../components/login/login.component";
 import {AdminCompaniesListComponent} from "../components/admin/admin-companies-list/admin-companies-list.component";
 import {AdminDashboardComponent} from "../components/admin/admin-dashboard/admin-dashboard.component";
 import {AdminCompanyDetailsComponent} from "../components/admin/admin-company-details/admin-company-details.component";
-import {AdminContactsComponent} from "../components/admin/admin-contacts/admin-contacts.component";
-import {AdminContactDetailsComponent} from "../components/admin/admin-contact-details/admin-contact-details.component";
 import {AdminInvoicesListComponent} from "../components/admin/admin-invoices-list/admin-invoices-list.component";
 import {EditInvoiceComponent} from "../components/admin/edit-invoice/edit-invoice.component";
 import {AdminInvoicesComponent} from "../components/admin/admin-invoices/admin-invoices.component";
 import {AdminCompaniesComponent} from "../components/admin/admin-companies/admin-companies.component";
 import {EditCompanyComponent} from "../components/admin/edit-company/edit-company.component";
+import {AdminContactsListComponent} from "../components/admin/admin-contacts-list/admin-contacts-list.component";
+import {EditContactComponent} from "../components/admin/edit-contact/edit-contact.component";
+import {AdminContactsComponent} from "../components/admin/admin-contacts/admin-contacts.component";
 
 
 const appRoutes: Routes = [
@@ -39,8 +40,13 @@ const appRoutes: Routes = [
     ]
   },
 
-  {path: "admin/contacts", component: AdminContactsComponent},
-  {path: "admin/contacts/:id", component: AdminContactDetailsComponent},
+  {
+    path: "admin/contacts", component: AdminContactsComponent, children: [
+      {path: "", component: AdminContactsListComponent},
+      {path: "new", component: EditContactComponent},
+      {path: ":id", component: EditContactComponent},
+    ]
+  },
   {
     path: "admin/companies", component: AdminCompaniesComponent, children: [
       {path: "", component: AdminCompaniesListComponent},

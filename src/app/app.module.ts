@@ -29,7 +29,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard/admi
 import { AdminCompaniesListComponent } from './components/admin/admin-companies-list/admin-companies-list.component';
 import { AdminHeaderComponent } from './components/admin/admin-header/admin-header.component';
 import { AdminListHeaderComponent } from './components/admin/admin-list-header/admin-list-header.component';
-import { AdminContactsComponent } from './components/admin/admin-contacts/admin-contacts.component';
+import { AdminContactsListComponent } from './components/admin/admin-contacts-list/admin-contacts-list.component';
 import { AdminInvoicesListComponent } from './components/admin/admin-invoices-list/admin-invoices-list.component';
 import { AdminContactDetailsComponent } from './components/admin/admin-contact-details/admin-contact-details.component';
 import { AdminCompanyDetailsComponent } from './components/admin/admin-company-details/admin-company-details.component';
@@ -39,6 +39,8 @@ import {DatePipe} from "@angular/common";
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { EditCompanyComponent } from './components/admin/edit-company/edit-company.component';
 import { AdminCompaniesComponent } from './components/admin/admin-companies/admin-companies.component';
+import { AdminContactsComponent } from './components/admin/admin-contacts/admin-contacts.component';
+import { EditContactComponent } from './components/admin/edit-contact/edit-contact.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,7 +65,7 @@ import { AdminCompaniesComponent } from './components/admin/admin-companies/admi
     AdminCompaniesListComponent,
     AdminHeaderComponent,
     AdminListHeaderComponent,
-    AdminContactsComponent,
+    AdminContactsListComponent,
     AdminInvoicesListComponent,
     AdminContactDetailsComponent,
     AdminCompanyDetailsComponent,
@@ -71,7 +73,9 @@ import { AdminCompaniesComponent } from './components/admin/admin-companies/admi
     AdminInvoicesComponent,
     NotificationsComponent,
     EditCompanyComponent,
-    AdminCompaniesComponent
+    AdminCompaniesComponent,
+    AdminContactsComponent,
+    EditContactComponent
   ],
   imports: [
     BrowserModule,

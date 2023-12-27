@@ -1,0 +1,64 @@
+<ng-template #loading>
+  <div class="row my-4" >
+    <div class="col-12  justify-content-center text-center">
+      <span class="adminLoader"></span>
+    </div>
+  </div>
+</ng-template>
+<button routerLink="/admin/contacts/-NmCg79fxnmLR5yUJdb9">click</button>
+<button routerLink="/admin/contacts/new">new</button>
+<div class="row mt-4 align-items-center justify-content-center" *ngIf="!isLoading;else loading">
+
+  <div class="col-6">
+    <form (ngSubmit)="onSave()" [formGroup]="contactForm">
+      <div class="row">
+        <div class="col-12 mx-2">
+          <div *ngIf="this.editMode">
+            <label for="contact_id" class="form-label"> Contact Id : </label>
+            <input class="readonly form-control readonly" readonly placeholder="auto-generated" type="text" id="contact_id" formControlName="id">
+          </div>
+          <div>
+            <label for="contact_name" class="form-label"> Name : </label>
+            <span class="on-error" *ngIf="!contactForm.get('contact_name')?.valid  && contactForm.get('contact_name')?.touched"> *  Contact Name is required</span>
+            <input type="text" id="contact_name" class="form-control" formControlName="contact_name">
+          </div>
+          <div>
+            <label for="contact_phone" class="form-label"> Phone Number : </label>
+            <span class="on-error" *ngIf="!contactForm.get('contact_phone')?.valid  && contactForm.get('contact_phone')?.touched"> * Phone number is required</span>
+            <input type="text" id="contact_phone" class="form-control" formControlName="contact_phone">
+          </div>
+
+          <div>
+            <label for="contact_email" class="form-label"> Email : </label>
+            <input type="email" id="contact_email" class="form-control" formControlName="contact_email">
+          </div>
+
+          <div>
+            <label for="contact_company" class="form-label"> Company : </label>
+            <span class="on-error" *ngIf="!contactForm.get('contact_company')?.valid  && contactForm.get('contact_company')?.touched"> * Company is required</span>
+            <select id="contact_company" class="form-control" formControlName="contact_company">
+              <option *ngFor="let company of companiesNames" value="{{company.company_id}}"> {{company.company_name}}</option>
+            </select>
+          </div>
+
+          <div *ngIf="this.editMode">
+            <label for="contact_created_at" class="form-label"> Created at : </label>
+            <input type="date" id="contact_created_at" class="form-control readonly" readonly formControlName="contact_created_at">
+          </div>
+
+
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-4 d-flex justify-content-sm-around mx-auto my-2">
+          <button class="btn btn-light" type="submit">Save</button>
+          <button class="btn btn-light" type="button" (click)="onCancel()">Cancel</button>
+          <button class="btn btn-light" type="button" (click)="onBack()">Back</button>
+          <button class="btn btn-light" type="button" (click)="onDelete()">Delete</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+

@@ -1,0 +1,80 @@
+<app-admin-list-header *ngIf="!onlyLastItems; else lastData" (onFilter)="searchData($event)" [title]="'All Contacts'"></app-admin-list-header>
+
+<ng-template #lastData>
+  <div class="row">
+    <div class="col-12 d-flex flex-inline my-2 px-2 lastItemsTitle justify-content-between align-items-center">
+      <h1 class="">Last contacts</h1>
+    </div>
+  </div>
+</ng-template>
+<ng-template #loading>
+  <div class="row my-4">
+    <div class="col-12  justify-content-center text-center">
+      <span class="adminLoader"></span>
+    </div>
+  </div>
+</ng-template>
+
+<div class="component-data" *ngIf="!isLoading;else loading">
+  <div class="row">
+    <div class="col admin-new d-flex justify-content-end">
+      <button class="btn newBtn fw-bold mt-3 me-3" type="button" (click)="onNewContact()">New Contact</button>
+    </div>
+  </div>
+  <div class="row adminItemsList my-2 py-2 ps-2">
+    <div class="col-12">
+      <div class="row adminTitleRow justify-content-start ">
+        <div class="col-2">
+          <p class="title my-2">Name</p>
+        </div>
+        <div class="col-2">
+          <p class="title my-2">Phone</p>
+        </div>
+        <div class="col-3">
+          <p class="title my-2">Mail</p>
+        </div>
+        <div class="col-2">
+          <p class="title my-2">Company</p>
+        </div>
+        <div class="col-2">
+          <p class="title my-2">Created At</p>
+        </div>
+      </div>
+      <div *ngIf="dataToDisplay.length===0 && !inError" class="col-12 justify-content-center">
+        <p class="fs-3 align-self-center text-center">There is no contact to display</p>
+      </div>
+      <ng-template  class="col-12" #error>
+        <p class="fs-3 align-self-center text-center">Error - data could not be loaded</p>
+      </ng-template>
+      <div *ngIf="!inError; else error">
+        <div class="row adminItemsData justify-content-start"
+             *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
+           :dataToDisplay)" routerLink="/admin/contacts/{{contact.id}}">
+          <div class="col-2 overflow-hidden">
+            <p class="data my-2">{{contact.name}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{contact.phone}}</p>
+          </div>
+          <div class="col-3 overflow-hidden">
+            <p class="data my-2">{{contact.email}}</p>
+          </div>
+          <div class="col-2 overflow-hidden">
+            <p class="data my-2">{{contact.company}}</p>
+          </div>
+          <div class="col-2">
+            <p class="data my-2">{{contact.createdAt |date:'dd-MM-yyyy'}}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row my-2">
+    <div class="col-12 d-flex justify-content-center" *ngIf="pagination">
+      <app-pagination [totalItems]="dataToDisplay.length"></app-pagination>
+    </div>
+  </div>
+</div>
+
+
