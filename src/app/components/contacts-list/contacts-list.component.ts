@@ -1,10 +1,11 @@
 import {Component, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../models/contact.model";
 import {ContactsService} from "../../services/contacts.service";
-import {Subscription} from "rxjs";
+import {catchError, concatMap, mergeAll, mergeMap, of, Subscription, tap} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../shared/helpers";
 import {NotificationsService} from "../../services/notifications.service";
+import {CompaniesService} from "../../services/companies.service";
 
 
 @Injectable()
@@ -31,6 +32,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   subscriptionsList: Subscription[] = [];
 
   constructor(private contactsService: ContactsService,
+              private companiesService: CompaniesService,
               private route: ActivatedRoute,
               private helpers: Helpers,
               private notificationsService: NotificationsService) {
@@ -60,25 +62,57 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }
 
+  getContactWithCompanyName(companyId: string, contact: Contact) {
+    return this.companiesService.getCompanytById(companyId).pipe(
+      concatMap(company => {
+        contact.company_name = company ? company.name : '';
+        return of(contact)
+      }),
+      catchError(err => {
+        return of(contact)
+      })
+    )
+  }
+
+
+  loadContacts() {
+    return this.contactsService.fetchContacts().pipe(
+      mergeAll(),
+      mergeMap(contact => {
+        return this.getContactWithCompanyName(contact.company, contact)
+          .pipe(
+            tap(c => {
+              this.fetchedData.push(c);
+            }),
+            catchError(err => {return of(contact)})
+          )
+      })
+    )
+  }
+
+  loadDataToDisplay(){
+    return this.loadContacts().pipe(
+      tap(res => {
+        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
+      })
+    )
+  }
+
   loadData() {
     this.isLoading = true;
+    this.fetchedData = [];
 
-    this.subscriptionsList.push(this.contactsService.fetchContacts().subscribe({
-      next : contactsData => {
-
-        this.fetchedData = contactsData;
-        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
+    this.subscriptionsList.push(this.loadDataToDisplay().subscribe({
+      next: () => {
         this.inError = false;
         this.isLoading = false;
       },
-
-      error : () => {
+      error: () => {
         this.notificationsService.error('Oh Oh 😕', "The contacts could not be loaded");
-
         this.inError = true;
         this.isLoading = false;
-
-      }}));
+      }
+    }));
   }
 
   private listenParams() {

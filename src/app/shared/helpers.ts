@@ -3,14 +3,13 @@ import {FilterPipe} from "../pipes/filter.pipe";
 import {LastPipe} from "../pipes/last.pipe";
 import {Injectable} from "@angular/core";
 import {SearchPipe} from "../pipes/search.pipe";
+import {CompaniesService} from "../services/companies.service";
 
 export function datesEquals(date1:Date,date2:Date){
   return date1.getFullYear() === date2.getFullYear()
     && date1.getMonth() === date2.getMonth()
     && date1.getDate() === date2.getDate()
 }
-
-
 export function onWelcomePage(url: UrlSegment[]) {
   return url.length === 0;
 }
@@ -89,4 +88,5 @@ export class Helpers {
     return result;
   }
 }
+
 
