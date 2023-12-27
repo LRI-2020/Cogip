@@ -6,6 +6,7 @@ import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
 import {DatePipe} from "@angular/common";
+import {NavigationService} from "../../../services/navigation.service";
 
 @Component({
   selector: 'app-edit-contact',
@@ -34,15 +35,16 @@ export class EditContactComponent implements OnInit, OnDestroy {
               private companiesService: CompaniesService,
               private activatedRoute: ActivatedRoute,
               private datePipe: DatePipe,
+              private navigationService:NavigationService,
               private router: Router) {
   }
 
   onCancel() {
-
+    this.loadData();
   }
 
   onBack() {
-
+    this.navigationService.back("/admin");
   }
 
   onDelete() {
