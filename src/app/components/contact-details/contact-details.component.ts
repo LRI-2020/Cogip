@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../models/contact.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ContactsService} from "../../services/contacts.service";
 import {catchError, concatMap, of, Subscription, tap} from "rxjs";
 import {NotificationsService} from "../../services/notifications.service";
@@ -21,7 +21,8 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private contactsService: ContactsService,
               private companiesService: CompaniesService,
-              private notificationsService: NotificationsService) {
+              private notificationsService: NotificationsService,
+              private router:Router) {
 
   }
 
@@ -74,6 +75,7 @@ export class ContactDetailsComponent implements OnInit, OnDestroy {
         this.notificationsService.error('Oh Oh 😕', "The contact details could not be loaded");
         this.inError = true;
         this.isLoading = false;
+        this.router.navigate(['contacts'])
       }
     }));
 
