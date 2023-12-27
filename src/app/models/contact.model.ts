@@ -1,5 +1,12 @@
 
 export class Contact {
+  get company_name(): string {
+    return this._company_name;
+  }
+
+  set company_name(value: string) {
+    this._company_name = value;
+  }
   get photo(): string {
     return this._photo;
   }
@@ -13,6 +20,7 @@ export class Contact {
   private _phone: string;
   private _createdAt: Date;
   private _company: string;
+  private _company_name: string='';
   private _id: number;
   private _photo: string;
 

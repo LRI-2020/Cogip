@@ -1,9 +1,10 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Contact, RawContact} from "../models/contact.model";
 import {Injectable} from "@angular/core";
-import {catchError, map} from "rxjs";
+import {catchError, concatMap, map, of, tap} from "rxjs";
 import {ContactConverterService} from "./converters/contact-converter.service";
 import {API_KEY} from "../../../secret";
+import {CompaniesService} from "./companies.service";
 
 @Injectable()
 export class ContactsService {
@@ -30,7 +31,6 @@ export class ContactsService {
       return contacts;
     }));
   }
-
 
   getContactById(id: string) {
     return this.http.get<any>(this.apiUrl + 'contact/' + id, {
