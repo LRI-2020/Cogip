@@ -1,10 +1,9 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Contact, RawContact} from "../models/contact.model";
 import {Injectable} from "@angular/core";
-import {catchError, concatMap, map, of, tap} from "rxjs";
+import {map} from "rxjs";
 import {ContactConverterService} from "./converters/contact-converter.service";
 import {API_KEY} from "../../../secret";
-import {CompaniesService} from "./companies.service";
 
 @Injectable()
 export class ContactsService {
@@ -57,7 +56,23 @@ export class ContactsService {
     console.log(JSON.stringify(body))
     return this.http.put(this.apiUrl+'contact/',body,{
       headers: {
-        //"X-API-Key": API_KEY
+        "X-API-Key": API_KEY
+      },
+      observe:"response"
+    })
+  }
+  createContact(name:string,phone:string,email:string,companyId:string){
+    let body={
+      "name": name,
+      "email": email,
+      "phone": phone,
+      "company_id": companyId
+    }
+
+    console.log(JSON.stringify(body))
+    return this.http.post(this.apiUrl+'contact/',body,{
+      headers: {
+        "X-API-Key": API_KEY
       },
       observe:"response"
     })

@@ -108,7 +108,6 @@ export class EditInvoiceComponent implements OnInit {
             error: (e) => {
               let error = e instanceof Error ? e.message + '.' : '';
               this.notificationsService.error('Oh Oh 😕', error + "The invoice has not been created");
-              this.displayData();
             }
            })
     } catch (e) {

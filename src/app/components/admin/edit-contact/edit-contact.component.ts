@@ -43,7 +43,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
   }
 
   onCancel() {
-    this.loadData();
+    this.displayData();
   }
 
   onBack() {
@@ -63,19 +63,29 @@ export class EditContactComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.listenParams().pipe(
+    return this.listenParams().pipe(
       mergeMap(params => {
         return forkJoin({params: of(params), companies: this.loadCompanies()});
       }),
       mergeMap(res => {
         return this.fulfillForm(res.params);
       })
-    ).subscribe({
+    )
+  }
+
+  private displayData() {
+    this.subscriptionsList.push(this.loadData().subscribe({
       next: () => {
         this.inError = false;
         this.isLoading = false;
+      },
+      error:()=>{
+        this.inError = false;
+        this.isLoading = false;
+        this.notificationsService.error('Oh Oh 😕', "The contact could not be loaded");
+        this.router.navigate(['/admin/contacts'])
       }
-    })
+    }))
   }
 
   ngOnDestroy(): void {
@@ -83,7 +93,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.loadData()
+    this.displayData()
   }
 
   private loadContact(id: string) {
@@ -146,7 +156,22 @@ export class EditContactComponent implements OnInit, OnDestroy {
   }
 
   private createContact() {
-
+    this.contactsService.createContact(
+      this.contactForm.get('contact_name')?.value,
+      this.contactForm.get('contact_phone')?.value,
+      this.contactForm.get('contact_email')?.value,
+      this.contactForm.get('contact_company')?.value,
+    ).subscribe({
+      next: () => {
+        this.notificationsService.success('Success', "The invoice has been created");
+        this.router.navigate(['/admin/contacts']);
+      },
+      error: (e) => {
+        let error = e instanceof Error ? e.message + '.' : '';
+        this.notificationsService.error('Oh Oh 😕', error + "The invoice has not been created");
+        this.loadData();
+      }
+    })
   }
 
   private validForUpdate() {
@@ -157,7 +182,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
   private updateContact(originalContact: Contact) {
     let contactToUpdate = this.getUpdatedValues(originalContact);
 
-    this.contactsService.updateContact(contactToUpdate).pipe(
+    this.subscriptionsList.push(this.contactsService.updateContact(contactToUpdate).pipe(
       tap(() => {
         return this.loadData();
       })).subscribe({
@@ -169,7 +194,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.notificationsService.error('Oh Oh 😕', "The contact has not been updated");
       }
-    })
+    }));
   }
 
   private contactHasChanged() {

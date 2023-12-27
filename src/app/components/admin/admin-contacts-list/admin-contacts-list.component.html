@@ -18,7 +18,7 @@
 <div class="component-data" *ngIf="!isLoading;else loading">
   <div class="row">
     <div class="col admin-new d-flex justify-content-end">
-      <button class="btn newBtn fw-bold mt-3 me-3" type="button" (click)="onNewContact()">New Contact</button>
+      <button class="btn newBtn fw-bold mt-3 me-3" type="button" routerLink="/admin/contacts/new">New Contact</button>
     </div>
   </div>
   <div class="row adminItemsList my-2 py-2 ps-2">
