@@ -1,11 +1,12 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../../models/contact.model";
-import {catchError, map, mergeAll, mergeMap, of, Subscription, tap, toArray} from "rxjs";
+import {catchError, EMPTY, map, mergeAll, mergeMap, of, Subscription, tap, toArray} from "rxjs";
 import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
 import {NotificationsService} from "../../../services/notifications.service";
 import {CompaniesService} from "../../../services/companies.service";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-admin-contacts-list',
@@ -41,13 +42,11 @@ export class AdminContactsListComponent implements OnInit, OnDestroy {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
 
     //load data, displayed data and listen for changes
-    this.loadData();
+    this.displayData();
 
 //Listen url for pagination pipe
     if (this.pagination) {
-
       this.listenParams()
-
     }
 
   }
@@ -79,24 +78,32 @@ export class AdminContactsListComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.isLoading = true;
-    this.subscriptionsList.push(this.contactsService.fetchContacts().pipe(
+    this.fetchedData=[];
+    return this.contactsService.fetchContacts().pipe(
       mergeAll(),
       mergeMap(contact => {
         return this.loadCompanyName(contact)
-      })
-    ).subscribe({
-      next: () => {
+      }),
+      tap(() => {
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
-        this.isLoading = false;
-        this.inError = false;
-      },
-      error: () => {
-        this.notificationsService.error('Oh Oh 😕', "The contacts could not be loaded");
-        this.isLoading = false;
-        this.inError = true;
-      }
-    }));
+      })
+    );
+  }
+
+  displayData() {
+    this.isLoading = true;
+    this.subscriptionsList.push(
+      this.loadData().subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.inError = false;
+        },
+        error: () => {
+          this.notificationsService.error('Oh Oh 😕', "The contacts could not be loaded");
+          this.isLoading = false;
+          this.inError = true;
+        }
+      }));
   }
 
   private listenParams() {
@@ -106,5 +113,24 @@ export class AdminContactsListComponent implements OnInit, OnDestroy {
           this.helpers.listenPagination(params, this.paginationInfos);
         }
       }));
+  }
+
+  onDelete(id: string) {
+    this.subscriptionsList.push(this.contactsService.deleteContact(id).pipe(
+      catchError(err => {
+        this.notificationsService.error('Oh Oh 😕', "The contact could not be deleted");
+        return of(err);
+      }),
+      mergeMap((response) => {
+        if (response instanceof HttpResponse && response.ok)
+          this.notificationsService.success('Success', "The contact has been deleted");
+        return this.loadData();
+      }))
+      .subscribe({
+        next: () => {},
+        error: () => {
+          this.notificationsService.error('Oh Oh 😕', "The contacts could not be loaded");
+        }
+      }))
   }
 }

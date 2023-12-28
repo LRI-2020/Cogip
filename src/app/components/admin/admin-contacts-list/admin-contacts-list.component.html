@@ -39,6 +39,12 @@
         <div class="col-2">
           <p class="title my-2">Created At</p>
         </div>
+        <div class="col">
+          <p class="title my-2"></p>
+        </div>
+        <div class="col">
+          <p class="title my-2"></p>
+        </div>
       </div>
       <div *ngIf="dataToDisplay.length===0 && !inError" class="col-12 justify-content-center">
         <p class="fs-3 align-self-center text-center">There is no contact to display</p>
@@ -50,20 +56,26 @@
         <div class="row adminItemsData justify-content-start"
              *ngFor="let contact of (pagination? (dataToDisplay |pagination:paginationInfos.itemsPerPage:paginationInfos.currentPage)
            :dataToDisplay)">
-          <div class="col-2 overflow-hidden"  routerLink="/admin/contacts/{{contact.id}}">
+          <div class="col overflow-hidden"  routerLink="/admin/contacts/{{contact.id}}">
             <p class="data clickable my-2">{{contact.name}}</p>
           </div>
-          <div class="col-2">
+          <div class="col">
             <p class="data my-2">{{contact.phone}}</p>
           </div>
-          <div class="col-3 overflow-hidden">
+          <div class="col overflow-hidden">
             <p class="data my-2">{{contact.email}}</p>
           </div>
-          <div class="col-2 overflow-hidden">
+          <div class="col overflow-hidden">
             <p class="data my-2">{{contact.company_name}}</p>
           </div>
-          <div class="col-2">
+          <div class="col">
             <p class="data my-2">{{contact.createdAt |date:'dd-MM-yyyy'}}</p>
+          </div>
+          <div class="col">
+            <button type="button" class="editBtn btn btn-light my-2" routerLink="/admin/contacts/{{contact.id}}"> Edit</button>
+          </div>
+          <div class="col">
+            <button type="button" class="delete Btn btn btn-light my-2" (click)="onDelete(contact.id)"> Delete</button>
           </div>
         </div>
       </div>
