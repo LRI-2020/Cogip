@@ -5,7 +5,7 @@ import {map, mergeMap} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
 import {CompanyConverterService} from "./converters/company-converter.service";
-import {API_KEY} from "../../../secret";
+import {environment} from "../../environments/environment";
 
 
 @Injectable()
@@ -19,7 +19,7 @@ export class CompaniesService {
   fetchCompanies() {
     return this.http.get<any[]>(this.apiUrl + 'company', {
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       }
     }).pipe(map(responseData => {
       return this.responseToCompanies(responseData);
@@ -30,7 +30,7 @@ export class CompaniesService {
 
     return this.http.get<any>(this.apiUrl + 'company/' + id, {
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       }
     }).pipe(map(responseData => {
       return this.responseToCompany(responseData);
@@ -81,7 +81,7 @@ export class CompaniesService {
 
     return this.http.put(this.apiUrl + 'company', JSON.stringify(body), {
       observe: "response", headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       }
     })
   }
@@ -95,7 +95,7 @@ export class CompaniesService {
     }
     return this.http.post(this.apiUrl + 'company', JSON.stringify(body), {
       observe: "response", headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       }
     })
   }
@@ -105,7 +105,7 @@ export class CompaniesService {
       return this.http.delete(this.apiUrl + 'company/' + id, {
         observe: "response",
         headers: {
-          "X-API-Key": API_KEY
+          "X-API-Key": environment.cogipApiKey
         }
       })
     }

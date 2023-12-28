@@ -4,9 +4,9 @@ import {Injectable} from "@angular/core";
 import {catchError, concatMap, map, mergeAll, mergeMap, of, toArray} from "rxjs";
 import {CompaniesService} from "./companies.service";
 import {InvoiceConverterService} from "./converters/invoice-converter.service";
-import {API_KEY} from "../../../secret";
 import {DatePipe} from "@angular/common";
 import {Company} from "../models/company.model";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class InvoicesService {
@@ -39,7 +39,7 @@ export class InvoicesService {
 
     return this.http.get<any[]>(this.apiUrl + 'invoice', {
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       }
     }).pipe(map(responseData => {
       let invoices: Invoice[] = [];
@@ -56,7 +56,8 @@ export class InvoicesService {
   fetchInvoiceById(id: string) {
     return this.http.get(this.apiUrl + 'invoice/' + id, {
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
+
       }
     })
       .pipe(map(responseData => {
@@ -96,7 +97,8 @@ export class InvoicesService {
     return this.http.put(this.apiUrl + 'invoice/', body, {
       observe: 'response',
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
+
       }
     })
   }
@@ -115,7 +117,8 @@ export class InvoicesService {
               {
                 observe: "response",
                 headers: {
-                  "X-API-Key": API_KEY
+                  "X-API-Key": environment.cogipApiKey
+
                 }
               });
           }
@@ -130,7 +133,8 @@ export class InvoicesService {
       return this.http.delete(this.apiUrl + 'invoice/' + id, {
         observe: "response",
         headers: {
-          "X-API-Key": API_KEY
+          "X-API-Key": environment.cogipApiKey
+
         }
       });
     } else {

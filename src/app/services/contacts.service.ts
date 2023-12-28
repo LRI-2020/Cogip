@@ -3,7 +3,7 @@ import {Contact, RawContact} from "../models/contact.model";
 import {Injectable} from "@angular/core";
 import {map} from "rxjs";
 import {ContactConverterService} from "./converters/contact-converter.service";
-import {API_KEY} from "../../../secret";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class ContactsService {
@@ -18,7 +18,7 @@ export class ContactsService {
 
     return this.http.get<any[]>(this.apiUrl + 'contact', {
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       }
     }).pipe(map(responseData => {
       let contacts: Contact[] = []
@@ -34,7 +34,7 @@ export class ContactsService {
   getContactById(id: string) {
     return this.http.get<any>(this.apiUrl + 'contact/' + id, {
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       }
     }).pipe(
       map(response => {
@@ -55,7 +55,7 @@ export class ContactsService {
 
     return this.http.put(this.apiUrl+'contact/',body,{
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       },
       observe:"response"
     })
@@ -70,7 +70,7 @@ export class ContactsService {
 
     return this.http.post(this.apiUrl+'contact/',body,{
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       },
       observe:"response"
     })
@@ -79,7 +79,7 @@ export class ContactsService {
   deleteContact(id:string){
     return this.http.delete(this.apiUrl+'contact/'+id,{
       headers: {
-        "X-API-Key": API_KEY
+        "X-API-Key": environment.cogipApiKey
       },
       observe:"response"
     })
