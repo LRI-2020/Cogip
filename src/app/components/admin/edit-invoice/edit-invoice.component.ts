@@ -77,7 +77,6 @@ export class EditInvoiceComponent implements OnInit {
     this.subscriptionsList.push(
       this.invoicesService.updateInvoice(invoiceToUpdate).pipe(
         concatMap(response => {
-          this.isLoading = true;
           return this.LoadData();
         })
       )
@@ -143,7 +142,6 @@ export class EditInvoiceComponent implements OnInit {
   }
 
   private displayData() {
-    this.isLoading = true;
     this.subscriptionsList.push(
       this.LoadData().subscribe({
         next: () => {
@@ -211,6 +209,7 @@ export class EditInvoiceComponent implements OnInit {
   private loadInvoice() {
     return this.activeRoute.params.pipe(
       concatMap(params => {
+        this.isLoading = true;
         this.editMode = params['id'] != null;
         if (this.editMode) {
           return this.invoicesService.getInvoiceWithCompany(params['id']).pipe(

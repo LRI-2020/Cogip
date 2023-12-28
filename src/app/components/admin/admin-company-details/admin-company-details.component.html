@@ -7,6 +7,7 @@
     </div>
   </ng-template>
 
+
   <div class="component-data">
     <app-edit-company></app-edit-company>
 
@@ -15,7 +16,10 @@
       <div class="col-10 my-2">
         <h1>Contact People</h1>
       </div>
-      <div *ngIf="!contactsError">
+      <ng-template class="col-9 my-2" #error>
+        <p class="fs-3 align-self-center text-center">Error - data could not be loaded</p>
+      </ng-template>
+      <div *ngIf="!contactsError;else error">
         <div class="col-9 my-2" *ngIf="!isLoadingContacts ; else loading">
           <div class="row">
             <div class="col d-flex flex-inline" *ngFor="let contact of companyContacts">

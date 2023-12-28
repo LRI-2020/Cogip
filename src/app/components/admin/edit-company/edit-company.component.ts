@@ -161,6 +161,7 @@ export class EditCompanyComponent implements OnInit {
   private loadData() {
 
     return this.activeRoute.params.pipe(concatMap(params => {
+      this.isLoading = true;
       this.editMode = params['id'] != null;
       if (this.editMode)
         return this.companiesService.getCompanytById(params['id']);
@@ -179,7 +180,6 @@ export class EditCompanyComponent implements OnInit {
   }
 
   private displayData() {
-    this.isLoading = true;
     this.subscriptionsList.push(
       this.loadData().subscribe({
       next: result => {

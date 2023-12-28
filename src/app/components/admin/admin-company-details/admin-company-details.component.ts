@@ -26,14 +26,12 @@ export class AdminCompanyDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.isLoadingContacts = true;
     //listen id in url
-    return this.route.params.pipe(tap(params => {
-        this.companyId = params['id'];
-      }),
-      mergeMap((params) => {
-        //get observables with contact after getting company id
-        return this.companiesService.getContacts(this.companyId);
+    return this.route.params.pipe(
+      mergeMap(params => {
+        this.isLoadingContacts = true;
+           //get observables with contact after getting company id
+        return this.companiesService.getContacts(params['id']);
       }));
   }
 
