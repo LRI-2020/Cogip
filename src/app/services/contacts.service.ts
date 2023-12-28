@@ -75,4 +75,13 @@ export class ContactsService {
       observe:"response"
     })
   }
+
+  deleteContact(id:string){
+    return this.http.delete(this.apiUrl+'contact/'+id,{
+      headers: {
+        "X-API-Key": API_KEY
+      },
+      observe:"response"
+    })
+  }
 }

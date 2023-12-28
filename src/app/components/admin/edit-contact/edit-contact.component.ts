@@ -49,8 +49,18 @@ export class EditContactComponent implements OnInit, OnDestroy {
     this.navigationService.back("/admin");
   }
 
-  onDelete() {
-
+  onDelete(id:string) {
+    if(id===this.originalContact?.id){
+      this.subscriptionsList.push(this.contactsService.deleteContact(id).subscribe({
+        next: () => {
+          this.notificationsService.success('Success', "The contact has been deleted");
+          this.router.navigate(['/admin/contacts'])
+        },
+        error:()=>{
+          this.notificationsService.error('Oh Oh 😕', "The contact could not be deleted");
+        }
+      }))
+    }
   }
 
   onSave() {
@@ -79,7 +89,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error:()=>{
-        this.inError = false;
+        this.inError = true;
         this.isLoading = false;
         this.notificationsService.error('Oh Oh 😕', "The contact could not be loaded");
         this.router.navigate(['/admin/contacts'])
@@ -162,12 +172,12 @@ export class EditContactComponent implements OnInit, OnDestroy {
       this.contactForm.get('contact_company')?.value,
     ).subscribe({
       next: () => {
-        this.notificationsService.success('Success', "The invoice has been created");
+        this.notificationsService.success('Success', "The contact has been created");
         this.router.navigate(['/admin/contacts']);
       },
       error: (e) => {
         let error = e instanceof Error ? e.message + '.' : '';
-        this.notificationsService.error('Oh Oh 😕', error + "The invoice has not been created");
+        this.notificationsService.error('Oh Oh 😕', error + "The contact has not been created");
         this.loadData();
       }
     })
