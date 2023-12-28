@@ -23,7 +23,7 @@ export class ContactConverterService {
   }
 
   rawToContact(rawContact:RawContact){
-    let creationDate = !isNaN(Date.parse(rawContact.creation_date))?new Date(rawContact.creation_date): new Date('1970-01-01');
+    let creationDate = !isNaN(Date.parse(rawContact.creationDate))?new Date(rawContact.creationDate): new Date('1970-01-01');
 
     return new Contact(rawContact.id,rawContact.name,
       rawContact.phone, rawContact.email,

@@ -85,11 +85,11 @@ export class Contact {
 }
 
 export class RawContact {
-  get creation_date(): string {
-    return this._creation_date;
+  get creationDate(): string {
+    return this._creationDate;
   }
 
-  private readonly _creation_date: string;
+  private readonly _creationDate: string;
   get company_id(): string {
     return this._company_id;
   }
@@ -133,7 +133,7 @@ export class RawContact {
     this._email = email;
     this._phone = phone;
     this._company_id = company_id;
-    this._creation_date = creation_date;
+    this._creationDate = creation_date;
   }
 
 
