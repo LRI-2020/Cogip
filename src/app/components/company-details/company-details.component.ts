@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Company, CompanyType} from "../../models/company.model";
 import {CompaniesService} from "../../services/companies.service";
 import {Contact} from "../../models/contact.model";
-import {catchError, concatMap, mergeMap, of, Subscription, tap} from "rxjs";
+import {catchError, concatMap, EMPTY, of, Subscription, tap} from "rxjs";
 import {NotificationsService} from "../../services/notifications.service";
 
 @Component({
@@ -35,12 +35,12 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
   loadCompany() {
     return this.route.params.pipe(
       concatMap(params => {
+        this.setLoading();
         return this.companiesService.getCompanytById(params['id']).pipe(
           tap(company => {
               if (company instanceof Company) {
                 this.company = company;
               }
-            return of(company)
             }
           ))
       }),
@@ -49,29 +49,24 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
         this.errorContacts = true;
         this.notificationsService.error('Oh Oh 😕', "The company could not be loaded");
         this.router.navigate(['/companies']);
-        return of(true)
+        return EMPTY
       })
     )
   }
 
   loadContacts(companyId: string) {
-    console.log('load Contacts')
     return this.companiesService.getContacts(companyId).pipe(
       tap(contacts => {
         this.companyContacts = contacts;
-        return of(contacts);
       }),
       catchError(error => {
         this.errorContacts = true;
         this.notificationsService.error('Oh Oh 😕', "The company's contacts could not be loaded");
-        return of(true);
+        return of(error);
       }));
   }
 
   loadData() {
-    this.isLoadingCompany = true;
-    this.isLoadingContacts = true;
-
     this.subscriptionsList.push(
       this.loadCompany().pipe(
         concatMap(company => {
@@ -81,19 +76,24 @@ export class CompanyDetailsComponent implements OnInit, OnDestroy {
         }))
         .subscribe({
           next: () => {
-            this.isLoadingCompany = false;
-            this.isLoadingContacts = false;
+            this.setLoaded();
           },
           error: () => {
-            console.log('company in error : ' + this.errorCompany)
-            console.log('contacts in error : ' + this.errorContacts)
-            this.isLoadingCompany = false;
-            this.isLoadingContacts = false;
+            this.setLoaded();
           }
         })
     )
   }
 
+  setLoading(){
+    this.isLoadingCompany = true;
+    this.isLoadingContacts = true;
+  }
+
+  setLoaded(){
+    this.isLoadingCompany = false;
+    this.isLoadingContacts = false;
+  }
   ngOnDestroy(): void {
     this.subscriptionsList.forEach(s => s.unsubscribe());
   }

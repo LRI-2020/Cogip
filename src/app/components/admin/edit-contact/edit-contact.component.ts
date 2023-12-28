@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../../models/contact.model";
-import {forkJoin, mergeMap, of, Subscription, tap} from "rxjs";
+import {forkJoin, map, mergeMap, of, Subscription, tap} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
@@ -192,7 +192,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
     let contactToUpdate = this.getUpdatedValues(originalContact);
 
     this.subscriptionsList.push(this.contactsService.updateContact(contactToUpdate).pipe(
-      tap(() => {
+      mergeMap(() => {
         return this.loadData();
       })).subscribe({
       next: () => {
