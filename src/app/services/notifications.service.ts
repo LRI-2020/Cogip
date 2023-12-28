@@ -11,8 +11,6 @@ export class NotificationsService {
   notifyRequest$ = this.notifyRequest.asObservable();
   private _idx=0;
 
-  constructor() {}
-
   info(title: string, message: string, timeout = 3000) {
     this.notifyRequest.next(new Notification(this._idx++, NotificationType.info, title, message, timeout));
   }

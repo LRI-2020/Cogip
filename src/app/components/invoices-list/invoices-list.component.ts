@@ -22,15 +22,15 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   fetchedData: Invoice[] = []
   dataToDisplay: Invoice[] = []
 
-  subscriptionsList:Subscription[]=[];
-  isLoading=true;
-  inError=false;
+  subscriptionsList: Subscription[] = [];
+  isLoading = true;
+  inError = false;
   paginationInfos: { itemsPerPage: number, currentPage: number } = {itemsPerPage: 2, currentPage: 1};
 
   constructor(private invoicesService: InvoicesService,
               private route: ActivatedRoute,
               private helpers: Helpers,
-              private notificationsService:NotificationsService) {
+              private notificationsService: NotificationsService) {
   }
 
   ngOnInit(): void {
@@ -51,7 +51,7 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
     console.log('search triggered!');
     this.dataToDisplay = this.helpers.searchData(this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams),
       (<HTMLInputElement>event.target).value,
-      ['invoiceNumber', 'dueDate', 'company', 'createdAt']);
+      ['invoiceNumber', 'dueDate', 'company_name', 'createdAt']);
   }
 
   ngOnDestroy(): void {
@@ -59,31 +59,30 @@ export class InvoicesListComponent implements OnInit, OnDestroy {
   }
 
   private loadData() {
-    this.isLoading=true;
+    this.isLoading = true;
 
     this.subscriptionsList.push(
       this.invoicesService.getInvoicesWithCompany().subscribe({
-        next : invoicesData => {
-        this.fetchedData = invoicesData;
-        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
-        this.isLoading=false;
-        this.inError=false;
-      },
+        next: invoicesData => {
+          this.fetchedData = invoicesData;
+          this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Invoice[];
+          this.isLoading = false;
+          this.inError = false;
+        },
 
-        error:() => {
+        error: () => {
           this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
-          this.inError=true;
+          this.inError = true;
           this.isLoading = false;
 
-        }}));
+        }
+      }));
   }
 
   private listenParams() {
     this.subscriptionsList.push(
       this.route.queryParams.subscribe(params => {
-        {
-          this.helpers.listenPagination(params, this.paginationInfos);
-        }
+        this.helpers.listenPagination(params, this.paginationInfos);
       }));
   }
 }

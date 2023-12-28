@@ -84,13 +84,15 @@ export class ContactsListComponent implements OnInit, OnDestroy {
             tap(c => {
               this.fetchedData.push(c);
             }),
-            catchError(err => {return of(contact)})
+            catchError(err => {
+              return of(contact)
+            })
           )
       })
     )
   }
 
-  loadDataToDisplay(){
+  loadDataToDisplay() {
     return this.loadContacts().pipe(
       tap(res => {
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Contact[];
@@ -118,9 +120,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   private listenParams() {
     this.subscriptionsList.push(
       this.route.queryParams.subscribe(params => {
-        {
-          this.helpers.listenPagination(params, this.paginationInfos);
-        }
+        this.helpers.listenPagination(params, this.paginationInfos);
       }));
   }
 }

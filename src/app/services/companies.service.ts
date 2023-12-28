@@ -60,7 +60,7 @@ export class CompaniesService {
     let companies: Company[] = []
     responseData.forEach((d: any) => {
       if (this.companyConverter.isRawCompany(d)) {
-        let company = this.companyConverter.rawToCompany(d as RawCompanyModel);
+        let company = this.companyConverter.rawToCompany(d);
         if (company) {
           companies.push(company);
         }
@@ -72,7 +72,7 @@ export class CompaniesService {
   private responseToCompany(responseData: any): Company | undefined {
 
     if (this.companyConverter.isRawCompany(responseData)) {
-      return this.companyConverter.rawToCompany(responseData as RawCompanyModel);
+      return this.companyConverter.rawToCompany(responseData);
     }
     throw new Error('No company');
   }

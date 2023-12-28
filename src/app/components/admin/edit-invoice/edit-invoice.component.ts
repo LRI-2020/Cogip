@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Invoice} from "../../../models/invoice.model";
 import {InvoicesService} from "../../../services/invoices.service";
-import {catchError, concatMap, of, Subscription, tap} from "rxjs";
+import {concatMap, of, Subscription, tap} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {NavigationService} from "../../../services/navigation.service";
 import {DatePipe} from "@angular/common";
@@ -76,12 +76,12 @@ export class EditInvoiceComponent implements OnInit {
 
     this.subscriptionsList.push(
       this.invoicesService.updateInvoice(invoiceToUpdate).pipe(
-        concatMap(response => {
+        concatMap(() => {
           return this.LoadData();
         })
       )
         .subscribe({
-          next: (response) => {
+          next: () => {
             this.isLoading = false;
             this.notificationsService.success('Success', "The invoice has been updated");
           },
@@ -173,10 +173,8 @@ export class EditInvoiceComponent implements OnInit {
   private processForm() {
     if (!this.editMode) {
       this.createInvoice();
-    } else {
-      if (this.validForUpdate() && this.originalInvoice) {
+    } else if (this.validForUpdate() && this.originalInvoice){
         this.updateInvoice(this.originalInvoice)
-      }
     }
   }
 

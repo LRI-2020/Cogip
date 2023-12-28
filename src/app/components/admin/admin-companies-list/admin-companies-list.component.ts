@@ -60,15 +60,16 @@ export class AdminCompaniesListComponent {
   private displayData() {
     this.isLoading = true;
     return this.companiesService.fetchCompanies().pipe(tap({
-      next : companiesData => {
-      this.fetchedData = companiesData;
-      this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
-      this.isLoading = false;
-    },
-    error: ()=>{
-      this.isLoading = false;
-      this.notificationsService.error('Oh Oh 😕', "The company could not been loaded : ");
-    }}))
+      next: companiesData => {
+        this.fetchedData = companiesData;
+        this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams) as Company[];
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.notificationsService.error('Oh Oh 😕', "The company could not been loaded : ");
+      }
+    }))
 
   }
 
@@ -96,9 +97,7 @@ export class AdminCompaniesListComponent {
   private listenRoute() {
     this.subscriptionsList.push(
       this.route.queryParams.subscribe(params => {
-        {
-          this.helpers.listenPagination(params, this.paginationInfos);
-        }
+        this.helpers.listenPagination(params, this.paginationInfos);
       }));
   }
 

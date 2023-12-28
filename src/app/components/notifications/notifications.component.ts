@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {INotification, NotificationType} from "../../models/notification.model";
 import {NotificationsService} from "../../services/notifications.service";
-import {debounceTime, Subscription, tap} from "rxjs";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-notifications',

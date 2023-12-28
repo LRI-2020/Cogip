@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Invoice, RawInvoice} from "../../models/invoice.model";
-import {RawCompanyModel} from "../../models/company.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceConverterService {
-
-  constructor() { }
-
   isRawInvoice(value:any):value is RawInvoice {
 
   if (!value || typeof value !== 'object') {

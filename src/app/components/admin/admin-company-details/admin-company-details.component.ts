@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Company} from "../../../models/company.model";
 import {Contact} from "../../../models/contact.model";
-import {mergeMap, of, Subscription, tap} from "rxjs";
+import {mergeMap, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {CompaniesService} from "../../../services/companies.service";
 import {NotificationsService} from "../../../services/notifications.service";

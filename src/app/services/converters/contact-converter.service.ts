@@ -6,8 +6,6 @@ import {Contact, RawContact} from "../../models/contact.model";
 })
 export class ContactConverterService {
 
-  constructor() { }
-
   isRawContact(value:any){
     if (!value || typeof value !== 'object') {
       return false

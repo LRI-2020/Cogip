@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../../models/contact.model";
-import {catchError, EMPTY, map, mergeAll, mergeMap, of, Subscription, tap, toArray} from "rxjs";
+import {catchError, map, mergeAll, mergeMap, of, Subscription, tap} from "rxjs";
 import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute} from "@angular/router";
 import {Helpers} from "../../../shared/helpers";
@@ -78,7 +78,7 @@ export class AdminContactsListComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.fetchedData=[];
+    this.fetchedData = [];
     return this.contactsService.fetchContacts().pipe(
       mergeAll(),
       mergeMap(contact => {
@@ -109,9 +109,7 @@ export class AdminContactsListComponent implements OnInit, OnDestroy {
   private listenParams() {
     this.subscriptionsList.push(
       this.route.queryParams.subscribe(params => {
-        {
-          this.helpers.listenPagination(params, this.paginationInfos);
-        }
+        this.helpers.listenPagination(params, this.paginationInfos);
       }));
   }
 
@@ -127,7 +125,8 @@ export class AdminContactsListComponent implements OnInit, OnDestroy {
         return this.loadData();
       }))
       .subscribe({
-        next: () => {},
+        next: () => {
+        },
         error: () => {
           this.notificationsService.error('Oh Oh 😕', "The contacts could not be loaded");
         }

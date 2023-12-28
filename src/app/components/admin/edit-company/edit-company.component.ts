@@ -91,7 +91,7 @@ export class EditCompanyComponent implements OnInit {
       'company_name': company ? company.name : '',
       'company_country': countryCode !== '' ? countryCode : 'BE',
       'company_type': company ? company.type.toString() : CompanyType.Client.toString(),
-      'vta_number': company && company.tva ? company.tva : '',
+      'vta_number': company?.tva ? company.tva : '',
       'created_at': company ? this.datepipe.transform(company.createdAt, 'yyyy-MM-dd') : ''
     })
   }

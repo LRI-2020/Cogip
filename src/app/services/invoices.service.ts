@@ -1,7 +1,7 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Invoice, RawInvoice} from "../models/invoice.model";
 import {Injectable} from "@angular/core";
-import {catchError, concatMap, empty, map, mergeAll, mergeMap, of, toArray} from "rxjs";
+import {catchError, concatMap, map, mergeAll, mergeMap, of, toArray} from "rxjs";
 import {CompaniesService} from "./companies.service";
 import {InvoiceConverterService} from "./converters/invoice-converter.service";
 import {API_KEY} from "../../../secret";
@@ -25,7 +25,7 @@ export class InvoicesService {
         invoice => {
           return this.companiesService.getCompanytById(invoice.company_id).pipe(
             //When company has been deleted but not invoice - catch error && continue
-            catchError(error => of(true)),
+            catchError(() => of(true)),
             map(company => {
                 invoice.company_name = company && company instanceof Company ? company.name : invoice.company_name;
                 return invoice;
@@ -45,7 +45,7 @@ export class InvoicesService {
       let invoices: Invoice[] = [];
       responseData.forEach((d: any) => {
         if (this.invoiceConverter.isRawInvoice(d)) {
-          let invoice = this.invoiceConverter.rawToInvoice(d as RawInvoice);
+          let invoice = this.invoiceConverter.rawToInvoice(d);
           invoices.push(invoice);
         }
       })
@@ -80,7 +80,7 @@ export class InvoicesService {
             invoice.company_name = company ? company.name : invoice.company_name;
             return invoice
           }),
-            catchError((err)=> of(invoice))
+            catchError(()=> of(invoice))
           )
         }
       ))

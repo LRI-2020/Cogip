@@ -82,9 +82,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   private listenParams() {
     this.subscriptionsList.push(
       this.route.queryParams.subscribe(params => {
-        {
-          this.helpers.listenPagination(params, this.paginationInfos);
-        }
+        this.helpers.listenPagination(params, this.paginationInfos);
       }));
   }
 }

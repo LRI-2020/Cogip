@@ -1,9 +1,8 @@
-﻿import {ActivatedRoute, Params, Router, UrlSegment} from "@angular/router";
+﻿import {Params, Router, UrlSegment} from "@angular/router";
 import {FilterPipe} from "../pipes/filter.pipe";
 import {LastPipe} from "../pipes/last.pipe";
 import {Injectable} from "@angular/core";
 import {SearchPipe} from "../pipes/search.pipe";
-import {CompaniesService} from "../services/companies.service";
 
 export function datesEquals(date1:Date,date2:Date){
   return date1.getFullYear() === date2.getFullYear()
@@ -17,7 +16,7 @@ export function onWelcomePage(url: UrlSegment[]) {
 export function   sortByDesc(prop: string) {
   return function (a: any, b: any) {
 
-    if (typeof a[prop] == 'string' && typeof a[prop] !== 'number' && !(Object.prototype.toString.call(a[prop]) === "[object String]")) {
+    if (typeof a[prop] == 'string' && typeof a[prop] !== 'number' && Object.prototype.toString.call(a[prop]) !== "[object String]") {
       return 0;
     }
 
@@ -35,7 +34,7 @@ export function   sortByDesc(prop: string) {
 export function   sortByAsc(prop: string) {
   return function (a: any, b: any) {
 
-    if (typeof a[prop] == 'string' && typeof a[prop] !== 'number' && !(Object.prototype.toString.call(a[prop]) === "[object String]")) {
+    if (typeof a[prop] == 'string' && typeof a[prop] !== 'number' && Object.prototype.toString.call(a[prop]) !== "[object String]") {
       return 0;
     }
 

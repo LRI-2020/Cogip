@@ -1,7 +1,5 @@
-import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {onWelcomePage} from "../../shared/helpers";
-import {ActivatedRoute} from "@angular/router";
-import {Subject, Subscription} from "rxjs";
+import {Component, Input, Output} from '@angular/core';
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-list-header',
@@ -11,9 +9,6 @@ import {Subject, Subscription} from "rxjs";
 export class ListHeaderComponent{
   @Input()title:string='';
   @Output() onFilter = new Subject<Event>();
-
-  constructor() {
-  }
 
   onFilterChanges($event:Event){
     this.onFilter.next($event);

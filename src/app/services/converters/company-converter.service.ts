@@ -6,9 +6,6 @@ import {Company, RawCompanyModel, CompanyType} from "../../models/company.model"
 })
 export class CompanyConverterService {
 
-  constructor() {
-  }
-
   rawToCompany(rawCompany: RawCompanyModel):Company {
     let creationDate = !isNaN(Date.parse(rawCompany.creationDate))?new Date(rawCompany.creationDate): new Date('1970-01-01');
       return new Company(rawCompany.id,

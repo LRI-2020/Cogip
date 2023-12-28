@@ -10,9 +10,6 @@ export class AdminListHeaderComponent {
   @Input()title:string='';
   @Output() onFilter = new Subject<Event>();
 
-  constructor() {
-  }
-
   onFilterChanges($event:Event){
     this.onFilter.next($event);
   }

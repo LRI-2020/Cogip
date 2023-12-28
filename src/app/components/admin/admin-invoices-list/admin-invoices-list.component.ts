@@ -38,7 +38,6 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onlyLastItems = (this.lastItemsParams.count > 0 && this.lastItemsParams.prop !== '');
-    console.log('company id received in list invoices component : '+this.dataFilter.value)
 
     //load Data
     this.subscriptionsList.push(this.loadData().subscribe());
@@ -60,14 +59,14 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
 
   private loadData() {
     this.isLoading = true;
-    return  this.invoicesService.getInvoicesWithCompany().pipe(tap({
+    return this.invoicesService.getInvoicesWithCompany().pipe(tap({
       next: result => {
         this.fetchedData = result;
         this.dataToDisplay = this.helpers.filterData(this.fetchedData, this.dataFilter.prop, this.dataFilter.value, this.lastItemsParams)
         this.isLoading = false;
       },
-        error: () => {
-        this.isLoading=false;
+      error: () => {
+        this.isLoading = false;
         this.notificationsService.error('Oh Oh 😕', "The invoices could not be loaded");
       }
     }))
@@ -75,10 +74,10 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
 
   onDelete(id: string) {
     try {
-      this.subscriptionsList.push(this.invoicesService.deleteInvoice(id).pipe(concatMap(response =>{
-          if(response.ok)
-               return this.loadData();
-          return of(response)
+      this.subscriptionsList.push(this.invoicesService.deleteInvoice(id).pipe(concatMap(response => {
+        if (response.ok)
+          return this.loadData();
+        return of(response)
       })).subscribe({
         next: () => {
           this.notificationsService.success('Success', "The invoice has been deleted");
@@ -98,9 +97,7 @@ export class AdminInvoicesListComponent implements OnInit, OnDestroy {
   private setPagination() {
     this.subscriptionsList.push(
       this.route.queryParams.subscribe(params => {
-        {
-          this.helpers.listenPagination(params, this.paginationInfos);
-        }
+        this.helpers.listenPagination(params, this.paginationInfos);
       }));
   }
 

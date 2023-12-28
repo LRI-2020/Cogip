@@ -10,6 +10,7 @@ export class LastPipe implements PipeTransform {
     if (value.length === 0 || count < 1 || prop.trim() === '') {
       return value;
     }
-    return value.sort(sortByDesc(prop)).slice(0,count);
+   value.sort(sortByDesc(prop));
+    return value.slice(0,count);
   }
 }

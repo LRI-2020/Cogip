@@ -13,17 +13,9 @@ export class SearchPipe implements PipeTransform {
     let resultArray = new Set();
     for (const item of value) {
       for (const prop of props) {
-        switch (typeof item[prop]) {
-          case 'string':
-            if (this.searchOnString(item, item[prop], regex) !== undefined) {
-              resultArray.add(this.searchOnString(item, item[prop], regex))
-            }
-            break;
-          case 'number':
-            if (this.searchOnString(item, item[prop].toString(), regex) !== undefined) {
-              resultArray.add(this.searchOnString(item, item[prop].toString(), regex))
-            }
-        }
+          let res = this.search(item,prop,regex)
+        if(res)
+          resultArray.add(res);
       }
     }
     return Array.from(resultArray);
@@ -31,7 +23,7 @@ export class SearchPipe implements PipeTransform {
 
   private searchOnString(item: any, value: string, regex: RegExp) {
 
-    if (value.toLowerCase().match(regex)) {
+    if (regex.exec(value.toLowerCase())) {
       return item
     }
   }
@@ -45,5 +37,17 @@ export class SearchPipe implements PipeTransform {
       }
     }
     return new RegExp(split.join(''));
+  }
+
+  private search(item:any,prop:string,regex:RegExp) {
+    console.log(Object.prototype.toString.call(item[prop]))
+    switch (Object.prototype.toString.call(item[prop])) {
+      case '[object String]':
+        return this.searchOnString(item, item[prop], regex)
+      case '[object Number]':
+        return this.searchOnString(item, item[prop].toString(), regex)
+      case '[object Date]':
+        return this.searchOnString(item, item[prop].toString(), regex)
+    }
   }
 }

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Contact} from "../../../models/contact.model";
-import {forkJoin, map, mergeMap, of, Subscription, tap} from "rxjs";
+import {forkJoin, mergeMap, of, Subscription, tap} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ContactsService} from "../../../services/contacts.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
@@ -14,7 +14,7 @@ import {NotificationsService} from "../../../services/notifications.service";
   templateUrl: './edit-contact.component.html',
   styleUrl: './edit-contact.component.scss'
 })
-export class EditContactComponent implements OnInit, OnDestroy {
+export class EditContactComponent implements OnInit {
   originalContact: Contact | undefined;
   editMode = false;
   isLoading = true;
@@ -49,14 +49,14 @@ export class EditContactComponent implements OnInit, OnDestroy {
     this.navigationService.back("/admin");
   }
 
-  onDelete(id:string) {
-    if(id===this.originalContact?.id){
+  onDelete(id: string) {
+    if (id === this.originalContact?.id) {
       this.subscriptionsList.push(this.contactsService.deleteContact(id).subscribe({
         next: () => {
           this.notificationsService.success('Success', "The contact has been deleted");
           this.router.navigate(['/admin/contacts'])
         },
-        error:()=>{
+        error: () => {
           this.notificationsService.error('Oh Oh 😕', "The contact could not be deleted");
         }
       }))
@@ -88,16 +88,13 @@ export class EditContactComponent implements OnInit, OnDestroy {
         this.inError = false;
         this.isLoading = false;
       },
-      error:()=>{
+      error: () => {
         this.inError = true;
         this.isLoading = false;
         this.notificationsService.error('Oh Oh 😕', "The contact could not be loaded");
         this.router.navigate(['/admin/contacts'])
       }
     }))
-  }
-
-  ngOnDestroy(): void {
   }
 
   ngOnInit(): void {
@@ -157,10 +154,8 @@ export class EditContactComponent implements OnInit, OnDestroy {
   private processForm() {
     if (!this.editMode) {
       this.createContact();
-    } else {
-      if (this.validForUpdate() && this.originalContact) {
-        this.updateContact(this.originalContact)
-      }
+    } else if (this.validForUpdate() && this.originalContact) {
+      this.updateContact(this.originalContact)
     }
   }
 

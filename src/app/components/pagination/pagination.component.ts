@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router, RouterModule} from "@angular/router";
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-pagination',
@@ -60,8 +60,12 @@ export class PaginationComponent implements OnInit, OnChanges {
 
   private setTotalPages() {
     this.pagesCount = this.itemsPerPage > 0 ?
-      (Math.ceil(this.totalItems / this.itemsPerPage) > 0 ? Math.ceil(this.totalItems / this.itemsPerPage) : 1)
+      this.computeTotalPages()
       : 1;
+  }
+
+  private computeTotalPages(){
+    return (Math.ceil(this.totalItems / this.itemsPerPage) > 0 ? Math.ceil(this.totalItems / this.itemsPerPage) : 1)
   }
 
   private setPaginationParams() {
