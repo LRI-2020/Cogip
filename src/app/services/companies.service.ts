@@ -1,6 +1,6 @@
 ﻿import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Company, CompanyType, RawCompanyModel} from "../models/company.model";
+import {Company, CompanyType} from "../models/company.model";
 import {map, mergeMap} from "rxjs";
 import {ContactsService} from "./contacts.service";
 import {sortByAsc} from "../shared/helpers";
@@ -36,20 +36,13 @@ export class CompaniesService {
       return this.responseToCompany(responseData);
     }));
   }
-
-  getCompanyByName(name: string) {
-    return this.fetchCompanies().pipe(map(companies => {
-      return companies.find(c => c.name === name);
-    }))
-  }
-
   getContacts(companyId: string) {
     return this.getCompanytById(companyId).pipe(map(company => {
       if(company){
         return company;
       }
       throw new Error('no company for this id');
-    }),mergeMap(company =>{
+    }),mergeMap(() =>{
       return this.contactsService.fetchContacts().pipe(map(contacts=>{
         return contacts.filter(c => c.company === companyId).sort(sortByAsc('id')).slice(0, 2);
       }))

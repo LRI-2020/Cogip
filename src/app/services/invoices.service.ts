@@ -1,5 +1,5 @@
 ﻿import {HttpClient} from "@angular/common/http";
-import {Invoice, RawInvoice} from "../models/invoice.model";
+import {Invoice} from "../models/invoice.model";
 import {Injectable} from "@angular/core";
 import {catchError, concatMap, map, mergeAll, mergeMap, of, toArray} from "rxjs";
 import {CompaniesService} from "./companies.service";

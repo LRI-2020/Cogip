@@ -80,7 +80,7 @@ export class Contact {
     this._email = email;
     this._company = company;
     this._createdAt = createdAt;
-    this._photo = photo || '';
+    this._photo = photo?? '';
   }
 }
 

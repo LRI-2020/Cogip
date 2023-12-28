@@ -61,7 +61,7 @@ export class Helpers {
     paginationInfos.itemsPerPage = (params['itemsPerPage'] && +params['itemsPerPage'] > 0) ? +params['itemsPerPage'] : paginationInfos.itemsPerPage;
     paginationInfos.currentPage = (params['currentPage'] && +params['currentPage'] > 0) ? +params['currentPage'] : paginationInfos.currentPage;
 
-    if ((!params['itemsPerPage'] || !params['itemsPerPage'])) {
+    if ((!params['itemsPerPage'] || !params['currentPage'])) {
       this.router.navigate([], {queryParams: {'currentPage': paginationInfos.currentPage.toString(), 'itemsPerPage': paginationInfos.itemsPerPage}})
     }
     return paginationInfos;
