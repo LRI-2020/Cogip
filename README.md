@@ -1,6 +1,7 @@
 # Cogip
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.5.
+Deployed : https://jolly-desert-0834c8f03.4.azurestaticapps.net/
 
 ## Development server
 
